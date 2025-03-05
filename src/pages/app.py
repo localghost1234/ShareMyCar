@@ -34,6 +34,9 @@ class App:
         # Start with the Inventory interface
         self.switch_interface(InventoryInterface)
 
+        # Register on_close() as the handler for the window close event
+        self.root.protocol("WM_DELETE_WINDOW", self.on_close)
+
     def switch_interface(self, interface_class):
         if self.current_interface:
             self.current_interface.frame.destroy()
@@ -41,6 +44,19 @@ class App:
         self.current_interface = interface_class(self.root, self.system)
 
     def on_close(self):
-        # Close the database connection
-        self.system.close()
+        print('Shutting down.')
+        
+        try:
+            # Commit any pending transactions
+            self.system.conn.commit()
+        except Exception as e:
+            print(f"Error committing transactions: \n{e}")
+        
+        try:
+            # Close the database connection
+            self.system.close()
+        except Exception as e:
+            print(f"Error closing the database connection: \n{e}")
+
+        
         self.root.destroy()
