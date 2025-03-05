@@ -31,6 +31,9 @@ class App:
             button = tk.Button(self.button_frame, text=interface_name, command=lambda i=interface_class: self.switch_interface(i))
             button.pack(side=tk.LEFT)
 
+        # Start with the Inventory interface
+        self.switch_interface(InventoryInterface)
+
     def switch_interface(self, interface_class):
         if self.current_interface:
             self.current_interface.frame.destroy()
