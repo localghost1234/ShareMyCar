@@ -39,3 +39,8 @@ class App:
             self.current_interface.frame.destroy()
 
         self.current_interface = interface_class(self.root, self.system)
+
+    def on_close(self):
+        # Close the database connection
+        self.system.close()
+        self.root.destroy()

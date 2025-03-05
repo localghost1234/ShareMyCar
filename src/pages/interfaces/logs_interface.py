@@ -1,6 +1,7 @@
 # logs_interface.py
 import tkinter as tk
 from tkinter import messagebox
+
 from src.pages.interfaces.base_interface import BaseInterface
 
 class LogsInterface(BaseInterface):
