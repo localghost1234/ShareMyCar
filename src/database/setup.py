@@ -1,9 +1,11 @@
 # database.py
 import sqlite3
 
+DB_NAME = "carsharing.db"
+
 def setup_database():
     # Connect to the SQLite database (or create it if it doesn't exist)
-    conn = sqlite3.connect("carsharing.db")
+    conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
 
     # Create the vehicles table
@@ -16,6 +18,19 @@ def setup_database():
             daily_price REAL NOT NULL,
             maintenance_cost REAL NOT NULL,
             available INTEGER DEFAULT 1
+        )
+    """)
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS bookings (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            vehicle_id INTEGER NOT NULL,
+            rental_days INTEGER NOT NULL,
+            estimated_km INTEGER NOT NULL,
+            estimated_cost REAL NOT NULL,
+            start_date TEXT NOT NULL,
+            end_date TEXT NOT NULL,
+            FOREIGN KEY (vehicle_id) REFERENCES vehicles(id)
         )
     """)
 

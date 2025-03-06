@@ -3,11 +3,11 @@ import tkinter as tk
 
 from src.core.system import CarsharingSystem
 from src.pages.interfaces.inventory_interface import InventoryInterface
-from src.pages.interfaces.logs_interface import LogsInterface
-from src.pages.interfaces.maintenance_interface import MaintenanceInterface
-from src.pages.interfaces.metrics_interface import MetricsInterface
+from src.pages.interfaces.booking_interface import BookingInterface
 from src.pages.interfaces.return_interface import ReturnInterface
-from src.pages.interfaces.scheduling_interface import SchedulingInterface
+from src.pages.interfaces.maintenance_interface import MaintenanceInterface
+from src.pages.interfaces.logs_interface import LogsInterface
+from src.pages.interfaces.metrics_interface import MetricsInterface
 
 class App:
     def __init__(self, root):
@@ -20,7 +20,7 @@ class App:
 
         interfaces = [
             ("Inventory", InventoryInterface),
-            ("Scheduling", SchedulingInterface),
+            ("Booking", BookingInterface),
             ("Return", ReturnInterface),
             ("Maintenance", MaintenanceInterface),
             ("Logs", LogsInterface),
