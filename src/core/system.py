@@ -94,4 +94,14 @@ class CarsharingSystem:
 
 
     def close(self):
-        self.conn.close()
+        try:
+            # Commit any pending transactions
+            self.conn.commit()
+        except Exception as e:
+            print(f"Error committing transactions: \n{e}")
+        
+        try:
+            # Close the database connection
+            self.conn.close()
+        except Exception as e:
+            print(f"Error closing the database connection: \n{e}")
