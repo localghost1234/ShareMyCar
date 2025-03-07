@@ -1,11 +1,10 @@
-# core_logic.py
-import sqlite3
+# system.py
+from src.database.setup import initialize_database
 from datetime import datetime, timedelta
 
 class CarsharingSystem:
     def __init__(self):
-        self.conn = sqlite3.connect("carsharing.db")
-        self.cursor = self.conn.cursor()
+        self.conn, self.cursor = initialize_database()
 
     def add_vehicle(self, brand, model, mileage, daily_price, maintenance_cost):
         self.cursor.execute("""
@@ -99,6 +98,11 @@ class CarsharingSystem:
             self.conn.commit()
         except Exception as e:
             print(f"Error committing transactions: \n{e}")
+
+        try:
+            self.cursor.close()
+        except Exception as e:
+            print(f"Error closing the cursor: \n{e}")
         
         try:
             # Close the database connection

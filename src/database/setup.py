@@ -1,9 +1,9 @@
 # database.py
 import sqlite3
 
-DB_NAME = "carsharing.db"
+from src.misc.constants import DB_NAME
 
-def setup_database():
+def initialize_database():
     # Connect to the SQLite database (or create it if it doesn't exist)
     conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
@@ -36,4 +36,5 @@ def setup_database():
 
     # Commit the changes and close the connection
     conn.commit()
-    conn.close()
+    
+    return conn, cursor
