@@ -26,7 +26,7 @@ class CarsharingSystem:
         """, (available, vehicle_id))
         self.conn.commit()
 
-    def book_vehicle(self, vehicle_id, rental_days, estimated_km):
+    def query_booking(self, vehicle_id, rental_days, estimated_km):
         """Books a vehicle, calculates cost, and updates the database."""
         # Check if the vehicle is available
         self.cursor.execute("SELECT daily_price, maintenance_cost, available FROM vehicles WHERE id = ?", (vehicle_id,))
@@ -58,6 +58,40 @@ class CarsharingSystem:
 
         self.conn.commit()
         return estimated_cost
+    
+    def query_return(self, vehicle_id, actual_km, late_days):
+        # Check if the vehicle exists
+        self.cursor.execute("SELECT * FROM vehicles WHERE id = ?", (vehicle_id,))
+        vehicle = self.cursor.fetchone()
+        
+        if not vehicle:
+            return None  # Vehicle doesn't exist
+
+        # Check if the vehicle is currently booked
+        self.cursor.execute("SELECT * FROM bookings WHERE vehicle_id = ?", (vehicle_id,))
+        booking = self.cursor.fetchone()
+        
+        if not booking:
+            return None  # Vehicle is not currently booked
+
+        # Extract booking details
+        rental_days = booking[2]  # Assuming column 2 is 'rental_days'
+        estimated_km = booking[3]  # Assuming column 3 is 'estimated_km'
+        estimated_cost = booking[4]  # Assuming column 4 is 'estimated_cost'
+
+        # Cost calculation logic
+        km_exceeded = max(0, actual_km - estimated_km)  # Extra km
+        late_fee = late_days * 20  # Example: charge 20€ per late day
+        total_cost = estimated_cost + (km_exceeded * 0.5) + late_fee  # 0.5€/extra km
+
+        # Update database: Mark booking as returned and update vehicle availability
+        self.cursor.execute("DELETE FROM bookings WHERE vehicle_id = ?", (vehicle_id,))
+        self.cursor.execute("UPDATE vehicles SET available = 1 WHERE id = ?", (vehicle_id,))
+
+        # Commit changes
+        self.conn.commit()
+        return total_cost
+
 
     def close(self):
         self.conn.close()

@@ -33,7 +33,7 @@ class BookingInterface(BaseInterface):
             rental_days = int(self.rental_days_entry.get())
             estimated_km = int(self.estimated_km_entry.get())
 
-            cost = self.system.book_vehicle(vehicle_id, rental_days, estimated_km)
+            cost = self.system.query_booking(vehicle_id, rental_days, estimated_km)
             if cost:
                 messagebox.showinfo("Success", f"Vehicle booked! Estimated cost: €{cost}")
             else:
