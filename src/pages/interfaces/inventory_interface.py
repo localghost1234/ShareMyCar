@@ -1,27 +1,44 @@
 import tkinter as tk
 from tkinter import messagebox
-from tkinter import ttk  # For better-looking widgets
-
-from src.core.vehicle import Vehicle
 from src.pages.interfaces.base_interface import BaseInterface
 
 class InventoryInterface(BaseInterface):
     def __init__(self, root, system):
         super().__init__(root, "Inventory Management", system)
 
-        self.add_button = tk.Button(self.frame, text="Add Vehicle", command=self.add_vehicle)
-        self.add_button.pack()
+        tk.Label(self.frame, text="Vehicle Inventory:").pack()
 
-        self.view_button = tk.Button(self.frame, text="View Vehicles", command=self.view_vehicles)
-        self.view_button.pack()
+        # Frame for vehicle list with scrollbars
+        self.vehicle_frame = tk.Frame(self.frame)
+        self.vehicle_frame.pack(fill=tk.BOTH, expand=True)
+
+        # Scrollbars (vertical and horizontal)
+        self.v_scrollbar = tk.Scrollbar(self.vehicle_frame, orient=tk.VERTICAL)
+        self.h_scrollbar = tk.Scrollbar(self.vehicle_frame, orient=tk.HORIZONTAL)
+
+        # Text widget with both scrollbars
+        self.inventory_text = tk.Text(
+            self.vehicle_frame, height=15, width=70, wrap="none",
+            yscrollcommand=self.v_scrollbar.set, xscrollcommand=self.h_scrollbar.set
+        )
+
+        # Pack elements properly
+        self.v_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        self.h_scrollbar.pack(side=tk.BOTTOM, fill=tk.X)
+        self.inventory_text.pack(fill=tk.BOTH, expand=True)
+
+        # Link scrollbars
+        self.v_scrollbar.config(command=self.inventory_text.yview)
+        self.h_scrollbar.config(command=self.inventory_text.xview)
+
+        self.load_vehicles()
 
     def add_vehicle(self):
-        # Create a custom dialog box
+        """Handles adding a new vehicle to the system."""
         dialog = tk.Toplevel(self.root)
         dialog.title("Add Vehicle")
         dialog.geometry("300x200")
 
-        # Labels and Entry fields
         tk.Label(dialog, text="Brand:").grid(row=0, column=0, padx=10, pady=5)
         brand_entry = tk.Entry(dialog)
         brand_entry.grid(row=0, column=1, padx=10, pady=5)
@@ -42,7 +59,6 @@ class InventoryInterface(BaseInterface):
         maintenance_cost_entry = tk.Entry(dialog)
         maintenance_cost_entry.grid(row=4, column=1, padx=10, pady=5)
 
-        # Submit button
         submit_button = tk.Button(dialog, text="Submit", command=lambda: self.submit_vehicle(
             brand_entry.get(),
             model_entry.get(),
@@ -54,7 +70,7 @@ class InventoryInterface(BaseInterface):
         submit_button.grid(row=5, column=0, columnspan=2, pady=10)
 
     def submit_vehicle(self, brand, model, mileage, daily_price, maintenance_cost, dialog):
-        # Validate inputs
+        """Validates and submits a new vehicle entry."""
         if not brand or not model or not mileage or not daily_price or not maintenance_cost:
             messagebox.showerror("Error", "All fields are required.")
             return
@@ -67,29 +83,35 @@ class InventoryInterface(BaseInterface):
             messagebox.showerror("Error", "Invalid input for mileage, daily price, or maintenance cost.")
             return
 
-        # Add the vehicle to the database
         self.system.add_vehicle(brand, model, mileage, daily_price, maintenance_cost)
         messagebox.showinfo("Success", "Vehicle added!")
 
-        # Close the dialog box
         dialog.destroy()
+        self.load_vehicles()  # Reload vehicles after adding
 
-    def view_vehicles(self):
+    def load_vehicles(self):
+        """Fetches and displays all vehicles in the inventory."""
+        self.inventory_text.config(state=tk.NORMAL)
+        self.inventory_text.delete("1.0", tk.END)
+
         vehicles = self.system.get_all_vehicles()
         
         if vehicles:
-            vehicles_info = "".join([
-                f"ID: {v[0]}\n"
-                f"Brand: {v[1]}\n"
-                f"Model: {v[2]}\n"
-                f"Current Mileage: {v[3]} miles\n"
-                f"Next Maintenance: {v[4]} miles\n"
-                f"Daily Price: €{v[5]}\n"
-                f"Maintenance Cost: €{v[6]}/mile\n"
-                f"Available: {'Yes' if v[7] else 'No'}\n"
-                "\n"
-                for v in vehicles
-            ])
-            messagebox.showinfo("Vehicles", vehicles_info)
+            for v in vehicles:
+                vehicle_info = (
+                    f"ID: {v[0]}\t\t"
+                    f"Brand: {v[1]}\t\t"
+                    f"Model: {v[2]}\t\t"
+                    f"Current Mileage: {v[3]} miles\t\t"
+                    f"Next Maintenance: {v[4]} miles\t\t"
+                    f"Daily Price: €{v[5]}\t\t"
+                    f"Maintenance Cost: €{v[6]}/mile\t\t"
+                    f"Available: {'Yes' if v[7] else 'No'}\n"
+                )
+                self.inventory_text.insert(tk.END, vehicle_info)
         else:
-            messagebox.showinfo("Vehicles", "No vehicles available.")
+            self.inventory_text.insert(tk.END, "No vehicles available.")
+
+        self.inventory_text.config(state=tk.DISABLED)
+
+
