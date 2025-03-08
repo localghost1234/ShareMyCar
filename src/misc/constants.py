@@ -5,6 +5,8 @@ from src.pages.interfaces.maintenance_interface import MaintenanceInterface
 from src.pages.interfaces.logs_interface import LogsInterface
 from src.pages.interfaces.metrics_interface import MetricsInterface
 
+DB_NAME = "carsharing.db"
+
 INTERFACES_LIST = [
             ("Inventory", InventoryInterface),
             ("Booking", BookingInterface),
@@ -13,5 +15,3 @@ INTERFACES_LIST = [
             ("Logs", LogsInterface),
             ("Metrics", MetricsInterface),
         ]
-
-DB_NAME = "carsharing.db"

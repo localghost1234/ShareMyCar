@@ -8,21 +8,25 @@ class CarsharingSystem:
 
     def add_vehicle(self, brand, model, mileage, daily_price, maintenance_cost):
         self.cursor.execute("""
-            INSERT INTO vehicles (brand, model, mileage, daily_price, maintenance_cost)
-            VALUES (?, ?, ?, ?, ?)
-        """, (brand, model, mileage, daily_price, maintenance_cost))
+            INSERT INTO vehicles (brand, model, current_mileage, maintenance_mileage, daily_price, maintenance_cost)
+            VALUES (?, ?, ?, ?, ?, ?)
+        """, (brand, model, mileage, mileage + 6000, daily_price, maintenance_cost))
         self.conn.commit()
 
-    def get_vehicles(self):
+    def get_all_vehicles(self):
         self.cursor.execute("SELECT * FROM vehicles")
         return self.cursor.fetchall()
+    
+    def get_vehicles_requiring_maintenance(self):
+        self.cursor.execute("SELECT id, brand, model, current_mileage, maintenance_mileage FROM vehicles WHERE current_mileage >= maintenance_mileage")
+        return self.cursor.fetchall()
 
-    def update_availability(self, vehicle_id, available):
+    def query_update_availability(self, vehicle_id, available: bool):
         self.cursor.execute("""
             UPDATE vehicles
             SET available = ?
             WHERE id = ?
-        """, (available, vehicle_id))
+        """, (1 if available else 0, vehicle_id))
         self.conn.commit()
 
     def query_booking(self, vehicle_id, rental_days, estimated_km):

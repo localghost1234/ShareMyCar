@@ -14,7 +14,8 @@ def initialize_database():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             brand TEXT NOT NULL,
             model TEXT NOT NULL,
-            mileage INTEGER NOT NULL,
+            current_mileage INTEGER NOT NULL,
+            maintenance_mileage INTEGER NOT NULL,
             daily_price REAL NOT NULL,
             maintenance_cost REAL NOT NULL,
             available INTEGER DEFAULT 1

@@ -75,12 +75,19 @@ class InventoryInterface(BaseInterface):
         dialog.destroy()
 
     def view_vehicles(self):
-        vehicles = self.system.get_vehicles()
+        vehicles = self.system.get_all_vehicles()
+        
         if vehicles:
-            vehicles_info = "\n".join([
-                f"ID: {v[0]}, Brand: {v[1]}, Model: {v[2]}, Mileage: {v[3]} km, "
-                f"Daily Price: €{v[4]}, Maintenance Cost: €{v[5]}/km, "
-                f"Available: {'Yes' if v[6] else 'No'}"
+            vehicles_info = "".join([
+                f"ID: {v[0]}\n"
+                f"Brand: {v[1]}\n"
+                f"Model: {v[2]}\n"
+                f"Current Mileage: {v[3]} miles\n"
+                f"Next Maintenance: {v[4]} miles\n"
+                f"Daily Price: €{v[5]}\n"
+                f"Maintenance Cost: €{v[6]}/mile\n"
+                f"Available: {'Yes' if v[7] else 'No'}\n"
+                "\n"
                 for v in vehicles
             ])
             messagebox.showinfo("Vehicles", vehicles_info)
