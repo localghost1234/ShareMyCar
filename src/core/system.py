@@ -8,9 +8,9 @@ class CarsharingSystem:
 
     def add_vehicle(self, brand, model, mileage, daily_price, maintenance_cost):
         self.cursor.execute("""
-            INSERT INTO vehicles (brand, model, current_mileage, maintenance_mileage, daily_price, maintenance_cost)
+            INSERT INTO vehicles (brand, model, current_mileage, daily_price, maintenance_cost, maintenance_mileage)
             VALUES (?, ?, ?, ?, ?, ?)
-        """, (brand, model, mileage, mileage + 6000, daily_price, maintenance_cost))
+        """, (brand, model, mileage, daily_price, maintenance_cost,mileage + 10000))
         self.conn.commit()
 
     def get_all_vehicles(self):

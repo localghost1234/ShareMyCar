@@ -33,7 +33,7 @@ class InventoryInterface(BaseInterface):
 
         # Add button for adding a new vehicle
         self.add_button = tk.Button(self.frame, text="Add Vehicle", command=self.add_vehicle)
-        self.add_button.pack(pady=10)
+        self.add_button.pack(padx=10, pady=10)
 
     def load_vehicles(self):
         """Fetches and displays all vehicles in the inventory."""

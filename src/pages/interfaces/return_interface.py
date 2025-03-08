@@ -50,7 +50,6 @@ class ReturnInterface(BaseInterface):
                 f"{headers[3]:<10} | "
                 f"{headers[4]:<15} | "
                 f"{headers[5]:<10} | "
-                f"{headers[6]:<15}"
             )
             self.vehicle_listbox.insert(tk.END, header_row)  # Insert headers
             self.vehicle_listbox.insert(tk.END, "-" * 100)  # Insert a separator line
@@ -63,7 +62,6 @@ class ReturnInterface(BaseInterface):
                     f"{v[3]:<10} | "
                     f"{v[4]:<15} | "
                     f"€{v[5]:<9} | "
-                    f"€{v[6]:<14}"
                 )
                 self.vehicle_listbox.insert(tk.END, vehicle_info)
         else:
