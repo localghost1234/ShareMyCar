@@ -15,10 +15,10 @@ def initialize_database():
             brand TEXT NOT NULL,
             model TEXT NOT NULL,
             current_mileage INTEGER NOT NULL,
-            maintenance_mileage INTEGER NOT NULL,
             daily_price REAL NOT NULL,
             maintenance_cost REAL NOT NULL,
-            available INTEGER DEFAULT 1
+            available INTEGER DEFAULT 1,
+            maintenance_mileage INTEGER NOT NULL
         )
     """)
 

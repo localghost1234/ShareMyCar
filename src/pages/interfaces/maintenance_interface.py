@@ -45,9 +45,9 @@ class MaintenanceInterface(BaseInterface):
                     f"ID: {v[0]}\t"
                     f"Brand: {v[1]}\t"
                     f"Model: {v[2]}\t"
-                    f"Current Mileage: {v[3]} miles\t"
-                    f"Next Maintenance: {v[4]} miles\t"
-                    f"Maintenance Cost: €{v[5]}/mile\n"
+                    f"Current Mileage: {v[3]} kms\t"
+                    f"Next Maintenance: {v[4]} kms\t"
+                    f"Maintenance Cost: €{v[5]}/km\n"
                 )
                 self.maintenance_text.insert(tk.END, vehicle_info)
         else:

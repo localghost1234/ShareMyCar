@@ -20,6 +20,11 @@ class CarsharingSystem:
     def get_vehicles_requiring_maintenance(self):
         self.cursor.execute("SELECT id, brand, model, current_mileage, maintenance_mileage FROM vehicles WHERE current_mileage >= maintenance_mileage")
         return self.cursor.fetchall()
+    
+    def get_unavailable_vehicles(self):
+        """Fetches all vehicles with available = 0."""
+        self.cursor.execute("SELECT * FROM vehicles WHERE available = 0")
+        return self.cursor.fetchall()
 
     def query_update_availability(self, vehicle_id, available: bool):
         self.cursor.execute("""

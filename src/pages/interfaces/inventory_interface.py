@@ -12,26 +12,63 @@ class InventoryInterface(BaseInterface):
         self.vehicle_frame = tk.Frame(self.frame)
         self.vehicle_frame.pack(fill=tk.BOTH, expand=True)
 
-        # Scrollbars (vertical and horizontal)
+        # Scrollbars (vertical)
         self.v_scrollbar = tk.Scrollbar(self.vehicle_frame, orient=tk.VERTICAL)
-        self.h_scrollbar = tk.Scrollbar(self.vehicle_frame, orient=tk.HORIZONTAL)
 
-        # Text widget with both scrollbars
-        self.inventory_text = tk.Text(
-            self.vehicle_frame, height=15, width=70, wrap="none",
-            yscrollcommand=self.v_scrollbar.set, xscrollcommand=self.h_scrollbar.set
+        # Listbox to display vehicles
+        self.vehicle_listbox = tk.Listbox(
+            self.vehicle_frame, height=15, width=120,
+            yscrollcommand=self.v_scrollbar.set, font=("Courier", 10)  # Use a monospaced font for alignment
         )
 
         # Pack elements properly
         self.v_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-        self.h_scrollbar.pack(side=tk.BOTTOM, fill=tk.X)
-        self.inventory_text.pack(fill=tk.BOTH, expand=True)
+        self.vehicle_listbox.pack(fill=tk.BOTH, expand=True)
 
-        # Link scrollbars
-        self.v_scrollbar.config(command=self.inventory_text.yview)
-        self.h_scrollbar.config(command=self.inventory_text.xview)
+        # Link scrollbar
+        self.v_scrollbar.config(command=self.vehicle_listbox.yview)
 
+        # Load vehicles
         self.load_vehicles()
+
+        # Add button for adding a new vehicle
+        self.add_button = tk.Button(self.frame, text="Add Vehicle", command=self.add_vehicle)
+        self.add_button.pack(pady=10)
+
+    def load_vehicles(self):
+        """Fetches and displays all vehicles in the inventory."""
+        self.vehicle_listbox.delete(0, tk.END)  # Clear the listbox
+
+        vehicles = self.system.get_all_vehicles()  # Add this method to your system class
+        
+        if vehicles:
+            # Define column headers
+            headers = ["ID", "Brand", "Model", "Mileage (kms)", "Daily Price", "Maintenance Cost", "Available"]
+            header_row = (
+                f"{headers[0]:<5} | "
+                f"{headers[1]:<15} | "
+                f"{headers[2]:<15} | "
+                f"{headers[3]:<15} | "
+                f"{headers[4]:<10} | "
+                f"{headers[5]:<15} | "
+                f"{headers[6]:<10}"
+            )
+            self.vehicle_listbox.insert(tk.END, header_row)  # Insert headers
+            self.vehicle_listbox.insert(tk.END, "-" * 120)  # Insert a separator line
+
+            for v in vehicles:
+                vehicle_info = (
+                    f"{v[0]:<5} | "
+                    f"{v[1]:<15} | "
+                    f"{v[2]:<15} | "
+                    f"{v[3]:<15} | "
+                    f"€{v[4]:<9} | "
+                    f"€{v[5]:<14} | "
+                    f"{'Yes' if v[6] else 'No':<10}"
+                )
+                self.vehicle_listbox.insert(tk.END, vehicle_info)
+        else:
+            self.vehicle_listbox.insert(tk.END, "No vehicles available.")
 
     def add_vehicle(self):
         """Handles adding a new vehicle to the system."""
@@ -88,30 +125,3 @@ class InventoryInterface(BaseInterface):
 
         dialog.destroy()
         self.load_vehicles()  # Reload vehicles after adding
-
-    def load_vehicles(self):
-        """Fetches and displays all vehicles in the inventory."""
-        self.inventory_text.config(state=tk.NORMAL)
-        self.inventory_text.delete("1.0", tk.END)
-
-        vehicles = self.system.get_all_vehicles()
-        
-        if vehicles:
-            for v in vehicles:
-                vehicle_info = (
-                    f"ID: {v[0]}\t\t"
-                    f"Brand: {v[1]}\t\t"
-                    f"Model: {v[2]}\t\t"
-                    f"Current Mileage: {v[3]} miles\t\t"
-                    f"Next Maintenance: {v[4]} miles\t\t"
-                    f"Daily Price: €{v[5]}\t\t"
-                    f"Maintenance Cost: €{v[6]}/mile\t\t"
-                    f"Available: {'Yes' if v[7] else 'No'}\n"
-                )
-                self.inventory_text.insert(tk.END, vehicle_info)
-        else:
-            self.inventory_text.insert(tk.END, "No vehicles available.")
-
-        self.inventory_text.config(state=tk.DISABLED)
-
-
