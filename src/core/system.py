@@ -92,9 +92,11 @@ class CarsharingSystem:
         late_fee = late_days * 20  # Example: charge 20€ per late day
         total_cost = estimated_cost + (km_exceeded * 0.5) + late_fee  # 0.5€/extra km
 
+        new_mileage = vehicle[3] + actual_km
+
         # Update database: Mark booking as returned and update vehicle availability
         self.cursor.execute("DELETE FROM bookings WHERE vehicle_id = ?", (vehicle_id,))
-        self.cursor.execute("UPDATE vehicles SET available = 1 WHERE id = ?", (vehicle_id,))
+        self.cursor.execute("UPDATE vehicles SET current_mileage = ?, available = 1 WHERE id = ?", (new_mileage, vehicle_id,))
 
         # Commit changes
         self.conn.commit()
