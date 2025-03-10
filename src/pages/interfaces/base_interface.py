@@ -34,10 +34,13 @@ class BaseInterface:
         )
 
         if disable_clicking:
+            # Set selectbackground and selectforeground to match the normal colors
             listbox.config(
                 selectbackground=listbox.cget("bg"),  # Match background color
                 selectforeground=listbox.cget("fg"),  # Match foreground color
-                selectmode=tk.NONE  # Disable selection
+                selectmode=tk.NONE,  # Disable selection
+                highlightthickness=0,  # Remove focus highlight border
+                activestyle="none"  # Remove the underline/active style
             )
 
         # Pack elements
