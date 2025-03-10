@@ -101,6 +101,20 @@ class CarsharingSystem:
         # Commit changes
         self.conn.commit()
         return total_cost
+    
+    def add_log(self, customer_name, vehicle_id, rental_duration, revenue, additional_costs):
+        self.cursor.execute("""
+            INSERT INTO logs (customer_name, vehicle_id, rental_duration, revenue, additional_costs)
+            VALUES (?, ?, ?, ?, ?)
+        """, (customer_name, vehicle_id, rental_duration, revenue, additional_costs))
+        
+        self.conn.commit()
+
+
+    def get_transaction_logs(self):
+        self.cursor.execute("SELECT * FROM logs")
+        
+        return self.cursor.fetchall()
 
 
     def close(self):

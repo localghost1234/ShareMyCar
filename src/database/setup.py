@@ -35,6 +35,19 @@ def initialize_database():
         )
     """)
 
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS logs (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            customer_name TEXT NOT NULL,
+            vehicle_id INTEGER NOT NULL,
+            rental_duration INTEGER NOT NULL,
+            revenue REAL NOT NULL,
+            additional_costs REAL DEFAULT 0.0,
+            total_cost REAL GENERATED ALWAYS AS (revenue + additional_costs) VIRTUAL,
+            FOREIGN KEY (vehicle_id) REFERENCES vehicles(id)
+        )
+    """)
+
     # Commit the changes and close the connection
     conn.commit()
     
