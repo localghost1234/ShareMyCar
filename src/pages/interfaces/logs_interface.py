@@ -15,44 +15,56 @@ class LogsInterface(BaseInterface):
         self.v_scrollbar = tk.Scrollbar(self.logs_frame, orient=tk.VERTICAL)
         self.h_scrollbar = tk.Scrollbar(self.logs_frame, orient=tk.HORIZONTAL)
 
-        # Text widget with both scrollbars
-        self.logs_text = tk.Text(
-            self.logs_frame, height=15, width=70, wrap="none",
+        # Listbox for displaying logs
+        self.logs_listbox = tk.Listbox(
+            self.logs_frame, height=15, width=120, font=("Courier", 10),
             yscrollcommand=self.v_scrollbar.set, xscrollcommand=self.h_scrollbar.set
         )
 
         # Pack elements properly
         self.v_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
         self.h_scrollbar.pack(side=tk.BOTTOM, fill=tk.X)
-        self.logs_text.pack(fill=tk.BOTH, expand=True)
+        self.logs_listbox.pack(fill=tk.BOTH, expand=True)
 
         # Link scrollbars
-        self.v_scrollbar.config(command=self.logs_text.yview)
-        self.h_scrollbar.config(command=self.logs_text.xview)
+        self.v_scrollbar.config(command=self.logs_listbox.yview)
+        self.h_scrollbar.config(command=self.logs_listbox.xview)
 
         # Load logs
         self.load_logs()
 
     def load_logs(self):
         """Fetches and displays transaction logs from the database."""
-        self.logs_text.config(state=tk.NORMAL)
-        self.logs_text.delete("1.0", tk.END)
+        self.logs_listbox.delete(0, tk.END)  # Clear previous entries
 
         logs = self.system.get_transaction_logs()
 
         if logs:
+            # Define column headers
+            headers = [
+                "Transaction ID", "Vehicle ID", "Customer Name", "Rental Duration (days)",
+                "Revenue (€)", "Additional Costs (€)"
+            ]
+            header_row = (
+                f"{headers[0]:<15} | "
+                f"{headers[1]:<10} | "
+                f"{headers[2]:<20} | "
+                f"{headers[3]:<20} | "
+                f"{headers[4]:<12} | "
+                f"{headers[5]:<18}"
+            )
+            self.logs_listbox.insert(tk.END, header_row)
+            self.logs_listbox.insert(tk.END, "-" * 100)  # Insert separator line
+
             for log in logs:
                 log_entry = (
-                    f"Transaction ID: {log[0]}\t"
-                    f"Customer Name: {log[1]}\t"
-                    f"Vehicle ID: {log[2]}\t"
-                    f"Rental Duration: {log[3]} days\t"
-                    f"Revenue: €{log[4]}\t"
-                    f"Additional Costs: €{log[5]}\n"
+                    f"{log[0]:<15} | "
+                    f"{log[1]:<10} | "
+                    f"{log[6]:<20} | "
+                    f"{log[2]:<20} | "
+                    f"€{log[3]:<11} | "
+                    f"€{log[4]:<17}"
                 )
-                self.logs_text.insert(tk.END, log_entry)
+                self.logs_listbox.insert(tk.END, log_entry)
         else:
-            self.logs_text.insert(tk.END, "No transaction logs available.")
-
-        self.logs_text.config(state=tk.DISABLED)
-
+            self.logs_listbox.insert(tk.END, "No transaction logs available.")
