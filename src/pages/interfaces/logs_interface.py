@@ -7,40 +7,18 @@ class LogsInterface(BaseInterface):
 
         tk.Label(self.frame, text="Transaction Logs:").pack()
 
-        # Frame for logs with scrollbars
-        self.logs_frame = tk.Frame(self.frame)
-        self.logs_frame.pack(fill=tk.BOTH, expand=True)
+        # Create a scrollable Listbox
+        self.logs_listbox = self.create_scrollable_listbox()
 
-        # Scrollbars (vertical and horizontal)
-        self.v_scrollbar = tk.Scrollbar(self.logs_frame, orient=tk.VERTICAL)
-        self.h_scrollbar = tk.Scrollbar(self.logs_frame, orient=tk.HORIZONTAL)
-
-        # Listbox for displaying logs
-        self.logs_listbox = tk.Listbox(
-            self.logs_frame, height=15, width=100,
-            font=("Courier", 10),
-            yscrollcommand=self.v_scrollbar.set,
-            xscrollcommand=self.h_scrollbar.set
-        )
-
-        # Pack elements properly
-        self.v_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-        self.h_scrollbar.pack(side=tk.BOTTOM, fill=tk.X)
-        self.logs_listbox.pack(fill=tk.BOTH, expand=True)
-
-        # Link scrollbars
-        self.v_scrollbar.config(command=self.logs_listbox.yview)
-        self.h_scrollbar.config(command=self.logs_listbox.xview)
-
-        # Load logs
+        # Load transaction logs
         self.load_logs()
 
     def load_logs(self):
         """Fetches and displays transaction logs from the database."""
-        self.logs_listbox.delete(0, tk.END)  # Clear previous entries
+        self.logs_listbox.delete(0, tk.END)  # Clear the listbox
 
-        logs = self.system.get_transaction_logs()
-
+        logs = self.system.get_transaction_logs()  # Fetch logs
+        
         if logs:
             # Define column headers
             headers = [
@@ -55,8 +33,8 @@ class LogsInterface(BaseInterface):
                 f"{headers[4]:<12} | "
                 f"{headers[5]:<18}"
             )
-            self.logs_listbox.insert(tk.END, header_row)
-            self.logs_listbox.insert(tk.END, "-" * 100)  # Insert separator line
+            self.logs_listbox.insert(tk.END, header_row)  # Insert headers
+            self.logs_listbox.insert(tk.END, "-" * 100)  # Insert a separator line
 
             for log in logs:
                 log_entry = (

@@ -99,9 +99,10 @@ class CarsharingSystem:
         # Cost calculation logic
         km_exceeded = max(0, actual_km - estimated_km)  # Extra km
         lateness_fee = late_days * 10  # Example: charge 10€ per late day
-        exceeded_mileage_fee = km_exceeded * 0.5
+        exceeded_mileage_fee = km_exceeded * 0.5 # 0.5€/extra km
+        cleaning_fees = 20
         additional_costs = exceeded_mileage_fee + lateness_fee
-        total_revenue = estimated_cost + additional_costs  # 0.5€/extra km
+        total_revenue = estimated_cost + additional_costs
 
         new_mileage = vehicle[3] + actual_km
 

@@ -1,4 +1,3 @@
-# metrics_interface.py
 import tkinter as tk
 from src.pages.interfaces.base_interface import BaseInterface
 
@@ -8,27 +7,20 @@ class MetricsInterface(BaseInterface):
         
         tk.Label(self.frame, text="Financial Metrics:").pack()
 
-        # Frame for financial data
-        self.metrics_frame = tk.Frame(self.frame)
-        self.metrics_frame.pack(fill=tk.BOTH, expand=True)
+        # Create a scrollable Listbox
+        self.metrics_listbox = self.create_scrollable_listbox()
 
-        # Text widget to display financial data
-        self.metrics_text = tk.Text(
-            self.metrics_frame, height=10, width=80, wrap="none"
-        )
-        self.metrics_text.pack(fill=tk.BOTH, expand=True)
-
-        # Load financial data
+        # Load financial metrics
         self.load_metrics()
-    
+
     def load_metrics(self):
         """Fetches and displays financial metrics."""
-        self.metrics_text.config(state=tk.NORMAL)
-        self.metrics_text.delete("1.0", tk.END)
+        self.metrics_listbox.delete(0, tk.END)  # Clear the listbox
 
-        metrics = self.system.get_financial_metrics()
+        metrics = self.system.get_financial_metrics()  # Fetch metrics
         
         if metrics:
+            # Define column headers
             headers = ["Total Revenue (€)", "Total Costs (€)", "Total Profit (€)", "Avg Mileage (km/vehicle)"]
             header_row = (
                 f"{headers[0]:<20} | "
@@ -36,17 +28,16 @@ class MetricsInterface(BaseInterface):
                 f"{headers[2]:<20} | "
                 f"{headers[3]:<20}"
             )
-            self.metrics_text.insert(tk.END, header_row + "\n")
-            self.metrics_text.insert(tk.END, "-" * 90 + "\n")
+            self.metrics_listbox.insert(tk.END, header_row)  # Insert headers
+            self.metrics_listbox.insert(tk.END, "-" * 90)  # Insert a separator line
 
+            # Insert metrics data
             metrics_row = (
                 f"{metrics['total_revenue']:<20.2f} | "
                 f"{metrics['total_costs']:<20.2f} | "
                 f"{metrics['total_profit']:<20.2f} | "
                 f"{metrics['average_mileage']:<20.2f}"
             )
-            self.metrics_text.insert(tk.END, metrics_row + "\n")
+            self.metrics_listbox.insert(tk.END, metrics_row)
         else:
-            self.metrics_text.insert(tk.END, "No financial data available.")
-
-        self.metrics_text.config(state=tk.DISABLED)
+            self.metrics_listbox.insert(tk.END, "No financial data available.")

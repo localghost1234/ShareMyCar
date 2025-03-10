@@ -8,28 +8,8 @@ class InventoryInterface(BaseInterface):
 
         tk.Label(self.frame, text="Vehicle Inventory:").pack()
 
-        # Frame for vehicle list with scrollbars
-        self.vehicle_frame = tk.Frame(self.frame)
-        self.vehicle_frame.pack(fill=tk.BOTH, expand=True)
-
-        # Scrollbars
-        self.v_scrollbar = tk.Scrollbar(self.vehicle_frame, orient=tk.VERTICAL)
-        self.h_scrollbar = tk.Scrollbar(self.vehicle_frame, orient=tk.HORIZONTAL)
-
-        # Listbox to display vehicles
-        self.vehicle_listbox = tk.Listbox(
-            self.vehicle_frame, height=15, width=100,
-            yscrollcommand=self.v_scrollbar.set,
-            xscrollcommand=self.h_scrollbar.set,
-            font=("Courier", 10)  # Use a monospaced font for alignment
-        )
-
-        # Pack elements properly
-        self.v_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-        self.vehicle_listbox.pack(fill=tk.BOTH, expand=True)
-
-        # Link scrollbar
-        self.v_scrollbar.config(command=self.vehicle_listbox.yview)
+        # Create a scrollable Listbox
+        self.vehicle_listbox = self.create_scrollable_listbox()
 
         # Load vehicles
         self.load_vehicles()
@@ -42,7 +22,7 @@ class InventoryInterface(BaseInterface):
         """Fetches and displays all vehicles in the inventory."""
         self.vehicle_listbox.delete(0, tk.END)  # Clear the listbox
 
-        vehicles = self.system.get_all_vehicles()  # Add this method to your system class
+        vehicles = self.system.get_all_vehicles()  # Fetch vehicles
         
         if vehicles:
             # Define column headers
@@ -74,57 +54,70 @@ class InventoryInterface(BaseInterface):
             self.vehicle_listbox.insert(tk.END, "No vehicles available.")
 
     def add_vehicle(self):
-        """Handles adding a new vehicle to the system."""
+        """Opens a modal dialog to add a new vehicle."""
         dialog = tk.Toplevel(self.root)
         dialog.title("Add Vehicle")
         dialog.geometry("300x200")
 
+        # Brand input
         tk.Label(dialog, text="Brand:").grid(row=0, column=0, padx=10, pady=5)
         brand_entry = tk.Entry(dialog)
         brand_entry.grid(row=0, column=1, padx=10, pady=5)
 
+        # Model input
         tk.Label(dialog, text="Model:").grid(row=1, column=0, padx=10, pady=5)
         model_entry = tk.Entry(dialog)
         model_entry.grid(row=1, column=1, padx=10, pady=5)
 
+        # Mileage input
         tk.Label(dialog, text="Mileage:").grid(row=2, column=0, padx=10, pady=5)
         mileage_entry = tk.Entry(dialog)
         mileage_entry.grid(row=2, column=1, padx=10, pady=5)
 
+        # Daily Price input
         tk.Label(dialog, text="Daily Price:").grid(row=3, column=0, padx=10, pady=5)
         daily_price_entry = tk.Entry(dialog)
         daily_price_entry.grid(row=3, column=1, padx=10, pady=5)
 
+        # Maintenance Cost input
         tk.Label(dialog, text="Maintenance Cost:").grid(row=4, column=0, padx=10, pady=5)
         maintenance_cost_entry = tk.Entry(dialog)
         maintenance_cost_entry.grid(row=4, column=1, padx=10, pady=5)
 
-        submit_button = tk.Button(dialog, text="Submit", command=lambda: self.submit_vehicle(
-            brand_entry.get(),
-            model_entry.get(),
-            mileage_entry.get(),
-            daily_price_entry.get(),
-            maintenance_cost_entry.get(),
-            dialog
-        ))
+        # Submit button
+        submit_button = tk.Button(
+            dialog, text="Submit",
+            command=lambda: self.submit_vehicle(
+                brand_entry.get(),
+                model_entry.get(),
+                mileage_entry.get(),
+                daily_price_entry.get(),
+                maintenance_cost_entry.get(),
+                dialog
+            )
+        )
         submit_button.grid(row=5, column=0, columnspan=2, pady=10)
 
     def submit_vehicle(self, brand, model, mileage, daily_price, maintenance_cost, dialog):
         """Validates and submits a new vehicle entry."""
+        # Validate input fields
         if not brand or not model or not mileage or not daily_price or not maintenance_cost:
-            messagebox.showerror("Error", "All fields are required.")
+            self.show_error("All fields are required.")
             return
 
+        # Validate numeric fields
         try:
             mileage = int(mileage)
             daily_price = float(daily_price)
             maintenance_cost = float(maintenance_cost)
         except ValueError:
-            messagebox.showerror("Error", "Invalid input for mileage, daily price, or maintenance cost.")
+            self.show_error("Invalid input for mileage, daily price, or maintenance cost.")
             return
 
+        # Add the vehicle to the system
         self.system.add_vehicle(brand, model, mileage, daily_price, maintenance_cost)
-        messagebox.showinfo("Success", "Vehicle added!")
+        self.show_info("Vehicle added successfully!")
 
+        # Close the dialog and refresh the vehicle list
         dialog.destroy()
-        self.load_vehicles()  # Reload vehicles after adding
+        self.load_vehicles()

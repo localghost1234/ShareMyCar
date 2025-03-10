@@ -1,35 +1,14 @@
 import tkinter as tk
-from tkinter import messagebox
 from src.pages.interfaces.base_interface import BaseInterface
 
 class ReturnInterface(BaseInterface):
     def __init__(self, root, system):
         super().__init__(root, "Return Management", system)
 
-        tk.Label(self.frame, text="Unavailable Vehicles:").pack()
+        tk.Label(self.frame, text="Booked Vehicles:").pack()
 
-        # Frame for vehicle list with scrollbars
-        self.vehicle_frame = tk.Frame(self.frame)
-        self.vehicle_frame.pack(fill=tk.BOTH, expand=True)
-
-        # Scrollbars (vertical)
-        self.v_scrollbar = tk.Scrollbar(self.vehicle_frame, orient=tk.VERTICAL)
-        self.h_scrollbar = tk.Scrollbar(self.vehicle_frame, orient=tk.HORIZONTAL)
-
-        # Listbox to display vehicles
-        self.vehicle_listbox = tk.Listbox(
-            self.vehicle_frame, height=15, width=100,
-            yscrollcommand=self.v_scrollbar.set,
-            xscrollcommand=self.h_scrollbar.set,
-            font=("Courier", 10)  # Use a monospaced font for alignment
-        )
-
-        # Pack elements properly
-        self.v_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-        self.vehicle_listbox.pack(fill=tk.BOTH, expand=True)
-
-        # Link scrollbar
-        self.v_scrollbar.config(command=self.vehicle_listbox.yview)
+        # Create a scrollable Listbox
+        self.vehicle_listbox = self.create_scrollable_listbox(disable_clicking=False)
 
         # Load unavailable vehicles
         self.load_unavailable_vehicles()
@@ -41,21 +20,22 @@ class ReturnInterface(BaseInterface):
         """Fetches and displays all unavailable vehicles."""
         self.vehicle_listbox.delete(0, tk.END)  # Clear the listbox
 
-        vehicles = self.system.get_unavailable_vehicles()  # Add this method to your system class
+        vehicles = self.system.get_unavailable_vehicles()  # Fetch unavailable vehicles
         
         if vehicles:
             # Define column headers
-            headers = ["ID", "Brand", "Model", "Mileage", "Daily Price", "Maintenance Cost"]
+            headers = ["ID", "Brand", "Model", "Mileage", "Daily Price", "Maintenance Cost", "Available"]
             header_row = (
                 f"{headers[0]:<5} | "
                 f"{headers[1]:<15} | "
                 f"{headers[2]:<15} | "
                 f"{headers[3]:<10} | "
                 f"{headers[4]:<15} | "
-                f"{headers[5]:<10} | "
+                f"{headers[5]:<15} | "
+                f"{headers[6]:<10}"
             )
             self.vehicle_listbox.insert(tk.END, header_row)  # Insert headers
-            self.vehicle_listbox.insert(tk.END, "-" * 100)  # Insert a separator line
+            self.vehicle_listbox.insert(tk.END, "-" * 120)  # Insert a separator line
 
             for v in vehicles:
                 vehicle_info = (
@@ -63,8 +43,9 @@ class ReturnInterface(BaseInterface):
                     f"{v[1]:<15} | "
                     f"{v[2]:<15} | "
                     f"{v[3]:<10} | "
-                    f"{v[4]:<15} | "
-                    f"€{v[5]:<9} | "
+                    f"€{v[4]:<9} | "
+                    f"€{v[5]:<14} | "
+                    f"{'No' if v[6] == 0 else 'Yes':<10}"
                 )
                 self.vehicle_listbox.insert(tk.END, vehicle_info)
         else:
@@ -75,53 +56,64 @@ class ReturnInterface(BaseInterface):
         selected_index = self.vehicle_listbox.curselection()  # Get the selected item index
         if selected_index:
             selected_vehicle = self.vehicle_listbox.get(selected_index)  # Get the selected vehicle info
-            
             vehicle_id = int(selected_vehicle.split(" | ")[0].strip())  # Extract the vehicle ID
-            #vehicle_id = int(selected_vehicle.split(" | ")[6].strip())  # Extract the vehicle ID
             self.show_return_dialog(vehicle_id)  # Open the return dialog
 
     def show_return_dialog(self, vehicle_id):
         """Opens the return vehicle dialog with the selected vehicle's ID."""
-        customer_name = self.system.get_customer_name(vehicle_id)
+        customer_name = self.system.get_customer_name(vehicle_id)  # Fetch customer name
 
         dialog = tk.Toplevel(self.root)
         dialog.title("Return Vehicle")
+        dialog.geometry("300x200")
 
-        tk.Label(dialog, text="Vehicle ID:").grid(row=0, column=0)
+        # Vehicle ID (read-only)
+        tk.Label(dialog, text="Vehicle ID:").grid(row=0, column=0, padx=10, pady=5)
         vehicle_id_entry = tk.Entry(dialog)
         vehicle_id_entry.insert(0, str(vehicle_id))
-        vehicle_id_entry.config(state=tk.DISABLED) 
-        vehicle_id_entry.grid(row=0, column=1)
+        vehicle_id_entry.config(state=tk.DISABLED)
+        vehicle_id_entry.grid(row=0, column=1, padx=10, pady=5)
 
-        tk.Label(dialog, text="Customer Name:").grid(row=1, column=0)
+        # Customer Name (read-only)
+        tk.Label(dialog, text="Customer Name:").grid(row=1, column=0, padx=10, pady=5)
         customer_name_entry = tk.Entry(dialog)
         customer_name_entry.insert(0, customer_name)
-        customer_name_entry.config(state=tk.DISABLED) 
-        customer_name_entry.grid(row=1, column=1)
+        customer_name_entry.config(state=tk.DISABLED)
+        customer_name_entry.grid(row=1, column=1, padx=10, pady=5)
 
-        tk.Label(dialog, text="Kilometers Driven:").grid(row=2, column=0)
+        # Kilometers Driven
+        tk.Label(dialog, text="Kilometers Driven:").grid(row=2, column=0, padx=10, pady=5)
         actual_km_entry = tk.Entry(dialog)
-        actual_km_entry.grid(row=2, column=1)
+        actual_km_entry.grid(row=2, column=1, padx=10, pady=5)
 
-        tk.Label(dialog, text="Late Days:").grid(row=3, column=0)
+        # Late Days
+        tk.Label(dialog, text="Late Days:").grid(row=3, column=0, padx=10, pady=5)
         late_days_entry = tk.Entry(dialog)
-        late_days_entry.grid(row=3, column=1)
+        late_days_entry.grid(row=3, column=1, padx=10, pady=5)
 
-        def submit():
-            try:
-                actual_km = int(actual_km_entry.get())
-                late_days = int(late_days_entry.get())
+        # Submit button
+        submit_button = tk.Button(
+            dialog, text="Submit",
+            command=lambda: self.submit_return(
+                vehicle_id, actual_km_entry.get(), late_days_entry.get(), customer_name, dialog
+            )
+        )
+        submit_button.grid(row=4, column=0, columnspan=2, pady=10)
 
-                total_cost = self.system.query_return(vehicle_id, actual_km, late_days, customer_name)
-                dialog.destroy()
+    def submit_return(self, vehicle_id, actual_km, late_days, customer_name, dialog):
+        """Validates and submits the return details."""
+        try:
+            actual_km = int(actual_km)
+            late_days = int(late_days)
+        except ValueError:
+            self.show_error("Please enter valid numbers for kilometers and late days.")
+            return
 
-                if total_cost:
-                    messagebox.showinfo("Success", f"Vehicle returned! Total cost: €{total_cost}")
-                    self.load_unavailable_vehicles()  # Refresh the list after returning
-                else:
-                    messagebox.showerror("Error", "Vehicle not found.")
-            except ValueError:
-                messagebox.showerror("Input Error", "Please enter valid numbers.")
-
-        submit_button = tk.Button(dialog, text="Submit", command=submit)
-        submit_button.grid(row=4, column=0, columnspan=2)
+        # Calculate total cost
+        total_cost = self.system.query_return(vehicle_id, actual_km, late_days, customer_name)
+        if total_cost:
+            self.show_info(f"Vehicle returned! Total cost: €{total_cost}")
+            dialog.destroy()
+            self.load_unavailable_vehicles()  # Refresh the list
+        else:
+            self.show_error("Vehicle not found or already returned.")
