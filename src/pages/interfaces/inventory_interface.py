@@ -12,13 +12,16 @@ class InventoryInterface(BaseInterface):
         self.vehicle_frame = tk.Frame(self.frame)
         self.vehicle_frame.pack(fill=tk.BOTH, expand=True)
 
-        # Scrollbars (vertical)
+        # Scrollbars
         self.v_scrollbar = tk.Scrollbar(self.vehicle_frame, orient=tk.VERTICAL)
+        self.h_scrollbar = tk.Scrollbar(self.vehicle_frame, orient=tk.HORIZONTAL)
 
         # Listbox to display vehicles
         self.vehicle_listbox = tk.Listbox(
-            self.vehicle_frame, height=15, width=120,
-            yscrollcommand=self.v_scrollbar.set, font=("Courier", 10)  # Use a monospaced font for alignment
+            self.vehicle_frame, height=15, width=100,
+            yscrollcommand=self.v_scrollbar.set,
+            xscrollcommand=self.h_scrollbar.set,
+            font=("Courier", 10)  # Use a monospaced font for alignment
         )
 
         # Pack elements properly

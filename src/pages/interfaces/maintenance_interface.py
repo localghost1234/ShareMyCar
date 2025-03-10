@@ -17,8 +17,10 @@ class MaintenanceInterface(BaseInterface):
 
         # Text widget with both scrollbars
         self.maintenance_text = tk.Text(
-            self.vehicle_frame, height=15, width=70, wrap="none",
-            yscrollcommand=self.v_scrollbar.set, xscrollcommand=self.h_scrollbar.set
+            self.vehicle_frame, height=15, width=100, wrap="none",
+            yscrollcommand=self.v_scrollbar.set,
+            xscrollcommand=self.h_scrollbar.set,
+            font=("Courier", 10)
         )
         
         # Pack elements properly

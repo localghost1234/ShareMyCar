@@ -17,8 +17,10 @@ class LogsInterface(BaseInterface):
 
         # Listbox for displaying logs
         self.logs_listbox = tk.Listbox(
-            self.logs_frame, height=15, width=120, font=("Courier", 10),
-            yscrollcommand=self.v_scrollbar.set, xscrollcommand=self.h_scrollbar.set
+            self.logs_frame, height=15, width=100,
+            font=("Courier", 10),
+            yscrollcommand=self.v_scrollbar.set,
+            xscrollcommand=self.h_scrollbar.set
         )
 
         # Pack elements properly

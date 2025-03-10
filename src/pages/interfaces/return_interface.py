@@ -14,11 +14,14 @@ class ReturnInterface(BaseInterface):
 
         # Scrollbars (vertical)
         self.v_scrollbar = tk.Scrollbar(self.vehicle_frame, orient=tk.VERTICAL)
+        self.h_scrollbar = tk.Scrollbar(self.vehicle_frame, orient=tk.HORIZONTAL)
 
         # Listbox to display vehicles
         self.vehicle_listbox = tk.Listbox(
             self.vehicle_frame, height=15, width=100,
-            yscrollcommand=self.v_scrollbar.set, font=("Courier", 10)  # Use a monospaced font for alignment
+            yscrollcommand=self.v_scrollbar.set,
+            xscrollcommand=self.h_scrollbar.set,
+            font=("Courier", 10)  # Use a monospaced font for alignment
         )
 
         # Pack elements properly
