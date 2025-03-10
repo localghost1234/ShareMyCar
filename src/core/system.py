@@ -117,6 +117,44 @@ class CarsharingSystem:
         # Commit changes
         self.conn.commit()
         return total_revenue
+    
+    def get_financial_metrics(self):
+        """Fetches and calculates financial metrics from the database."""
+        metrics = {
+            "total_revenue": 0,
+            "total_operational_costs": 0,
+            "total_profit": 0,
+            "average_mileage_per_vehicle": 0
+        }
+
+        # Get total revenue from logs
+        self.cursor.execute("SELECT SUM(revenue) FROM logs")
+        total_revenue = self.cursor.fetchone()[0] or 0
+        metrics["total_revenue"] = total_revenue
+
+        # Get total maintenance costs from vehicles
+        self.cursor.execute("SELECT SUM(maintenance_cost) FROM vehicles")
+        total_maintenance_cost = self.cursor.fetchone()[0] or 0
+
+        # Get total additional costs from logs (e.g., extra fees, cleaning costs)
+        self.cursor.execute("SELECT SUM(additional_costs) FROM logs")
+        total_additional_costs = self.cursor.fetchone()[0] or 0
+
+        # Calculate total operational costs
+        total_operational_costs = total_maintenance_cost + total_additional_costs
+        metrics["total_costs"] = total_operational_costs
+
+        # Calculate total profit
+        total_profit = total_revenue - total_operational_costs
+        metrics["total_profit"] = total_profit
+
+        # Get average mileage per vehicle
+        self.cursor.execute("SELECT AVG(current_mileage) FROM vehicles")
+        avg_mileage = self.cursor.fetchone()[0] or 0
+        metrics["average_mileage"] = avg_mileage
+
+        return metrics
+
 
 
     def close(self):
