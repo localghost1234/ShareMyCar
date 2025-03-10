@@ -7,6 +7,11 @@ class BookingInterface(BaseInterface):
     def __init__(self, root, system):
         super().__init__(root, "Booking Management", system)
 
+        # Customer Name input
+        tk.Label(self.frame, text="Customer Name:").pack()
+        self.customer_name = tk.Entry(self.frame)
+        self.customer_name.pack()
+
         # Vehicle ID input
         tk.Label(self.frame, text="Vehicle ID:").pack()
         self.vehicle_id_entry = tk.Entry(self.frame)
@@ -30,10 +35,11 @@ class BookingInterface(BaseInterface):
         """Handles booking process by taking input values and calling system logic."""
         try:
             vehicle_id = int(self.vehicle_id_entry.get())
+            customer_name = self.vehicle_id_entry.get()
             rental_days = int(self.rental_days_entry.get())
             estimated_km = int(self.estimated_km_entry.get())
 
-            cost = self.system.query_booking(vehicle_id, rental_days, estimated_km)
+            cost = self.system.query_booking(vehicle_id, rental_days, estimated_km, customer_name)
             
             if cost:
                 messagebox.showinfo("Success", f"Vehicle booked! Estimated cost: €{cost}")

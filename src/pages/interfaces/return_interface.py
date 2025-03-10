@@ -72,11 +72,16 @@ class ReturnInterface(BaseInterface):
         selected_index = self.vehicle_listbox.curselection()  # Get the selected item index
         if selected_index:
             selected_vehicle = self.vehicle_listbox.get(selected_index)  # Get the selected vehicle info
+            
             vehicle_id = int(selected_vehicle.split(" | ")[0].strip())  # Extract the vehicle ID
+            #vehicle_id = int(selected_vehicle.split(" | ")[6].strip())  # Extract the vehicle ID
             self.show_return_dialog(vehicle_id)  # Open the return dialog
 
     def show_return_dialog(self, vehicle_id):
         """Opens the return vehicle dialog with the selected vehicle's ID."""
+        customer_name = self.system.get_customer_name(vehicle_id)
+        print(customer_name)
+
         dialog = tk.Toplevel(self.root)
         dialog.title("Return Vehicle")
 
@@ -86,20 +91,26 @@ class ReturnInterface(BaseInterface):
         vehicle_id_entry.config(state=tk.DISABLED) 
         vehicle_id_entry.grid(row=0, column=1)
 
-        tk.Label(dialog, text="Kilometers Driven:").grid(row=1, column=0)
-        actual_km_entry = tk.Entry(dialog)
-        actual_km_entry.grid(row=1, column=1)
+        tk.Label(dialog, text="Customer Name:").grid(row=1, column=0)
+        customer_name_entry = tk.Entry(dialog)
+        customer_name_entry.insert(0, str(customer_name))
+        customer_name_entry.config(state=tk.DISABLED) 
+        customer_name_entry.grid(row=1, column=1)
 
-        tk.Label(dialog, text="Late Days:").grid(row=2, column=0)
+        tk.Label(dialog, text="Kilometers Driven:").grid(row=2, column=0)
+        actual_km_entry = tk.Entry(dialog)
+        actual_km_entry.grid(row=2, column=1)
+
+        tk.Label(dialog, text="Late Days:").grid(row=3, column=0)
         late_days_entry = tk.Entry(dialog)
-        late_days_entry.grid(row=2, column=1)
+        late_days_entry.grid(row=3, column=1)
 
         def submit():
             try:
                 actual_km = int(actual_km_entry.get())
                 late_days = int(late_days_entry.get())
 
-                total_cost = self.system.query_return(vehicle_id, actual_km, late_days)
+                total_cost = self.system.query_return(vehicle_id, actual_km, late_days, customer_name)
                 dialog.destroy()
 
                 if total_cost:
@@ -111,4 +122,4 @@ class ReturnInterface(BaseInterface):
                 messagebox.showerror("Input Error", "Please enter valid numbers.")
 
         submit_button = tk.Button(dialog, text="Submit", command=submit)
-        submit_button.grid(row=3, column=0, columnspan=2)
+        submit_button.grid(row=4, column=0, columnspan=2)

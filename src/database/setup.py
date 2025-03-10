@@ -8,6 +8,10 @@ def initialize_database():
     conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
 
+    #cursor.execute("DROP TABLE IF EXISTS vehicles")
+    #cursor.execute("DROP TABLE IF EXISTS bookings")
+    #cursor.execute("DROP TABLE IF EXISTS logs")
+
     # Create the vehicles table
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS vehicles (
@@ -31,6 +35,7 @@ def initialize_database():
             estimated_cost REAL NOT NULL,
             start_date TEXT NOT NULL,
             end_date TEXT NOT NULL,
+            customer_name TEXT NOT NULL,
             FOREIGN KEY (vehicle_id) REFERENCES vehicles(id)
         )
     """)
@@ -38,12 +43,12 @@ def initialize_database():
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS logs (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            customer_name TEXT NOT NULL,
             vehicle_id INTEGER NOT NULL,
             rental_duration INTEGER NOT NULL,
             revenue REAL NOT NULL,
             additional_costs REAL DEFAULT 0.0,
             total_cost REAL GENERATED ALWAYS AS (revenue + additional_costs) VIRTUAL,
+            customer_name TEXT NOT NULL,
             FOREIGN KEY (vehicle_id) REFERENCES vehicles(id)
         )
     """)
