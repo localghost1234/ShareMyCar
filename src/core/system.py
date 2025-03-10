@@ -28,7 +28,12 @@ class CarsharingSystem:
     
     def get_customer_name(self, vehicle_id):
         self.cursor.execute("SELECT customer_name FROM bookings WHERE vehicle_id = ?", (vehicle_id,))
-        return self.cursor.fetchone()
+        name = self.cursor.fetchone()
+        return name[0] if name else None
+    
+    def get_transaction_logs(self):
+        self.cursor.execute("SELECT * FROM logs")
+        return self.cursor.fetchall()
 
     def query_update_availability(self, vehicle_id, available: bool):
         self.cursor.execute("""
@@ -106,18 +111,12 @@ class CarsharingSystem:
 
         self.cursor.execute("""
             INSERT INTO logs (vehicle_id, rental_duration, revenue, additional_costs, customer_name)
-            VALUES (?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?)
         """, (vehicle_id, rental_days, total_revenue, additional_costs, customer_name))
 
         # Commit changes
         self.conn.commit()
         return total_revenue
-
-
-    def get_transaction_logs(self):
-        self.cursor.execute("SELECT * FROM logs")
-        
-        return self.cursor.fetchall()
 
 
     def close(self):

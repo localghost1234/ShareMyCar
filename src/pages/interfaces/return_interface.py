@@ -80,7 +80,6 @@ class ReturnInterface(BaseInterface):
     def show_return_dialog(self, vehicle_id):
         """Opens the return vehicle dialog with the selected vehicle's ID."""
         customer_name = self.system.get_customer_name(vehicle_id)
-        print(customer_name)
 
         dialog = tk.Toplevel(self.root)
         dialog.title("Return Vehicle")
@@ -93,7 +92,7 @@ class ReturnInterface(BaseInterface):
 
         tk.Label(dialog, text="Customer Name:").grid(row=1, column=0)
         customer_name_entry = tk.Entry(dialog)
-        customer_name_entry.insert(0, str(customer_name))
+        customer_name_entry.insert(0, customer_name)
         customer_name_entry.config(state=tk.DISABLED) 
         customer_name_entry.grid(row=1, column=1)
 

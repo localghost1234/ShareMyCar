@@ -47,7 +47,6 @@ def initialize_database():
             rental_duration INTEGER NOT NULL,
             revenue REAL NOT NULL,
             additional_costs REAL DEFAULT 0.0,
-            total_cost REAL GENERATED ALWAYS AS (revenue + additional_costs) VIRTUAL,
             customer_name TEXT NOT NULL,
             FOREIGN KEY (vehicle_id) REFERENCES vehicles(id)
         )
