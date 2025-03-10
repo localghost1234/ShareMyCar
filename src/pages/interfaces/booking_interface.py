@@ -5,7 +5,7 @@ from src.pages.interfaces.base_interface import BaseInterface
 
 class BookingInterface(BaseInterface):
     def __init__(self, root, system):
-        super().__init__(root, "Booking Management", system)
+        super().__init__(root, system, "Booking Management", "")
 
         # Vehicle ID input
         tk.Label(self.frame, text="Vehicle ID:").pack()

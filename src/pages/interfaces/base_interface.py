@@ -3,15 +3,17 @@ import tkinter as tk
 from tkinter import messagebox
 
 class BaseInterface:
-    def __init__(self, root, title, system):
+    def __init__(self, root, system, title, subtitle):
         self.root = root
         self.system = system
         self.frame = tk.Frame(root)
         self.frame.pack(fill=tk.BOTH, expand=True)
 
         # Title label
-        self.title_label = tk.Label(self.frame, text=title, font=("Arial", 16))
-        self.title_label.pack(pady=10)
+        tk.Label(self.frame, text=title, font=("Arial", 16)).pack(pady=10)
+
+        # Subtitle label
+        tk.Label(self.frame, text=subtitle).pack()
 
     def create_scrollable_listbox(self, disable_clicking=True, height=15, width=100, font=("Courier", 10)):
         """

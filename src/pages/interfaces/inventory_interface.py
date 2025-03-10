@@ -4,9 +4,7 @@ from src.pages.interfaces.base_interface import BaseInterface
 
 class InventoryInterface(BaseInterface):
     def __init__(self, root, system):
-        super().__init__(root, "Inventory Management", system)
-
-        tk.Label(self.frame, text="Vehicle Inventory:").pack()
+        super().__init__(root,  system, "Inventory Management", "Vehicle Inventory")
 
         # Create a scrollable Listbox
         self.vehicle_listbox = self.create_scrollable_listbox()

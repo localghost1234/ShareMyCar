@@ -3,9 +3,7 @@ from src.pages.interfaces.base_interface import BaseInterface
 
 class LogsInterface(BaseInterface):
     def __init__(self, root, system):
-        super().__init__(root, "Transaction Logs", system)
-
-        tk.Label(self.frame, text="Transaction Logs:").pack()
+        super().__init__(root, system, "Logs Management", "Transaction Logs")
 
         # Create a scrollable Listbox
         self.logs_listbox = self.create_scrollable_listbox()

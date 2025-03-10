@@ -3,9 +3,7 @@ from src.pages.interfaces.base_interface import BaseInterface
 
 class ReturnInterface(BaseInterface):
     def __init__(self, root, system):
-        super().__init__(root, "Return Management", system)
-
-        tk.Label(self.frame, text="Booked Vehicles:").pack()
+        super().__init__(root, system, "Return Management", "Unavailable Vehicles")
 
         # Create a scrollable Listbox
         self.vehicle_listbox = self.create_scrollable_listbox(disable_clicking=False)

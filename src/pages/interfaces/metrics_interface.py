@@ -3,9 +3,7 @@ from src.pages.interfaces.base_interface import BaseInterface
 
 class MetricsInterface(BaseInterface):
     def __init__(self, root, system):
-        super().__init__(root, "Financial Metrics", system)
-        
-        tk.Label(self.frame, text="Financial Metrics:").pack()
+        super().__init__(root, system, "Metrics Management", "Financial Metrics")
 
         # Create a scrollable Listbox
         self.metrics_listbox = self.create_scrollable_listbox()

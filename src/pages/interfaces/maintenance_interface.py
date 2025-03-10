@@ -3,9 +3,7 @@ from src.pages.interfaces.base_interface import BaseInterface
 
 class MaintenanceInterface(BaseInterface):
     def __init__(self, root, system):
-        super().__init__(root, "Maintenance Management", system)
-        
-        tk.Label(self.frame, text="Vehicles Needing Maintenance:").pack()
+        super().__init__(root, system, "Maintenance Management", "Vehicles Needing Maintenance")
 
         # Create a scrollable Listbox
         self.maintenance_listbox = self.create_scrollable_listbox(self.frame)
