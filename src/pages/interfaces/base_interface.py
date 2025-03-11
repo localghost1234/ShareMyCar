@@ -2,7 +2,7 @@
 import tkinter as tk
 from tkinter import messagebox
 
-separator_row = "-" * 120
+separator_row = "-" * 100
 
 # TODO: combine all loading functions into a single one here
 class BaseInterface:
@@ -13,15 +13,17 @@ class BaseInterface:
         self.frame.pack(fill=tk.BOTH, expand=True)
 
         # Title label
-        tk.Label(self.frame, text=title, font=("Arial", 16)).pack(pady=10)
+        tk.Label(self.frame, text=title, font=("Arial", 18)).pack(pady=10)
 
         # Subtitle label
         tk.Label(self.frame, text=subtitle).pack() if subtitle else None
 
-    def create_scrollable_listbox(self, disable_clicking=True, font=("Courier", 10)):
+    def create_scrollable_listbox(self, header_row=[], disable_clicking=True, font=("Courier", 12)):
         """
         Creates a scrollable Listbox with vertical and horizontal scrollbars.
         """
+        tk.Label(self.frame, text=header_row).pack() if header_row else None  # Insert headers
+
         # Frame for the Listbox and scrollbars
         self.frame.pack(fill=tk.BOTH, expand=True)
 
@@ -56,15 +58,12 @@ class BaseInterface:
         v_scrollbar.config(command=self.listbox.yview)
         h_scrollbar.config(command=self.listbox.xview)
 
-    def load_content(self, get_content, generate_model, header_row, empty_message):
+    def load_content(self, get_content, generate_model, empty_message):
         self.listbox.delete(0, tk.END)  # Clear the listbox
 
         content = get_content()  # Fetch vehicles
         
         if content:
-            self.listbox.insert(tk.END, header_row)  # Insert headers
-            self.listbox.insert(tk.END, separator_row)  # Insert a separator line
-
             for c in content:
                 model = generate_model(c)
                 self.listbox.insert(tk.END, model)

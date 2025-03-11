@@ -1,9 +1,12 @@
 import tkinter as tk
 from src.pages.interfaces.base_interface import BaseInterface
 
+titles = ("Return Management", "Unavailable Vehicles")
+
 # Define column headers
 headers = ("ID", "Brand", "Model", "Mileage", "Daily Price", "Maintenance Cost", "Available")
 header_row = " | ".join(f"{h:<10}" for h in headers)
+empty_message = "No booked vehicles found."
 
 generate_model = lambda content: (
     f"{content[0]:<10} | "
@@ -17,16 +20,15 @@ generate_model = lambda content: (
 
 class ReturnInterface(BaseInterface):
     def __init__(self, root, system):
-        super().__init__(root, system, "Return Management", "Unavailable Vehicles")
+        super().__init__(root, system, *titles)
 
         # Create a scrollable Listbox
-        self.create_scrollable_listbox(disable_clicking=False)
+        self.create_scrollable_listbox(header_row, disable_clicking=False)
 
         self.load_content(
             get_content=self.system.get_unavailable_vehicles,
             generate_model=generate_model,
-            header_row=header_row,
-            empty_message="No booked vehicles found."
+            empty_message=empty_message,
         )
 
         # Bind double-click event to handle vehicle selection

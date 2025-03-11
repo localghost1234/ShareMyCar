@@ -3,9 +3,11 @@ import tkinter as tk
 from tkinter import messagebox
 from src.pages.interfaces.base_interface import BaseInterface
 
+title = "Booking Management"
+
 class BookingInterface(BaseInterface):
     def __init__(self, root, system):
-        super().__init__(root, system, "Booking Management")
+        super().__init__(root, system, title)
 
         # Vehicle ID input
         tk.Label(self.frame, text="Vehicle ID:").pack()
