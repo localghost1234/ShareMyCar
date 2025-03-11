@@ -1,10 +1,8 @@
 # base_interface.py
 import tkinter as tk
 from tkinter import messagebox
+from src.misc.utilities import generate_header_row
 
-separator_row = "-" * 100
-
-# TODO: combine all loading functions into a single one here
 class BaseInterface:
     def __init__(self, root, system, title, subtitle=""):
         self.root = root
@@ -16,13 +14,13 @@ class BaseInterface:
         tk.Label(self.frame, text=title, font=("Arial", 18)).pack(pady=10)
 
         # Subtitle label
-        tk.Label(self.frame, text=subtitle).pack() if subtitle else None
+        tk.Label(self.frame, text=subtitle, font=("Arial", 12)).pack() if subtitle else None
 
-    def create_scrollable_listbox(self, header_row=[], disable_clicking=True, font=("Courier", 12)):
+    def create_scrollable_listbox(self, headers=(), disable_clicking=True, font=("Courier", 12)):
         """
         Creates a scrollable Listbox with vertical and horizontal scrollbars.
         """
-        tk.Label(self.frame, text=header_row).pack() if header_row else None  # Insert headers
+        tk.Label(self.frame, text=generate_header_row(headers)).pack() if headers else None  # Insert headers
 
         # Frame for the Listbox and scrollbars
         self.frame.pack(fill=tk.BOTH, expand=True)

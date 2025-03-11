@@ -1,11 +1,8 @@
 import tkinter as tk
 from src.pages.interfaces.base_interface import BaseInterface
 
-titles = ("Return Management", "Unavailable Vehicles")
-
-# Define column headers
+titles = ("Return Management", "Select a booked vehicle:")
 headers = ("ID", "Brand", "Model", "Mileage", "Daily Price", "Maintenance Cost", "Available")
-header_row = " | ".join(f"{h:<10}" for h in headers)
 empty_message = "No booked vehicles found."
 
 generate_model = lambda content: (
@@ -23,7 +20,7 @@ class ReturnInterface(BaseInterface):
         super().__init__(root, system, *titles)
 
         # Create a scrollable Listbox
-        self.create_scrollable_listbox(header_row, disable_clicking=False)
+        self.create_scrollable_listbox(headers, disable_clicking=False)
 
         self.load_content(
             get_content=self.system.get_unavailable_vehicles,
@@ -37,6 +34,7 @@ class ReturnInterface(BaseInterface):
     def on_vehicle_double_click(self, event):
         """Handles double-clicking on a vehicle in the list."""
         selected_index = self.listbox.curselection()  # Get the selected item index
+        
         if selected_index:
             selected_vehicle = self.listbox.get(selected_index)  # Get the selected vehicle info
             vehicle_id = int(selected_vehicle.split(" | ")[0].strip())  # Extract the vehicle ID

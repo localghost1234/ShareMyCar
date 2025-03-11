@@ -3,7 +3,6 @@ from src.pages.interfaces.base_interface import BaseInterface
 
 titles = ("Maintenance Management", "Vehicles Needing Maintenance")
 headers = ("ID", "Brand", "Model", "Current Mileage", "Maintenance Cost")
-header_row = " | ".join(f"{h:<10}" for h in headers)
 empty_message = "All vehicles are in good condition."
 
 generate_model = lambda content: (
@@ -19,7 +18,7 @@ class MaintenanceInterface(BaseInterface):
         super().__init__(root, system, *titles)
 
         # Create a scrollable Listbox
-        self.create_scrollable_listbox(header_row)
+        self.create_scrollable_listbox(headers)
 
         # Load vehicles requiring maintenance
         self.load_content(

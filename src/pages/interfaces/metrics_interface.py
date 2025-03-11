@@ -3,7 +3,6 @@ from src.pages.interfaces.base_interface import BaseInterface
 
 titles = ("Metrics Management", "Financial Metrics")
 headers = ("Total Revenue (€)", "Total Costs (€)", "Total Profit (€)", "Avg Mileage (km/vehicle)")
-header_row = " | ".join(f"{h:<20}" for h in headers)
 empty_message = "No financial data available."
 
 generate_model = lambda content: (
@@ -18,7 +17,7 @@ class MetricsInterface(BaseInterface):
         super().__init__(root, system, *titles)
 
         # Create a scrollable Listbox
-        self.create_scrollable_listbox(header_row)
+        self.create_scrollable_listbox(headers)
 
         # Load financial metrics
         self.load_content(

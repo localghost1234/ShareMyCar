@@ -3,7 +3,6 @@ from src.pages.interfaces.base_interface import BaseInterface
 
 titles = ("Logs Management", "Transaction Logs")
 headers = ("Transaction ID", "Vehicle ID", "Customer Name", "Rental Duration (days)", "Revenue (€)", "Additional Costs (€)")
-header_row = " | ".join(f"{h:<10}" for h in headers)
 empty_message = "No transaction logs found."
 
 generate_model = lambda content: (
@@ -20,7 +19,7 @@ class LogsInterface(BaseInterface):
         super().__init__(root, system, *titles)
 
         # Create a scrollable Listbox
-        self.create_scrollable_listbox(header_row)
+        self.create_scrollable_listbox(headers)
 
         # Load transaction logs
         self.load_content(

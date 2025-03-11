@@ -3,7 +3,6 @@ from src.pages.interfaces.base_interface import BaseInterface
 
 titles = ("Inventory Management", "Vehicle Inventory")
 headers = ("ID", "Brand", "Model", "Mileage (kms)", "Daily Price", "Maintenance Cost", "Available")
-header_row = " | ".join(f"{h:<10}" for h in headers)
 empty_message = "No vehicles available."
 
 generate_model = lambda content: (
@@ -20,7 +19,7 @@ class InventoryInterface(BaseInterface):
     def __init__(self, root, system):
         super().__init__(root,  system, *titles)
 
-        self.create_scrollable_listbox(header_row)
+        self.create_scrollable_listbox(headers)
 
         self.load_content(
             get_content=self.system.get_all_vehicles,
