@@ -1,0 +1,88 @@
+# database.py
+import sqlite3
+
+from src.misc.constants import DB_NAME
+
+class Database():
+    def __init__(self):
+        # Connect to the SQLite database (or create it if it doesn't exist)
+        self.conn = sqlite3.connect(DB_NAME)
+        self.cursor = self.conn.cursor()
+
+        #cursor.execute("DROP TABLE IF EXISTS vehicles")
+        #cursor.execute("DROP TABLE IF EXISTS bookings")
+        #cursor.execute("DROP TABLE IF EXISTS logs")
+
+        # Create the vehicles table
+        self.cursor.execute("""
+            CREATE TABLE IF NOT EXISTS vehicles (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                brand TEXT NOT NULL,
+                model TEXT NOT NULL,
+                current_mileage INTEGER NOT NULL,
+                daily_price REAL NOT NULL,
+                maintenance_cost REAL NOT NULL,
+                available INTEGER DEFAULT 1,
+                maintenance_mileage INTEGER NOT NULL
+            )
+        """)
+
+        self.cursor.execute("""
+            CREATE TABLE IF NOT EXISTS bookings (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                vehicle_id INTEGER NOT NULL,
+                rental_days INTEGER NOT NULL,
+                estimated_km INTEGER NOT NULL,
+                estimated_cost REAL NOT NULL,
+                start_date TEXT NOT NULL,
+                end_date TEXT NOT NULL,
+                customer_name TEXT NOT NULL,
+                FOREIGN KEY (vehicle_id) REFERENCES vehicles(id)
+            )
+        """)
+
+        self.cursor.execute("""
+            CREATE TABLE IF NOT EXISTS logs (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                vehicle_id INTEGER NOT NULL,
+                rental_duration INTEGER NOT NULL,
+                revenue REAL NOT NULL,
+                additional_costs REAL DEFAULT 0.0,
+                customer_name TEXT NOT NULL,
+                FOREIGN KEY (vehicle_id) REFERENCES vehicles(id)
+            )
+        """)
+
+        # Commit the changes and close the connection
+        self.conn.commit()
+
+    def commit(self):
+        self.conn.commit()
+
+    def execute_query(self, statement, params=()):
+        self.cursor.execute(statement, params)
+
+    def fetch(self, only_one: bool):
+        if only_one:
+            object = self.cursor.fetchone()
+            return object[0] if object else None
+        
+        return self.cursor.fetchall()
+
+    def close(self):
+        try:
+            # Commit any pending transactions
+            self.commit()
+        except Exception as e:
+            print(f"Error committing transactions: \n{e}")
+
+        try:
+            self.cursor.close()
+        except Exception as e:
+            print(f"Error closing the cursor: \n{e}")
+        
+        try:
+            # Close the database connection
+            self.conn.close()
+        except Exception as e:
+            print(f"Error closing the database connection: \n{e}")
