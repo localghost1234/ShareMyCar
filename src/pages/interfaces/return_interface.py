@@ -1,39 +1,40 @@
 import tkinter as tk
 from src.pages.interfaces.base_interface import BaseInterface
 
+# Define column headers
+headers = ("ID", "Brand", "Model", "Mileage", "Daily Price", "Maintenance Cost", "Available")
+header_row = (
+    f"{headers[0]:<5} | "
+    f"{headers[1]:<15} | "
+    f"{headers[2]:<15} | "
+    f"{headers[3]:<10} | "
+    f"{headers[4]:<15} | "
+    f"{headers[5]:<15} | "
+    f"{headers[6]:<10}"
+)
+
 class ReturnInterface(BaseInterface):
     def __init__(self, root, system):
         super().__init__(root, system, "Return Management", "Unavailable Vehicles")
 
         # Create a scrollable Listbox
-        self.vehicle_listbox = self.create_scrollable_listbox(disable_clicking=False)
+        self.create_scrollable_listbox(disable_clicking=False)
 
         # Load unavailable vehicles
         self.load_unavailable_vehicles()
 
         # Bind double-click event to handle vehicle selection
-        self.vehicle_listbox.bind("<Double-Button-1>", self.on_vehicle_double_click)
+        self.listbox.bind("<Double-Button-1>", self.on_vehicle_double_click)
 
     def load_unavailable_vehicles(self):
         """Fetches and displays all unavailable vehicles."""
-        self.vehicle_listbox.delete(0, tk.END)  # Clear the listbox
+        self.listbox.delete(0, tk.END)  # Clear the listbox
 
         vehicles = self.system.get_unavailable_vehicles()  # Fetch unavailable vehicles
         
         if vehicles:
-            # Define column headers
-            headers = ["ID", "Brand", "Model", "Mileage", "Daily Price", "Maintenance Cost", "Available"]
-            header_row = (
-                f"{headers[0]:<5} | "
-                f"{headers[1]:<15} | "
-                f"{headers[2]:<15} | "
-                f"{headers[3]:<10} | "
-                f"{headers[4]:<15} | "
-                f"{headers[5]:<15} | "
-                f"{headers[6]:<10}"
-            )
-            self.vehicle_listbox.insert(tk.END, header_row)  # Insert headers
-            self.vehicle_listbox.insert(tk.END, "-" * 120)  # Insert a separator line
+            self.listbox.insert(tk.END, header_row)  # Insert headers
+            self.listbox.insert(tk.END, "-" * 120)  # Insert a separator line
 
             for v in vehicles:
                 vehicle_info = (
@@ -45,15 +46,15 @@ class ReturnInterface(BaseInterface):
                     f"€{v[5]:<14} | "
                     f"{'No' if v[6] == 0 else 'Yes':<10}"
                 )
-                self.vehicle_listbox.insert(tk.END, vehicle_info)
+                self.listbox.insert(tk.END, vehicle_info)
         else:
-            self.vehicle_listbox.insert(tk.END, "No unavailable vehicles found.")
+            self.listbox.insert(tk.END, "No unavailable vehicles found.")
 
     def on_vehicle_double_click(self, event):
         """Handles double-clicking on a vehicle in the list."""
-        selected_index = self.vehicle_listbox.curselection()  # Get the selected item index
+        selected_index = self.listbox.curselection()  # Get the selected item index
         if selected_index:
-            selected_vehicle = self.vehicle_listbox.get(selected_index)  # Get the selected vehicle info
+            selected_vehicle = self.listbox.get(selected_index)  # Get the selected vehicle info
             vehicle_id = int(selected_vehicle.split(" | ")[0].strip())  # Extract the vehicle ID
             self.show_return_dialog(vehicle_id)  # Open the return dialog
 

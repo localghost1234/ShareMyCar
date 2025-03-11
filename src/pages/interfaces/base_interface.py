@@ -18,7 +18,6 @@ class BaseInterface:
     def create_scrollable_listbox(self, disable_clicking=True, height=15, width=100, font=("Courier", 10)):
         """
         Creates a scrollable Listbox with vertical and horizontal scrollbars.
-        Returns the Listbox and its scrollbars.
         """
         # Frame for the Listbox and scrollbars
         self.frame.pack(fill=tk.BOTH, expand=True)
@@ -28,7 +27,7 @@ class BaseInterface:
         h_scrollbar = tk.Scrollbar(self.frame, orient=tk.HORIZONTAL)
 
         # Listbox
-        listbox = tk.Listbox(
+        self.listbox = tk.Listbox(
             self.frame, height=height, width=width,
             yscrollcommand=v_scrollbar.set,
             xscrollcommand=h_scrollbar.set,
@@ -37,9 +36,9 @@ class BaseInterface:
 
         if disable_clicking:
             # Set selectbackground and selectforeground to match the normal colors
-            listbox.config(
-                selectbackground=listbox.cget("bg"),  # Match background color
-                selectforeground=listbox.cget("fg"),  # Match foreground color
+            self.listbox.config(
+                selectbackground=self.listbox.cget("bg"),  # Match background color
+                selectforeground=self.listbox.cget("fg"),  # Match foreground color
                 selectmode=tk.NONE,  # Disable selection
                 highlightthickness=0,  # Remove focus highlight border
                 activestyle="none"  # Remove the underline/active style
@@ -48,18 +47,16 @@ class BaseInterface:
         # Pack elements
         v_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
         h_scrollbar.pack(side=tk.BOTTOM, fill=tk.X)
-        listbox.pack(fill=tk.BOTH, expand=True)
+        self.listbox.pack(fill=tk.BOTH, expand=True)
 
         # Link scrollbars
-        v_scrollbar.config(command=listbox.yview)
-        h_scrollbar.config(command=listbox.xview)
-
-        return listbox
-
-    def show_error(self, message):
-        """Displays an error message in a messagebox."""
-        messagebox.showerror("Error", message)
+        v_scrollbar.config(command=self.listbox.yview)
+        h_scrollbar.config(command=self.listbox.xview)
 
     def show_info(self, message):
         """Displays an info message in a messagebox."""
         messagebox.showinfo("Info", message)
+
+    def show_error(self, message):
+        """Displays an error message in a messagebox."""
+        messagebox.showerror("Error", message)

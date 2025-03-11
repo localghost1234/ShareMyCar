@@ -1,41 +1,35 @@
 import tkinter as tk
-from tkinter import messagebox
 from src.pages.interfaces.base_interface import BaseInterface
+
+headers = ("ID", "Brand", "Model", "Mileage (kms)", "Daily Price", "Maintenance Cost", "Available")
+header_row = (
+    f"{headers[0]:<5} | "
+    f"{headers[1]:<15} | "
+    f"{headers[2]:<15} | "
+    f"{headers[3]:<15} | "
+    f"{headers[4]:<10} | "
+    f"{headers[5]:<15} | "
+    f"{headers[6]:<10}"
+)
 
 class InventoryInterface(BaseInterface):
     def __init__(self, root, system):
         super().__init__(root,  system, "Inventory Management", "Vehicle Inventory")
 
-        # Create a scrollable Listbox
-        self.vehicle_listbox = self.create_scrollable_listbox()
-
-        # Load vehicles
+        self.create_scrollable_listbox()
         self.load_vehicles()
 
-        # Add button for adding a new vehicle
         self.add_button = tk.Button(self.frame, text="Add Vehicle", command=self.add_vehicle)
         self.add_button.pack(padx=10, pady=10)
 
     def load_vehicles(self):
-        """Fetches and displays all vehicles in the inventory."""
-        self.vehicle_listbox.delete(0, tk.END)  # Clear the listbox
+        self.listbox.delete(0, tk.END)  # Clear the listbox
 
         vehicles = self.system.get_all_vehicles()  # Fetch vehicles
         
         if vehicles:
-            # Define column headers
-            headers = ["ID", "Brand", "Model", "Mileage (kms)", "Daily Price", "Maintenance Cost", "Available"]
-            header_row = (
-                f"{headers[0]:<5} | "
-                f"{headers[1]:<15} | "
-                f"{headers[2]:<15} | "
-                f"{headers[3]:<15} | "
-                f"{headers[4]:<10} | "
-                f"{headers[5]:<15} | "
-                f"{headers[6]:<10}"
-            )
-            self.vehicle_listbox.insert(tk.END, header_row)  # Insert headers
-            self.vehicle_listbox.insert(tk.END, "-" * 120)  # Insert a separator line
+            self.listbox.insert(tk.END, header_row)  # Insert headers
+            self.listbox.insert(tk.END, "-" * 120)  # Insert a separator line
 
             for v in vehicles:
                 vehicle_info = (
@@ -47,12 +41,11 @@ class InventoryInterface(BaseInterface):
                     f"€{v[5]:<14} | "
                     f"{'Yes' if v[6] else 'No':<10}"
                 )
-                self.vehicle_listbox.insert(tk.END, vehicle_info)
+                self.listbox.insert(tk.END, vehicle_info)
         else:
-            self.vehicle_listbox.insert(tk.END, "No vehicles available.")
+            self.listbox.insert(tk.END, "No vehicles available.")
 
     def add_vehicle(self):
-        """Opens a modal dialog to add a new vehicle."""
         dialog = tk.Toplevel(self.root)
         dialog.title("Add Vehicle")
         dialog.geometry("300x200")
@@ -97,8 +90,6 @@ class InventoryInterface(BaseInterface):
         submit_button.grid(row=5, column=0, columnspan=2, pady=10)
 
     def submit_vehicle(self, brand, model, mileage, daily_price, maintenance_cost, dialog):
-        """Validates and submits a new vehicle entry."""
-        # Validate input fields
         if not brand or not model or not mileage or not daily_price or not maintenance_cost:
             self.show_error("All fields are required.")
             return
@@ -112,10 +103,8 @@ class InventoryInterface(BaseInterface):
             self.show_error("Invalid input for mileage, daily price, or maintenance cost.")
             return
 
-        # Add the vehicle to the system
         self.system.add_vehicle(brand, model, mileage, daily_price, maintenance_cost)
         self.show_info("Vehicle added successfully!")
 
-        # Close the dialog and refresh the vehicle list
         dialog.destroy()
         self.load_vehicles()
