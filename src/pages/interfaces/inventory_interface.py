@@ -2,16 +2,17 @@ import tkinter as tk
 from src.pages.interfaces.base_interface import BaseInterface
 
 headers = ("ID", "Brand", "Model", "Mileage (kms)", "Daily Price", "Maintenance Cost", "Available")
-header_row = (
-    f"{headers[0]:<5} | "
-    f"{headers[1]:<15} | "
-    f"{headers[2]:<15} | "
-    f"{headers[3]:<15} | "
-    f"{headers[4]:<10} | "
-    f"{headers[5]:<15} | "
-    f"{headers[6]:<10}"
+header_row = " | ".join(f"{h:<15}" for h in headers)
+
+generate_model = lambda content: (
+    f"{content[0]:<5} | "
+    f"{content[1]:<15} | "
+    f"{content[2]:<15} | "
+    f"{content[3]:<15} | "
+    f"€{content[4]:<9} | "
+    f"€{content[5]:<14} | "
+    f"{'Yes' if content[6] else 'No':<10}"
 )
-separator_row = "-" * 120
 
 class InventoryInterface(BaseInterface):
     def __init__(self, root, system):
@@ -19,31 +20,15 @@ class InventoryInterface(BaseInterface):
 
         self.create_scrollable_listbox()
 
+        self.load_content(
+            get_content=self.system.get_all_vehicles,
+            generate_model=generate_model,
+            header_row=header_row,
+            empty_message="No vehicles available."
+        )
+
         self.add_button = tk.Button(self.frame, text="Add Vehicle", command=self.add_vehicle)
         self.add_button.pack(padx=10, pady=10)
-
-    def load_vehicles(self):
-        self.listbox.delete(0, tk.END)  # Clear the listbox
-
-        vehicles = self.system.get_all_vehicles()  # Fetch vehicles
-        
-        if vehicles:
-            self.listbox.insert(tk.END, header_row)  # Insert headers
-            self.listbox.insert(tk.END, separator_row)  # Insert a separator line
-
-            for v in vehicles:
-                vehicle_info = (
-                    f"{v[0]:<5} | "
-                    f"{v[1]:<15} | "
-                    f"{v[2]:<15} | "
-                    f"{v[3]:<15} | "
-                    f"€{v[4]:<9} | "
-                    f"€{v[5]:<14} | "
-                    f"{'Yes' if v[6] else 'No':<10}"
-                )
-                self.listbox.insert(tk.END, vehicle_info)
-        else:
-            self.listbox.insert(tk.END, "No vehicles available.")
 
     def add_vehicle(self):
         dialog = tk.Toplevel(self.root)

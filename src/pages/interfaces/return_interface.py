@@ -3,16 +3,18 @@ from src.pages.interfaces.base_interface import BaseInterface
 
 # Define column headers
 headers = ("ID", "Brand", "Model", "Mileage", "Daily Price", "Maintenance Cost", "Available")
-header_row = (
-    f"{headers[0]:<5} | "
-    f"{headers[1]:<15} | "
-    f"{headers[2]:<15} | "
-    f"{headers[3]:<10} | "
-    f"{headers[4]:<15} | "
-    f"{headers[5]:<15} | "
-    f"{headers[6]:<10}"
-)
+header_row = " | ".join(f"{h:<15}" for h in headers)
 separator_row = "-" * 120
+
+generate_model = lambda content: (
+    f"{content[0]:<5} | "
+    f"{content[1]:<15} | "
+    f"{content[2]:<15} | "
+    f"{content[3]:<10} | "
+    f"€{content[4]:<9} | "
+    f"€{content[5]:<14} | "
+    f"{'No' if content[6] == 0 else 'Yes':<10}"
+)
 
 class ReturnInterface(BaseInterface):
     def __init__(self, root, system):
@@ -21,35 +23,14 @@ class ReturnInterface(BaseInterface):
         # Create a scrollable Listbox
         self.create_scrollable_listbox(disable_clicking=False)
 
-        # Load unavailable vehicles
-        self.load_unavailable_vehicles()
-
+        self.load_content(
+            get_content=self.system.get_unavailable_vehicles,
+            generate_model=generate_model,
+            header_row=header_row,
+            empty_message="No booked vehicles found."
+        )
         # Bind double-click event to handle vehicle selection
         self.listbox.bind("<Double-Button-1>", self.on_vehicle_double_click)
-
-    def load_unavailable_vehicles(self):
-        """Fetches and displays all unavailable vehicles."""
-        self.listbox.delete(0, tk.END)  # Clear the listbox
-
-        vehicles = self.system.get_unavailable_vehicles()  # Fetch unavailable vehicles
-        
-        if vehicles:
-            self.listbox.insert(tk.END, header_row)  # Insert headers
-            self.listbox.insert(tk.END, separator_row)  # Insert a separator line
-
-            for v in vehicles:
-                vehicle_info = (
-                    f"{v[0]:<5} | "
-                    f"{v[1]:<15} | "
-                    f"{v[2]:<15} | "
-                    f"{v[3]:<10} | "
-                    f"€{v[4]:<9} | "
-                    f"€{v[5]:<14} | "
-                    f"{'No' if v[6] == 0 else 'Yes':<10}"
-                )
-                self.listbox.insert(tk.END, vehicle_info)
-        else:
-            self.listbox.insert(tk.END, "No unavailable vehicles found.")
 
     def on_vehicle_double_click(self, event):
         """Handles double-clicking on a vehicle in the list."""

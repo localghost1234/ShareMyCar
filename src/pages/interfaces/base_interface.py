@@ -2,6 +2,8 @@
 import tkinter as tk
 from tkinter import messagebox
 
+separator_row = "-" * 120
+
 # TODO: combine all loading functions into a single one here
 class BaseInterface:
     def __init__(self, root, system, title, subtitle=""):
@@ -16,7 +18,7 @@ class BaseInterface:
         # Subtitle label
         tk.Label(self.frame, text=subtitle).pack() if subtitle else None
 
-    def create_scrollable_listbox(self, on_load_content, disable_clicking=True, height=15, width=100, font=("Courier", 10)):
+    def create_scrollable_listbox(self, disable_clicking=True, height=15, width=100, font=("Courier", 10)):
         """
         Creates a scrollable Listbox with vertical and horizontal scrollbars.
         """
@@ -54,7 +56,20 @@ class BaseInterface:
         v_scrollbar.config(command=self.listbox.yview)
         h_scrollbar.config(command=self.listbox.xview)
 
-        on_load_content()
+    def load_content(self, get_content, generate_model, header_row, empty_message):
+        self.listbox.delete(0, tk.END)  # Clear the listbox
+
+        content = get_content()  # Fetch vehicles
+        
+        if content:
+            self.listbox.insert(tk.END, header_row)  # Insert headers
+            self.listbox.insert(tk.END, separator_row)  # Insert a separator line
+
+            for c in content:
+                model = generate_model(c)
+                self.listbox.insert(tk.END, model)
+        else:
+            self.listbox.insert(tk.END, "No vehicles available.")
 
     def show_info(self, message):
         """Displays an info message in a messagebox."""
