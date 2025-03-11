@@ -2,11 +2,13 @@ import tkinter as tk
 from src.pages.interfaces.base_interface import BaseInterface
 
 headers = ("Total Revenue (€)", "Total Costs (€)", "Total Profit (€)", "Avg Mileage (km/vehicle)")
-header_row = (
-    f"{headers[0]:<20} | "
-    f"{headers[1]:<20} | "
-    f"{headers[2]:<20} | "
-    f"{headers[3]:<20}"
+header_row = " | ".join(f"{h:<15}" for h in headers)
+
+generate_model = lambda content: (
+    f"{content[0]:<20} | "
+    f"{content[1]:<20} | "
+    f"{content[2]:<20} | "
+    f"{content[3]:<20}"
 )
 
 class MetricsInterface(BaseInterface):
@@ -17,25 +19,9 @@ class MetricsInterface(BaseInterface):
         self.create_scrollable_listbox()
 
         # Load financial metrics
-        self.load_metrics()
-
-    def load_metrics(self):
-        """Fetches and displays financial metrics."""
-        self.listbox.delete(0, tk.END)  # Clear the listbox
-
-        metrics = self.system.get_financial_metrics()  # Fetch metrics
-        
-        if metrics:
-            self.listbox.insert(tk.END, header_row)  # Insert headers
-            self.listbox.insert(tk.END, "-" * 90)  # Insert a separator line
-
-            # Insert metrics data
-            metrics_row = (
-                f"{metrics['total_revenue']:<20.2f} | "
-                f"{metrics['total_costs']:<20.2f} | "
-                f"{metrics['total_profit']:<20.2f} | "
-                f"{metrics['average_mileage']:<20.2f}"
-            )
-            self.listbox.insert(tk.END, metrics_row)
-        else:
-            self.listbox.insert(tk.END, "No financial data available.")
+        self.load_content(
+            get_content=self.system.get_financial_metrics,
+            generate_model=generate_model,
+            header_row=header_row,
+            empty_message="No financial data available.",
+        )

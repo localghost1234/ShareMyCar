@@ -69,7 +69,7 @@ class BaseInterface:
                 model = generate_model(c)
                 self.listbox.insert(tk.END, model)
         else:
-            self.listbox.insert(tk.END, "No vehicles available.")
+            self.listbox.insert(tk.END, empty_message)
 
     def show_info(self, message):
         """Displays an info message in a messagebox."""

@@ -4,7 +4,6 @@ from src.pages.interfaces.base_interface import BaseInterface
 # Define column headers
 headers = ("ID", "Brand", "Model", "Mileage", "Daily Price", "Maintenance Cost", "Available")
 header_row = " | ".join(f"{h:<15}" for h in headers)
-separator_row = "-" * 120
 
 generate_model = lambda content: (
     f"{content[0]:<5} | "
@@ -29,6 +28,7 @@ class ReturnInterface(BaseInterface):
             header_row=header_row,
             empty_message="No booked vehicles found."
         )
+
         # Bind double-click event to handle vehicle selection
         self.listbox.bind("<Double-Button-1>", self.on_vehicle_double_click)
 

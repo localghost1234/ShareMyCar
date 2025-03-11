@@ -3,14 +3,15 @@ from src.pages.interfaces.base_interface import BaseInterface
 
 # Define column headers
 headers = ("ID", "Brand", "Model", "Current Mileage", "Maintenance Cost")
-header_row = (
-    f"{headers[0]:<5} | "
-    f"{headers[1]:<15} | "
-    f"{headers[2]:<15} | "
-    f"{headers[3]:<15} | "
-    f"{headers[4]:<15}"
+header_row = " | ".join(f"{h:<15}" for h in headers)
+
+generate_model = lambda content: (
+    f"{content[0]:<5} | "
+    f"{content[1]:<15} | "
+    f"{content[2]:<15} | "
+    f"{content[3]:<15} | "
+    f"€{content[4]:<14}"
 )
-separator_row = "-" * 80
 
 class MaintenanceInterface(BaseInterface):
     def __init__(self, root, system):
@@ -20,26 +21,9 @@ class MaintenanceInterface(BaseInterface):
         self.create_scrollable_listbox()
 
         # Load vehicles requiring maintenance
-        self.load_maintenance_vehicles()
-
-    def load_maintenance_vehicles(self):
-        """Fetches and displays vehicles that require maintenance."""
-        self.listbox.delete(0, tk.END)  # Clear the listbox
-
-        vehicles = self.system.get_vehicles_requiring_maintenance()  # Fetch vehicles
-        
-        if vehicles:
-            self.listbox.insert(tk.END, header_row)  # Insert headers
-            self.listbox.insert(tk.END, separator_row)  # Insert a separator line
-
-            for v in vehicles:
-                vehicle_info = (
-                    f"{v[0]:<5} | "
-                    f"{v[1]:<15} | "
-                    f"{v[2]:<15} | "
-                    f"{v[3]:<15} | "
-                    f"€{v[4]:<14}"
-                )
-                self.listbox.insert(tk.END, vehicle_info)
-        else:
-            self.listbox.insert(tk.END, "All vehicles are in good condition.")
+        self.load_content(
+            get_content=self.system.get_vehicles_requiring_maintenance,
+            generate_model=generate_model,
+            header_row=header_row,
+            empty_message="All vehicles are in good condition."
+        )
