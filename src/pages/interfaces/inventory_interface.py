@@ -2,15 +2,15 @@ import tkinter as tk
 from src.pages.interfaces.base_interface import BaseInterface
 
 headers = ("ID", "Brand", "Model", "Mileage (kms)", "Daily Price", "Maintenance Cost", "Available")
-header_row = " | ".join(f"{h:<15}" for h in headers)
+header_row = " | ".join(f"{h:<10}" for h in headers)
 
 generate_model = lambda content: (
-    f"{content[0]:<5} | "
-    f"{content[1]:<15} | "
-    f"{content[2]:<15} | "
-    f"{content[3]:<15} | "
-    f"€{content[4]:<9} | "
-    f"€{content[5]:<14} | "
+    f"{content[0]:<10} | "
+    f"{content[1]:<10} | "
+    f"{content[2]:<10} | "
+    f"{content[3]:<10} | "
+    f"€{content[4]:<10} | "
+    f"€{content[5]:<10} | "
     f"{'Yes' if content[6] else 'No':<10}"
 )
 

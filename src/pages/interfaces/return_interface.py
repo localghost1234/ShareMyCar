@@ -3,15 +3,15 @@ from src.pages.interfaces.base_interface import BaseInterface
 
 # Define column headers
 headers = ("ID", "Brand", "Model", "Mileage", "Daily Price", "Maintenance Cost", "Available")
-header_row = " | ".join(f"{h:<15}" for h in headers)
+header_row = " | ".join(f"{h:<10}" for h in headers)
 
 generate_model = lambda content: (
-    f"{content[0]:<5} | "
-    f"{content[1]:<15} | "
-    f"{content[2]:<15} | "
+    f"{content[0]:<10} | "
+    f"{content[1]:<10} | "
+    f"{content[2]:<10} | "
     f"{content[3]:<10} | "
-    f"€{content[4]:<9} | "
-    f"€{content[5]:<14} | "
+    f"€{content[4]:<10} | "
+    f"€{content[5]:<10} | "
     f"{'No' if content[6] == 0 else 'Yes':<10}"
 )
 

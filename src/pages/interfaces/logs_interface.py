@@ -2,15 +2,15 @@ import tkinter as tk
 from src.pages.interfaces.base_interface import BaseInterface
 
 headers = ("Transaction ID", "Vehicle ID", "Customer Name", "Rental Duration (days)", "Revenue (€)", "Additional Costs (€)")
-header_row = " | ".join(f"{h:<15}" for h in headers)
+header_row = " | ".join(f"{h:<10}" for h in headers)
 
 generate_model = lambda content: (
-    f"{content[0]:<15} | "
+    f"{content[0]:<10} | "
     f"{content[1]:<10} | "
-    f"{content[6]:<20} | "
-    f"{content[2]:<20} | "
-    f"€{content[3]:<11} | "
-    f"€{content[4]:<17}"
+    f"{content[6]:<10} | "
+    f"{content[2]:<10} | "
+    f"€{content[3]:<10} | "
+    f"€{content[4]:<10}"
 )
 
 class LogsInterface(BaseInterface):

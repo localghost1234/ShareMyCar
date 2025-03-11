@@ -2,7 +2,7 @@ import tkinter as tk
 from src.pages.interfaces.base_interface import BaseInterface
 
 headers = ("Total Revenue (€)", "Total Costs (€)", "Total Profit (€)", "Avg Mileage (km/vehicle)")
-header_row = " | ".join(f"{h:<15}" for h in headers)
+header_row = " | ".join(f"{h:<20}" for h in headers)
 
 generate_model = lambda content: (
     f"{content[0]:<20} | "
