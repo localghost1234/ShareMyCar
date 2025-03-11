@@ -12,6 +12,7 @@ header_row = (
     f"{headers[5]:<15} | "
     f"{headers[6]:<10}"
 )
+separator_row = "-" * 120
 
 class ReturnInterface(BaseInterface):
     def __init__(self, root, system):
@@ -34,7 +35,7 @@ class ReturnInterface(BaseInterface):
         
         if vehicles:
             self.listbox.insert(tk.END, header_row)  # Insert headers
-            self.listbox.insert(tk.END, "-" * 120)  # Insert a separator line
+            self.listbox.insert(tk.END, separator_row)  # Insert a separator line
 
             for v in vehicles:
                 vehicle_info = (

@@ -10,6 +10,7 @@ header_row = (
     f"{headers[4]:<12} | "
     f"{headers[5]:<18}"
 )
+separator_row = "-" * 120
 
 class LogsInterface(BaseInterface):
     def __init__(self, root, system):
@@ -29,7 +30,7 @@ class LogsInterface(BaseInterface):
         
         if logs:
             self.listbox.insert(tk.END, header_row)  # Insert headers
-            self.listbox.insert(tk.END, "-" * 100)  # Insert a separator line
+            self.listbox.insert(tk.END, separator_row)  # Insert a separator line
 
             for log in logs:
                 log_entry = (

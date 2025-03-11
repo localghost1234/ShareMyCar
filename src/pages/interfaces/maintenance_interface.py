@@ -10,13 +10,14 @@ header_row = (
     f"{headers[3]:<15} | "
     f"{headers[4]:<15}"
 )
+separator_row = "-" * 80
 
 class MaintenanceInterface(BaseInterface):
     def __init__(self, root, system):
         super().__init__(root, system, "Maintenance Management", "Vehicles Needing Maintenance")
 
         # Create a scrollable Listbox
-        self.create_scrollable_listbox(self.frame)
+        self.create_scrollable_listbox()
 
         # Load vehicles requiring maintenance
         self.load_maintenance_vehicles()
@@ -29,7 +30,7 @@ class MaintenanceInterface(BaseInterface):
         
         if vehicles:
             self.listbox.insert(tk.END, header_row)  # Insert headers
-            self.listbox.insert(tk.END, "-" * 80)  # Insert a separator line
+            self.listbox.insert(tk.END, separator_row)  # Insert a separator line
 
             for v in vehicles:
                 vehicle_info = (

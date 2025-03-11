@@ -2,6 +2,7 @@
 import tkinter as tk
 from tkinter import messagebox
 
+# TODO: combine all loading functions into a single one here
 class BaseInterface:
     def __init__(self, root, system, title, subtitle=""):
         self.root = root
@@ -15,7 +16,7 @@ class BaseInterface:
         # Subtitle label
         tk.Label(self.frame, text=subtitle).pack() if subtitle else None
 
-    def create_scrollable_listbox(self, disable_clicking=True, height=15, width=100, font=("Courier", 10)):
+    def create_scrollable_listbox(self, on_load_content, disable_clicking=True, height=15, width=100, font=("Courier", 10)):
         """
         Creates a scrollable Listbox with vertical and horizontal scrollbars.
         """
@@ -52,6 +53,8 @@ class BaseInterface:
         # Link scrollbars
         v_scrollbar.config(command=self.listbox.yview)
         h_scrollbar.config(command=self.listbox.xview)
+
+        on_load_content()
 
     def show_info(self, message):
         """Displays an info message in a messagebox."""

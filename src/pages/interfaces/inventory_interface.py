@@ -11,13 +11,13 @@ header_row = (
     f"{headers[5]:<15} | "
     f"{headers[6]:<10}"
 )
+separator_row = "-" * 120
 
 class InventoryInterface(BaseInterface):
     def __init__(self, root, system):
         super().__init__(root,  system, "Inventory Management", "Vehicle Inventory")
 
         self.create_scrollable_listbox()
-        self.load_vehicles()
 
         self.add_button = tk.Button(self.frame, text="Add Vehicle", command=self.add_vehicle)
         self.add_button.pack(padx=10, pady=10)
@@ -29,7 +29,7 @@ class InventoryInterface(BaseInterface):
         
         if vehicles:
             self.listbox.insert(tk.END, header_row)  # Insert headers
-            self.listbox.insert(tk.END, "-" * 120)  # Insert a separator line
+            self.listbox.insert(tk.END, separator_row)  # Insert a separator line
 
             for v in vehicles:
                 vehicle_info = (
