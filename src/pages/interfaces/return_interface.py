@@ -2,17 +2,16 @@ import tkinter as tk
 from src.pages.interfaces.base_interface import BaseInterface
 
 titles = ("Return Management", "Select a booked vehicle:")
-headers = ("ID", "Brand", "Model", "Mileage", "Daily Price", "Maintenance Cost", "Available")
+headers = ("ID", "Brand", "Model", "Mileage", "Daily Price", "Maintenance Cost")
 empty_message = "No booked vehicles found."
 
 generate_model = lambda content: (
-    f"{content[0]:<10} | "
-    f"{content[1]:<10} | "
-    f"{content[2]:<10} | "
-    f"{content[3]:<10} | "
-    f"€{content[4]:<10} | "
-    f"€{content[5]:<10} | "
-    f"{'No' if content[6] == 0 else 'Yes':<10}"
+    f"{content[0]:<15} | "
+    f"{content[1]:<15} | "
+    f"{content[2]:<15} | "
+    f"{content[3]:<15} | "
+    f"€{content[4]:<15} | "
+    f"€{content[5]:<15} | "
 )
 
 class ReturnInterface(BaseInterface):
@@ -92,9 +91,16 @@ class ReturnInterface(BaseInterface):
 
         # Calculate total cost
         total_cost = self.system.query_return(vehicle_id, actual_km, late_days, customer_name)
+
         if total_cost:
             self.show_info(f"Vehicle returned! Total cost: €{total_cost}")
             dialog.destroy()
-            self.load_unavailable_vehicles()  # Refresh the list
+            
+            # Refresh the list
+            self.load_content(
+                get_content=self.system.get_unavailable_vehicles,
+                generate_model=generate_model,
+                empty_message=empty_message,
+            )
         else:
             self.show_error("Vehicle not found or already returned.")

@@ -1,7 +1,7 @@
 # app.py
 import tkinter as tk
 
-from src.core.system import CarsharingSystem
+from src.core.system import System
 
 # TODO: change startup page to have a welcoming message
 from src.pages.interfaces.inventory_interface import InventoryInterface
@@ -10,7 +10,7 @@ from src.misc.constants import INTERFACES_LIST
 
 class App:
     def __init__(self):
-        self.system = CarsharingSystem()
+        self.system = System()
         self.current_interface = None
 
         self.root = tk.Tk()

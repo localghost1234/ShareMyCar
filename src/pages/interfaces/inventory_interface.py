@@ -1,18 +1,18 @@
 import tkinter as tk
 from src.pages.interfaces.base_interface import BaseInterface
 
-titles = ("Inventory Management", "Vehicle Inventory")
+titles = ("Inventory Management", "All existing vehicles")
 headers = ("ID", "Brand", "Model", "Mileage (kms)", "Daily Price", "Maintenance Cost", "Available")
 empty_message = "No vehicles available."
 
 generate_model = lambda content: (
-    f"{content[0]:<10} | "
-    f"{content[1]:<10} | "
-    f"{content[2]:<10} | "
-    f"{content[3]:<10} | "
-    f"€{content[4]:<10} | "
-    f"€{content[5]:<10} | "
-    f"{'Yes' if content[6] else 'No':<10}"
+    f"{content[0]:<13} | "
+    f"{content[1]:<13} | "
+    f"{content[2]:<13} | "
+    f"{content[3]:<13} | "
+    f"€{content[4]:<13} | "
+    f"€{content[5]:<13} | "
+    f"{'Yes' if content[6] else 'No':<13}"
 )
 
 class InventoryInterface(BaseInterface):
@@ -92,4 +92,8 @@ class InventoryInterface(BaseInterface):
         self.show_info("Vehicle added successfully!")
 
         dialog.destroy()
-        self.load_vehicles()
+        self.load_content(
+            get_content=self.system.get_all_vehicles,
+            generate_model=generate_model,
+            empty_message=empty_message,
+        )

@@ -3,18 +3,7 @@ import sqlite3
 
 from src.misc.constants import DB_NAME
 
-class Database():
-    def __init__(self):
-        # Connect to the SQLite database (or create it if it doesn't exist)
-        self.conn = sqlite3.connect(DB_NAME)
-        self.cursor = self.conn.cursor()
-
-        #cursor.execute("DROP TABLE IF EXISTS vehicles")
-        #cursor.execute("DROP TABLE IF EXISTS bookings")
-        #cursor.execute("DROP TABLE IF EXISTS logs")
-
-        # Create the vehicles table
-        self.cursor.execute("""
+STATEMENT_CREATE_VEHICLES_TABLE = """
             CREATE TABLE IF NOT EXISTS vehicles (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 brand TEXT NOT NULL,
@@ -25,9 +14,9 @@ class Database():
                 available INTEGER DEFAULT 1,
                 maintenance_mileage INTEGER NOT NULL
             )
-        """)
+        """
 
-        self.cursor.execute("""
+STATEMENT_CREATE_BOOKINGS_TABLE = """
             CREATE TABLE IF NOT EXISTS bookings (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 vehicle_id INTEGER NOT NULL,
@@ -39,9 +28,9 @@ class Database():
                 customer_name TEXT NOT NULL,
                 FOREIGN KEY (vehicle_id) REFERENCES vehicles(id)
             )
-        """)
+        """
 
-        self.cursor.execute("""
+STATEMENT_CREATE_LOGS_TABLE = """
             CREATE TABLE IF NOT EXISTS logs (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 vehicle_id INTEGER NOT NULL,
@@ -51,21 +40,35 @@ class Database():
                 customer_name TEXT NOT NULL,
                 FOREIGN KEY (vehicle_id) REFERENCES vehicles(id)
             )
-        """)
+        """
+
+class Database():
+    def __init__(self):
+        # Connect to the SQLite database (or create it if it doesn't exist)
+        self.conn = sqlite3.connect(DB_NAME)
+        self.cursor = self.conn.cursor()
+
+        #cursor.execute("DROP TABLE IF EXISTS vehicles")
+        #cursor.execute("DROP TABLE IF EXISTS bookings")
+        #cursor.execute("DROP TABLE IF EXISTS logs")
+
+        # Create the vehicles table
+        self.cursor.execute(STATEMENT_CREATE_VEHICLES_TABLE)
+        self.cursor.execute(STATEMENT_CREATE_BOOKINGS_TABLE)
+        self.cursor.execute(STATEMENT_CREATE_LOGS_TABLE)
 
         # Commit the changes and close the connection
-        self.conn.commit()
-
-    def commit(self):
-        self.conn.commit()
+        self.commit()
 
     def execute_query(self, statement, params=()):
         self.cursor.execute(statement, params)
 
+    def commit(self):
+        self.conn.commit()
+
     def fetch(self, only_one: bool):
         if only_one:
-            object = self.cursor.fetchone()
-            return object[0] if object else None
+            return self.cursor.fetchone()
         
         return self.cursor.fetchall()
 

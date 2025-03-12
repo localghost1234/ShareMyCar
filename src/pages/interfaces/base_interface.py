@@ -14,9 +14,9 @@ class BaseInterface:
         tk.Label(self.frame, text=title, font=("Arial", 18)).pack(pady=10)
 
         # Subtitle label
-        tk.Label(self.frame, text=subtitle, font=("Arial", 12)).pack() if subtitle else None
+        tk.Label(self.frame, text=subtitle, font=("Arial", 14)).pack(pady=10) if subtitle else None
 
-    def create_scrollable_listbox(self, headers=(), disable_clicking=True, font=("Courier", 12)):
+    def create_scrollable_listbox(self, headers=(), disable_clicking=True, font=("Courier", 10)):
         """
         Creates a scrollable Listbox with vertical and horizontal scrollbars.
         """

@@ -2,7 +2,7 @@
 from src.core.database import Database
 from datetime import datetime, timedelta
 
-class CarsharingSystem:
+class System:
     def __init__(self):
         self.database = Database()
 
@@ -29,7 +29,7 @@ class CarsharingSystem:
     def get_customer_name(self, vehicle_id):
         self.database.execute_query("SELECT customer_name FROM bookings WHERE vehicle_id = ?", (vehicle_id,))
         name = self.database.fetch(only_one=True)
-        return name[0] if name else None
+        return name[0] if name else "Unknown Customer"
     
     def get_transaction_logs(self):
         self.database.execute_query("SELECT * FROM logs")
@@ -37,24 +37,23 @@ class CarsharingSystem:
     
     def get_financial_metrics(self):
         """Fetches and calculates financial metrics from the database."""
-
         self.database.execute_query("SELECT * FROM logs")
-        is_there_log = self.database.fetch(only_one=True) or None
+        is_there_log = self.database.fetch(only_one=True)[0] or None
 
         if not is_there_log:
             return ()
         
         # Get total revenue from logs
         self.database.execute_query("SELECT SUM(revenue) FROM logs")
-        total_revenue = self.database.fetch(only_one=True) or 0
+        total_revenue = self.database.fetch(only_one=True)[0] or 0
 
         # Get total maintenance costs from vehicles
         self.database.execute_query("SELECT SUM(maintenance_cost) FROM vehicles")
-        total_maintenance_cost = self.database.fetch(only_one=True) or 0
+        total_maintenance_cost = self.database.fetch(only_one=True)[0] or 0
 
         # Get total additional costs from logs (e.g., extra fees, cleaning costs)
         self.database.execute_query("SELECT SUM(additional_costs) FROM logs")
-        total_additional_costs = self.database.fetch(only_one=True) or 0
+        total_additional_costs = self.database.fetch(only_one=True)[0] or 0
 
         # Calculate total operational costs
         total_operational_costs = total_maintenance_cost + total_additional_costs
@@ -64,14 +63,16 @@ class CarsharingSystem:
 
         # Get average mileage per vehicle
         self.database.execute_query("SELECT AVG(current_mileage) FROM vehicles")
-        avg_mileage = self.database.fetch(only_one=True) or 0
+        avg_mileage = self.database.fetch(only_one=True)[0] or 0
 
-        return (
+        metrics = (
             total_revenue,
-            total_additional_costs,
+            total_operational_costs,
             total_profit,
             avg_mileage,
         )
+
+        return metrics
 
     def query_update_availability(self, vehicle_id, available: bool):
         self.database.execute_query("""

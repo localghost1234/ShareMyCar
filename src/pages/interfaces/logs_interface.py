@@ -6,12 +6,12 @@ headers = ("Transaction ID", "Vehicle ID", "Customer Name", "Rental Duration (da
 empty_message = "No transaction logs found."
 
 generate_model = lambda content: (
-    f"{content[0]:<10} | "
-    f"{content[1]:<10} | "
-    f"{content[6]:<10} | "
-    f"{content[2]:<10} | "
-    f"€{content[3]:<10} | "
-    f"€{content[4]:<10}"
+    f"{content[0]:<15} | "
+    f"{content[1]:<15} | "
+    f"{content[5]:<15} | "
+    f"{content[2]:<15} | "
+    f"€{content[3]:<15} | "
+    f"€{content[4]:<15}"
 )
 
 class LogsInterface(BaseInterface):
