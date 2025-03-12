@@ -1,5 +1,5 @@
-import os
 from tkinter import Label, Button, filedialog
+from src.misc.utilities import calculate_max_widths
 from src.pages.interfaces.base_interface import BaseInterface
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
@@ -55,52 +55,66 @@ class MetricsInterface(BaseInterface):
         width, height = A4
         y_position = height - 40  # Start position
 
-        pdf.setFont("Helvetica-Bold", 14)
+        pdf.setFont("Helvetica-Bold", 16)
         pdf.drawString(200, y_position, f"Full Car Sharing Report - {current_datetime.strftime("%Y-%m-%d_%H:%M:%S")}")
         y_position -= 30
 
-        pdf.setFont("Helvetica", 12)
+        x_position = 50
+        y_position = height - 50
+        font_size = 8
+        pdf.setFont("Helvetica", font_size)
+
+        # Define column headers and their corresponding max lengths
+        vehicle_headers = ["ID", "Brand", "Model", "Mileage", "Daily Price", "Maintenance Cost", "Available", "Maintenance Mileage"]
+        booking_headers = ["ID", "Vehicle ID", "Rental Days", "Estimated KM", "Estimated Cost", "Start Date", "End Date", "Customer Name"]
+        log_headers = ["ID", "Vehicle ID", "Rental Duration", "Revenue", "Additional Costs", "Customer Name"]
+
+        # Compute column widths based on the longest item in each column
+        def compute_column_widths(headers, data):
+            col_widths = [max(len(str(item)) for item in col) for col in zip(headers, *data)]
+            return [w * 5 + 10 for w in col_widths]  # Scale widths dynamically
+
+        vehicle_col_widths = compute_column_widths(vehicle_headers, all_vehicles)
+        booking_col_widths = compute_column_widths(booking_headers, all_bookings)
+        log_col_widths = compute_column_widths(log_headers, all_logs)
+
+        def draw_table(headers, data, col_widths):
+            nonlocal y_position
+            x_pos = x_position
+            pdf.setFont("Helvetica-Bold", font_size)
+            for i, header in enumerate(headers):
+                pdf.drawString(x_pos, y_position, header)
+                x_pos += col_widths[i]
+            y_position -= 10
+            pdf.setFont("Helvetica", font_size)
+            
+            for row in data:
+                x_pos = x_position
+                for i, cell in enumerate(row):
+                    pdf.drawString(x_pos, y_position, str(cell))
+                    x_pos += col_widths[i]
+                y_position -= 10
+                if y_position < 50:
+                    pdf.showPage()
+                    pdf.setFont("Helvetica", font_size)
+                    y_position = height - 50
 
         # **1. Add Vehicles Data**
-        pdf.drawString(50, y_position, "Vehicles:")
+        pdf.drawString(x_position, y_position, "Vehicles:")
+        y_position -= 15
+        draw_table(vehicle_headers, all_vehicles, vehicle_col_widths)
         y_position -= 20
-
-        for vehicle in all_vehicles:
-            pdf.drawString(50, y_position, f"Vehicle ID: {vehicle[0]}, Brand: {vehicle[1]}, Model: {vehicle[2]}")
-            y_position -= 15
-            if y_position < 50:  # New page if needed
-                pdf.showPage()
-                pdf.setFont("Helvetica", 12)
-                y_position = height - 40
-
-        y_position -= 40
 
         # **2. Add Booking Data**
-        pdf.drawString(50, y_position, "Bookings:")
+        pdf.drawString(x_position, y_position, "Bookings:")
+        y_position -= 15
+        draw_table(booking_headers, all_bookings, booking_col_widths)
         y_position -= 20
-
-        for booking in all_bookings:
-            pdf.drawString(50, y_position, f"Booking ID: {booking[0]}, Vehicle ID: {booking[1]}, User: {booking[2]}")
-            y_position -= 15
-            if y_position < 50:
-                pdf.showPage()
-                pdf.setFont("Helvetica", 12)
-                y_position = height - 40
-
-        y_position -= 40
 
         # **3. Add Transaction Logs**
-        pdf.drawString(50, y_position, "Transaction Logs:")
-        y_position -= 20
+        pdf.drawString(x_position, y_position, "Transaction Logs:")
+        y_position -= 15
+        draw_table(log_headers, all_logs, log_col_widths)
 
-        for log in all_logs:
-            pdf.drawString(50, y_position, f"Log ID: {log[0]}, Amount: {log[1]}€, Date: {log[2]}")
-            y_position -= 15
-            if y_position < 50:
-                pdf.showPage()
-                pdf.setFont("Helvetica", 12)
-                y_position = height - 40
-
-        # Save the PDF
         pdf.save()
         print(f"Report saved as {file_path}")
