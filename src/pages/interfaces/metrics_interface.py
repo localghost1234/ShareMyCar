@@ -1,5 +1,5 @@
 from tkinter import Label, Button, filedialog
-from src.misc.utilities import calculate_max_widths
+from src.misc.utilities import calculate_max_widths, compute_column_widths
 from src.pages.interfaces.base_interface import BaseInterface
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
@@ -8,6 +8,10 @@ from datetime import datetime
 titles = ("Metrics Management", "Financial Metrics")
 headers = ("Total Revenue (€)", "Total Costs (€)", "Total Profit (€)", "Avg Mileage (km/vehicle)")
 empty_message = "No financial data available."
+
+vehicle_headers = ("ID", "Brand", "Model", "Mileage", "Daily Price", "Maintenance Cost", "Available", "Maintenance Mileage")
+booking_headers = ("ID", "Vehicle ID", "Rental Days", "Estimated KM", "Estimated Cost", "Start Date", "End Date", "Customer Name")
+log_headers = ("ID", "Vehicle ID", "Rental Duration", "Revenue", "Additional Costs", "Customer Name")
 
 class MetricsInterface(BaseInterface):
     def __init__(self, root, system):
@@ -64,20 +68,12 @@ class MetricsInterface(BaseInterface):
         font_size = 8
         pdf.setFont("Helvetica", font_size)
 
-        # Define column headers and their corresponding max lengths
-        vehicle_headers = ["ID", "Brand", "Model", "Mileage", "Daily Price", "Maintenance Cost", "Available", "Maintenance Mileage"]
-        booking_headers = ["ID", "Vehicle ID", "Rental Days", "Estimated KM", "Estimated Cost", "Start Date", "End Date", "Customer Name"]
-        log_headers = ["ID", "Vehicle ID", "Rental Duration", "Revenue", "Additional Costs", "Customer Name"]
-
         # Compute column widths based on the longest item in each column
         def compute_column_widths(headers, data):
             col_widths = [max(len(str(item)) for item in col) for col in zip(headers, *data)]
             return [w * 5 + 10 for w in col_widths]  # Scale widths dynamically
 
-        vehicle_col_widths = compute_column_widths(vehicle_headers, all_vehicles)
-        booking_col_widths = compute_column_widths(booking_headers, all_bookings)
-        log_col_widths = compute_column_widths(log_headers, all_logs)
-
+        # Helper function to calculate max column widths
         def draw_table(headers, data, col_widths):
             nonlocal y_position
             x_pos = x_position
@@ -98,6 +94,10 @@ class MetricsInterface(BaseInterface):
                     pdf.showPage()
                     pdf.setFont("Helvetica", font_size)
                     y_position = height - 50
+
+        vehicle_col_widths = compute_column_widths(vehicle_headers, all_vehicles)
+        booking_col_widths = compute_column_widths(booking_headers, all_bookings)
+        log_col_widths = compute_column_widths(log_headers, all_logs)
 
         # **1. Add Vehicles Data**
         pdf.drawString(x_position, y_position, "Vehicles:")
