@@ -17,6 +17,14 @@ class System:
         self.database.execute_query("SELECT * FROM vehicles")
         return self.database.fetch(only_one=False)
     
+    def get_all_bookings(self):
+        self.database.execute_query("SELECT * FROM bookings")
+        return self.database.fetch(only_one=False)
+    
+    def get_transaction_logs(self):
+        self.database.execute_query("SELECT * FROM logs")
+        return self.database.fetch(only_one=False)
+    
     def get_vehicles_requiring_maintenance(self):
         self.database.execute_query("SELECT id, brand, model, current_mileage, maintenance_mileage FROM vehicles WHERE current_mileage >= maintenance_mileage")
         return self.database.fetch(only_one=False)
@@ -30,10 +38,6 @@ class System:
         self.database.execute_query("SELECT customer_name FROM bookings WHERE vehicle_id = ?", (vehicle_id,))
         name = self.database.fetch(only_one=True)
         return name[0] if name else "Unknown Customer"
-    
-    def get_transaction_logs(self):
-        self.database.execute_query("SELECT * FROM logs")
-        return self.database.fetch(only_one=False)
     
     def get_financial_metrics(self):
         """Fetches and calculates financial metrics from the database."""
