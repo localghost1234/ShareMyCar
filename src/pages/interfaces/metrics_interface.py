@@ -19,33 +19,30 @@ class MetricsInterface(BaseInterface):
 
         self.metrics = self.system.get_financial_metrics()
 
-        tk.Label(self.frame, text="Total Revenue (€):", font=("Arial", 10, "bold")).pack(pady=5)
-        tk.Label(self.frame, text=self.metrics[0], font=("Arial", 8, "italic")).pack()
+        new_frame = tk.Frame(self.frame)
 
-        tk.Label(self.frame, text="Total Operational Costs (€):", font=("Arial", 10, "bold")).pack(pady=5)
-        tk.Label(self.frame, text=self.metrics[1], font=("Arial", 8, "italic")).pack()
+        tk.Button(new_frame, text="Download Full Report", command=self.generate_full_report).grid(row=0, column=0, pady=2)
 
-        tk.Label(self.frame, text="Total Profit (€):", font=("Arial", 10, "bold")).pack(pady=5)
-        tk.Label(self.frame, text=self.metrics[2], font=("Arial", 8, "italic")).pack()
+        tk.Label(new_frame, text="Total Revenue (€):", font=("Arial", 10, "bold")).grid(row=1, column=0, pady=5)
+        tk.Label(new_frame, text=self.metrics[0], font=("Arial", 8, "italic")).grid(row=1, column=1)
 
-        tk.Label(self.frame, text="Average Mileage Per Vehicle (km):", font=("Arial", 10, "bold")).pack(pady=5)
-        tk.Label(self.frame, text=self.metrics[3], font=("Arial", 8, "italic")).pack()
+        tk.Label(new_frame, text="Total Operational Costs (€):", font=("Arial", 10, "bold")).grid(row=2, column=0, pady=5)
+        tk.Label(new_frame, text=self.metrics[1], font=("Arial", 8, "italic")).grid(row=2, column=1)
 
-        tk.Button(self.frame, text="Query Metric", command=self.query_metric).pack(pady=20)
-        tk.Button(self.frame, text="Download Full Report", command=self.generate_full_report).pack(pady=2)
+        tk.Label(new_frame, text="Total Profit (€):", font=("Arial", 10, "bold")).grid(row=3, column=0, pady=5)
+        tk.Label(new_frame, text=self.metrics[2], font=("Arial", 8, "italic")).grid(row=3, column=1)
 
-    def query_metric(self):
-        """Open a modal window to query specific data."""
-        # Create a modal window
-        modal_window = tk.Toplevel(self.root)
-        modal_window.title("Query Data")
-        modal_window.geometry("200x100")
-        
-        tk.Label(modal_window, text="Input Query", font=("Arial", 16, "bold")).pack()
-        query_entry = tk.Entry(modal_window).pack(pady=10)
+        tk.Label(new_frame, text="Average Mileage Per Vehicle (km):", font=("Arial", 10, "bold")).grid(row=4, column=0, pady=5)
+        tk.Label(new_frame, text=self.metrics[3], font=("Arial", 8, "italic")).grid(row=4, column=1)
+
+        query_var = tk.StringVar()
+        tk.Label(new_frame, text="Enter query in a 'key:value' format (e.g. vehicle:id, booking:start_date)", font=("Arial", 10, "bold")).grid(row=5, column=0, pady=5)
+        tk.Entry(new_frame, textvariable=query_var).grid(row=6, column=0)
 
         # tk.Button to execute the query
-        tk.Button(modal_window, text="Search", command=self.system.database.execute_query(str(query_entry.get()))).grid(row=2, column=0, columnspan=2, pady=10)
+        tk.Button(new_frame, text="Display Query", command=lambda: self.system.database.execute_query(query_var.get())).grid(row=7, pady=15)
+
+        tk.Label(new_frame, text="No results found!", font=("Arial", 12)).grid(row=8, padx=15, pady=15)
 
     def generate_full_report(self):
         all_vehicles = self.system.get_all_vehicles()
