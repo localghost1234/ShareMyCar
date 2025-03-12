@@ -1,7 +1,9 @@
+import os
 from tkinter import Label, Button, filedialog
 from src.pages.interfaces.base_interface import BaseInterface
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
+from datetime import datetime
 
 titles = ("Metrics Management", "Financial Metrics")
 headers = ("Total Revenue (€)", "Total Costs (€)", "Total Profit (€)", "Avg Mileage (km/vehicle)")
@@ -36,11 +38,14 @@ class MetricsInterface(BaseInterface):
         all_bookings = self.system.get_all_bookings()
         all_logs = self.system.get_transaction_logs()
 
+        current_datetime = datetime.now()
+
         file_path = filedialog.asksaveasfilename(
-        defaultextension=".pdf",
-        filetypes=[("PDF Files", "*.pdf")],
-        title="Save Report As"
-    )
+            defaultextension=".pdf",
+            filetypes=[("PDF Files", "*.pdf")],
+            title="Choose Report Folder",
+            initialfile=f"FullReport_{current_datetime.strftime("%Y-%m-%d_%H%M%S")}"
+        )
 
         if not file_path:  # User cancelled
             return
@@ -51,7 +56,7 @@ class MetricsInterface(BaseInterface):
         y_position = height - 40  # Start position
 
         pdf.setFont("Helvetica-Bold", 14)
-        pdf.drawString(200, y_position, "Full System Report")
+        pdf.drawString(200, y_position, f"Full Car Sharing Report - {current_datetime.strftime("%Y-%m-%d_%H:%M:%S")}")
         y_position -= 30
 
         pdf.setFont("Helvetica", 12)
@@ -61,12 +66,14 @@ class MetricsInterface(BaseInterface):
         y_position -= 20
 
         for vehicle in all_vehicles:
-            pdf.drawString(50, y_position, f"ID: {vehicle[0]}, Brand: {vehicle[1]}, Model: {vehicle[2]}")
+            pdf.drawString(50, y_position, f"Vehicle ID: {vehicle[0]}, Brand: {vehicle[1]}, Model: {vehicle[2]}")
             y_position -= 15
             if y_position < 50:  # New page if needed
                 pdf.showPage()
                 pdf.setFont("Helvetica", 12)
                 y_position = height - 40
+
+        y_position -= 40
 
         # **2. Add Booking Data**
         pdf.drawString(50, y_position, "Bookings:")
@@ -79,6 +86,8 @@ class MetricsInterface(BaseInterface):
                 pdf.showPage()
                 pdf.setFont("Helvetica", 12)
                 y_position = height - 40
+
+        y_position -= 40
 
         # **3. Add Transaction Logs**
         pdf.drawString(50, y_position, "Transaction Logs:")
