@@ -11,7 +11,7 @@ generate_model = lambda content: (
     f"{content[2]:<15} | "
     f"{content[3]:<15} | "
     f"€{content[4]:<15} | "
-    f"€{content[5]:<15} | "
+    f"€{content[5]:<15}"
 )
 
 class ReturnInterface(BaseInterface):
