@@ -47,10 +47,12 @@ class Database():
         except Exception as e:
             print("Error during database query:", e)
             print("Query:", query)
+            return None
 
-        if operation == SQL.OPERATION.SELECT:
-            return self.cursor.fetchone() if fetch == SQL.FETCH.ONE else self.cursor.fetchall()
-        return None
+        if operation != SQL.OPERATION.SELECT:
+            return None
+        
+        return self.cursor.fetchone() if fetch == SQL.FETCH.ONE else self.cursor.fetchall()
 
     def commit(self):
         self.conn.commit()
