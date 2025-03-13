@@ -15,49 +15,49 @@ class System:
 
     def get_all_vehicles(self):
         self.database.execute_query("SELECT * FROM vehicles")
-        return self.database.fetch(only_one=False)
+        return self.database.cursor.fetchall()
     
     def get_all_bookings(self):
         self.database.execute_query("SELECT * FROM bookings")
-        return self.database.fetch(only_one=False)
+        return self.database.cursor.fetchall()
     
     def get_transaction_logs(self):
         self.database.execute_query("SELECT * FROM logs")
-        return self.database.fetch(only_one=False)
+        return self.database.cursor.fetchall()
     
     def get_vehicles_requiring_maintenance(self):
         self.database.execute_query("SELECT id, brand, model, current_mileage, maintenance_mileage FROM vehicles WHERE current_mileage >= maintenance_mileage")
-        return self.database.fetch(only_one=False)
+        return self.database.cursor.fetchall()
     
     def get_unavailable_vehicles(self):
         """Fetches all vehicles with available = 0."""
         self.database.execute_query("SELECT * FROM vehicles WHERE available = 0")
-        return self.database.fetch(only_one=False)
+        return self.database.cursor.fetchall()
     
     def get_customer_name(self, vehicle_id):
         self.database.execute_query("SELECT customer_name FROM bookings WHERE vehicle_id = ?", (vehicle_id,))
-        name = self.database.fetch(only_one=True)
+        name = self.database.cursor.fetchone()
         return name[0] if name else "Unknown Customer"
     
     def get_financial_metrics(self):
         """Fetches and calculates financial metrics from the database."""
         self.database.execute_query("SELECT * FROM logs")
-        is_there_log = self.database.fetch(only_one=True)[0] or None
+        is_there_log = self.database.cursor.fetchone()[0] or None
 
         if not is_there_log:
             return ()
         
         # Get total revenue from logs
         self.database.execute_query("SELECT SUM(revenue) FROM logs")
-        total_revenue = self.database.fetch(only_one=True)[0] or 0
+        total_revenue = self.database.cursor.fetchone()[0] or 0
 
         # Get total maintenance costs from vehicles
         self.database.execute_query("SELECT SUM(maintenance_cost) FROM vehicles")
-        total_maintenance_cost = self.database.fetch(only_one=True)[0] or 0
+        total_maintenance_cost = self.database.cursor.fetchone()[0] or 0
 
         # Get total additional costs from logs (e.g., extra fees, cleaning costs)
         self.database.execute_query("SELECT SUM(additional_costs) FROM logs")
-        total_additional_costs = self.database.fetch(only_one=True)[0] or 0
+        total_additional_costs = self.database.cursor.fetchone()[0] or 0
 
         # Calculate total operational costs
         total_operational_costs = total_maintenance_cost + total_additional_costs
@@ -67,7 +67,7 @@ class System:
 
         # Get average mileage per vehicle
         self.database.execute_query("SELECT AVG(current_mileage) FROM vehicles")
-        avg_mileage = self.database.fetch(only_one=True)[0] or 0
+        avg_mileage = self.database.cursor.fetchone()[0] or 0
 
         metrics = (
             total_revenue,
@@ -90,7 +90,7 @@ class System:
         """Books a vehicle, calculates cost, and updates the database."""
         # Check if the vehicle is available
         self.database.execute_query("SELECT daily_price, maintenance_cost, available FROM vehicles WHERE id = ?", (vehicle_id,))
-        vehicle = self.database.fetch(only_one=True)
+        vehicle = self.database.cursor.fetchone()
 
         if not vehicle:
             return None  # Vehicle does not exist
@@ -122,14 +122,14 @@ class System:
     def query_return(self, vehicle_id, actual_km, late_days, customer_name):
         # Check if the vehicle exists
         self.database.execute_query("SELECT * FROM vehicles WHERE id = ?", (vehicle_id,))
-        vehicle = self.database.fetch(only_one=True)
+        vehicle = self.database.cursor.fetchone()
         
         if not vehicle:
             return None  # Vehicle doesn't exist
 
         # Check if the vehicle is currently booked
         self.database.execute_query("SELECT * FROM bookings WHERE vehicle_id = ?", (vehicle_id,))
-        booking = self.database.fetch(only_one=True)
+        booking = self.database.cursor.fetchone()
         
         if not booking:
             return None  # Vehicle is not currently booked

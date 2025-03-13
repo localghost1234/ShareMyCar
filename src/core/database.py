@@ -66,12 +66,6 @@ class Database():
     def commit(self):
         self.conn.commit()
 
-    def fetch(self, only_one: bool):
-        if only_one:
-            return self.cursor.fetchone()
-        
-        return self.cursor.fetchall()
-
     def close(self):
         try:
             # Commit any pending transactions

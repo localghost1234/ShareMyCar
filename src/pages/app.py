@@ -12,7 +12,7 @@ class App:
 
         self.root = tk.Tk()
         self.root.geometry("720x480")
-        self.root.title("Carsharing Management System")
+        self.root.title("Share My Car")
 
         button_frame = tk.Frame(self.root)
         button_frame.pack()
