@@ -38,7 +38,7 @@ class MetricsInterface(BaseInterface):
         modal_window.geometry("360x400")
         
         tk.Label(modal_window, text="Input Query", font=("Arial", 16, "bold")).pack(pady=7)
-        tk.Label(modal_window, text="Use 'key:value' format\n(e.g. vehicles:id, bookings:custome_name, logs:vehicle_id)", font=("Arial", 11, "italic")).pack()
+        tk.Label(modal_window, text="Use 'key:value' format\n(e.g. vehicles:id, bookings:custome_name, logs:vehicle_id)", font=("Arial", 9, "italic")).pack()
         
         query_entry = tk.Entry(modal_window, font=("Arial", 10))
         query_entry.pack(pady=10)
