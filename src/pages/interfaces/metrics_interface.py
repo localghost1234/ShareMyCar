@@ -19,16 +19,16 @@ class MetricsInterface(BaseInterface):
 
         self.metrics = self.system.get_financial_metrics()
 
-        tk.Label(self.frame, text="Total Revenue (€):", font=("Arial", 14, "bold")).pack(pady=5)
+        tk.Label(self.frame, text="Total Revenue (€):", font=("Arial", 13, "bold")).pack(pady=5)
         tk.Label(self.frame, text=self.metrics[0], font=("Arial", 12, "italic")).pack()
 
-        tk.Label(self.frame, text="Total Operational Costs (€):", font=("Arial", 14, "bold")).pack(pady=5)
+        tk.Label(self.frame, text="Total Operational Costs (€):", font=("Arial", 13, "bold")).pack(pady=5)
         tk.Label(self.frame, text=self.metrics[1], font=("Arial", 12, "italic")).pack()
 
-        tk.Label(self.frame, text="Total Profit (€):", font=("Arial", 14, "bold")).pack(pady=5)
+        tk.Label(self.frame, text="Total Profit (€):", font=("Arial", 13, "bold")).pack(pady=5)
         tk.Label(self.frame, text=self.metrics[2], font=("Arial", 12, "italic")).pack()
 
-        tk.Label(self.frame, text="Average Mileage Per Vehicle (km):", font=("Arial", 14, "bold")).pack(pady=5)
+        tk.Label(self.frame, text="Average Mileage Per Vehicle (km):", font=("Arial", 13, "bold")).pack(pady=5)
         tk.Label(self.frame, text=self.metrics[3], font=("Arial", 12, "italic")).pack()
 
         tk.Button(self.frame, text="Query Metric", command=self.query_metric).pack(pady=20)
@@ -46,24 +46,46 @@ class MetricsInterface(BaseInterface):
         
         query_entry = tk.Entry(modal_window)
         query_entry.pack(pady=10)
-        query_arr = query_entry.get().strip().split(':')
 
         def submit_query():
-            if len(query_arr) != 2:
+            nonlocal modal_window
+            nonlocal query_entry
+
+            query_list = query_entry.get().strip().split(':')
+            
+            if len(query_list) != 2:
                 self.show_error("Please, enter a 'key' and a 'value' only")
                 return
             
-            key = query_arr[0]
-            value = query_arr[1]
+            key = query_list[0]
+            value = query_list[1]
 
-            if not key in ["vehicle", "booking", "log"]:
-                self.show_error("Please, enter a valid key")
-
-            query_statement = f"SELECT {value} FROM {key}"
+            query_statement = f"SELECT {value} FROM {key}s"
             self.system.database.execute_query(query_statement)
-            result = self.system.database.fetch(only_one=False)
+            result_list = self.system.database.fetch(only_one=False)
             
-            tk.Label(modal_window, text=result, font=("Arial", 12)).pack()
+            if not len(result_list):
+                tk.Label(modal_window, text="No results found.", font=("Arial", 12)).pack(pady=15)
+                return
+            
+            tk.Label(modal_window, text=f"{len(result_list)} results found:", font=("Arial", 12)).pack(pady=15)
+            
+            v_scrollbar = tk.Scrollbar(modal_window, orient=tk.VERTICAL)
+
+            listbox = tk.Listbox(
+                modal_window,
+                yscrollcommand=v_scrollbar.set,
+                font=("Arial", 10)
+            )
+
+            v_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+            listbox.pack(fill=tk.Y)
+
+            # Link scrollbars
+            v_scrollbar.config(command=listbox.yview)
+
+            for item in result_list:
+                listbox.insert(tk.END, item[0])
 
         # tk.Button to execute the query
         tk.Button(modal_window, text="Search", command=submit_query).pack()
