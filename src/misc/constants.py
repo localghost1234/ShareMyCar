@@ -5,9 +5,29 @@ from src.pages.interfaces.maintenance_interface import MaintenanceInterface
 from src.pages.interfaces.logs_interface import LogsInterface
 from src.pages.interfaces.metrics_interface import MetricsInterface
 
+from types import SimpleNamespace
+
+SQL = SimpleNamespace(
+    OPERATION=SimpleNamespace(
+        SELECT="SELECT",
+        INSERT="INSERT",
+        UPDATE="UPDATE",
+        DELETE="DELETE"
+    ),
+    TABLE=SimpleNamespace(
+        VEHICLES="vehicles",
+        BOOKINGS="bookings",
+        LOGS="logs"
+    ),
+    FETCH=SimpleNamespace(
+        ONE="one",
+        ALL="all"
+    )
+)
+
 DB_NAME = "carsharing.db"
 
-DATABASE_TABLES_STATEMENTS = (
+DATABASE_TABLE_STATEMENTS = (
         """
             CREATE TABLE IF NOT EXISTS vehicles (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,

@@ -56,25 +56,28 @@ class MetricsInterface(BaseInterface):
             key = query_list[0]
             value = query_list[1]
 
-            query_statement = f"SELECT {value} FROM {key}"
-            self.system.database.execute_query(query_statement)
-            result_list = self.system.database.cursor.fetchall()
+            results_list = self.system.database.execute_query(
+                operation="SELECT",
+                table=key,
+                columns=value,
+                fetch="all" 
+            )
 
             for widget in modal_window.winfo_children():                
                 if isinstance(widget, tk.Listbox):
                     widget.destroy()  # Destroy the existing Listbox
-                elif isinstance(widget, tk.Label) and widget.cget("text").startswith(f"{len(result_list)} results found:"):
+                elif isinstance(widget, tk.Label) and widget.cget("text").startswith(f"{len(results_list)} results found:"):
                     widget.destroy()
                 elif isinstance(widget, tk.Label) and widget.cget("text").startswith("No result found."):
                     widget.destroy()
                 elif isinstance(widget, tk.Scrollbar):
                     widget.destroy()
             
-            if not len(result_list):
+            if not len(results_list):
                 tk.Label(modal_window, text="No results found.", font=("Arial", 12)).pack(pady=15)
                 return
             
-            tk.Label(modal_window, text=f"{len(result_list)} results found:", font=("Arial", 12)).pack(pady=15)
+            tk.Label(modal_window, text=f"{len(results_list)} results found:", font=("Arial", 12)).pack(pady=15)
             
             v_scrollbar = tk.Scrollbar(modal_window, orient=tk.VERTICAL)
 
@@ -90,7 +93,7 @@ class MetricsInterface(BaseInterface):
             # Link scrollbars
             v_scrollbar.config(command=listbox.yview)
 
-            for item in result_list:
+            for item in results_list:
                 listbox.insert(tk.END, item[0])
 
         # tk.Button to execute the query
