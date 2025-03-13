@@ -22,6 +22,12 @@ class Database():
     def commit(self):
         self.conn.commit()
 
+    def fetchall(self):
+        return self.cursor.fetchall()
+    
+    def fetchone(self):
+        return self.cursor.fetchone()
+
     def close(self):
         try:
             # Commit any pending transactions
