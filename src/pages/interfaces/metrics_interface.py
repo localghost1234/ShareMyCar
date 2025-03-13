@@ -62,7 +62,7 @@ class MetricsInterface(BaseInterface):
 
             query_statement = f"SELECT {value} FROM {key}s"
             self.system.database.execute_query(query_statement)
-            result_list = self.system.database.fetch(only_one=False)
+            result_list = self.system.database.cursor.fetchall()
 
             for widget in modal_window.winfo_children():                
                 if isinstance(widget, tk.Listbox):
@@ -123,7 +123,7 @@ class MetricsInterface(BaseInterface):
         y_position = height - 40  # Start position
 
         pdf.setFont("Helvetica-Bold", 16)
-        pdf.drawString(200, y_position, f"Full Car Sharing Report - {current_datetime.strftime("%Y-%m-%d_%H:%M:%S")}")
+        pdf.drawString(200, y_position, f"Full Report - {current_datetime.strftime("%Y-%m-%d_%H:%M:%S")}")
         y_position -= 30
 
         x_position = 50
