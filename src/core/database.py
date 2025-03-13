@@ -1,45 +1,7 @@
 # database.py
 import sqlite3
 
-from src.misc.constants import DB_NAME
-
-STATEMENT_CREATE_VEHICLES_TABLE = """
-            CREATE TABLE IF NOT EXISTS vehicles (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                brand TEXT NOT NULL,
-                model TEXT NOT NULL,
-                current_mileage INTEGER NOT NULL,
-                daily_price REAL NOT NULL,
-                maintenance_cost REAL NOT NULL,
-                available INTEGER DEFAULT 1,
-                maintenance_mileage INTEGER NOT NULL
-            )
-        """
-
-STATEMENT_CREATE_BOOKINGS_TABLE = """
-            CREATE TABLE IF NOT EXISTS bookings (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                vehicle_id INTEGER NOT NULL,
-                rental_days INTEGER NOT NULL,
-                estimated_km INTEGER NOT NULL,
-                estimated_cost REAL NOT NULL,
-                customer_name TEXT NOT NULL,
-                FOREIGN KEY (vehicle_id) REFERENCES vehicles(id)
-            )
-        """
-
-STATEMENT_CREATE_LOGS_TABLE = """
-            CREATE TABLE IF NOT EXISTS logs (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                vehicle_id INTEGER NOT NULL,
-                rental_duration INTEGER NOT NULL,
-                revenue REAL NOT NULL,
-                additional_costs REAL DEFAULT 0.0,
-                customer_name TEXT NOT NULL,
-                transaction_type TEXT NOT NULL,
-                FOREIGN KEY (vehicle_id) REFERENCES vehicles(id)
-            )
-        """
+from src.misc.constants import DATABASE_TABLES_STATEMENTS, DB_NAME
 
 class Database():
     def __init__(self):
@@ -48,9 +10,8 @@ class Database():
         self.cursor = self.conn.cursor()
 
         # Create the vehicles table
-        self.cursor.execute(STATEMENT_CREATE_VEHICLES_TABLE)
-        self.cursor.execute(STATEMENT_CREATE_BOOKINGS_TABLE)
-        self.cursor.execute(STATEMENT_CREATE_LOGS_TABLE)
+        for statement in DATABASE_TABLES_STATEMENTS:
+            self.cursor.execute(statement)
 
         # Commit the changes and close the connection
         self.conn.commit()
