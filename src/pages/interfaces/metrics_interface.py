@@ -10,26 +10,22 @@ headers = ("Total Revenue (€)", "Total Costs (€)", "Total Profit (€)", "Av
 empty_message = "No financial data available."
 
 vehicle_headers = ("ID", "Brand", "Model", "Mileage", "Daily Price", "Maintenance Cost", "Available", "Maintenance Mileage")
-booking_headers = ("ID", "Vehicle ID", "Rental Days", "Estimated KM", "Estimated Cost", "Start Date", "End Date", "Customer Name")
-log_headers = ("ID", "Vehicle ID", "Rental Duration", "Revenue", "Additional Costs", "Customer Name")
+booking_headers = ("ID", "Vehicle ID", "Rental Days", "Estimated KM", "Estimated Cost", "Customer Name")
+log_headers = ("ID", "Vehicle ID", "Rental Duration", "Revenue", "Additional Costs", "Customer Name", "Transaction Type")
 
 class MetricsInterface(BaseInterface):
     def __init__(self, root, system):
         super().__init__(root, system, *titles)
 
-        self.metrics = self.system.get_financial_metrics()
+        metrics = self.system.get_financial_metrics()
 
-        tk.Label(self.frame, text="Total Revenue (€):", font=("Arial", 13, "bold")).pack(pady=5)
-        tk.Label(self.frame, text=self.metrics[0], font=("Arial", 12, "italic")).pack()
+        if not metrics:
+            tk.Label(self.frame, text=empty_message, font=("Arial", 18, "bold")).pack(padx=50, pady=50)
+            return
 
-        tk.Label(self.frame, text="Total Operational Costs (€):", font=("Arial", 13, "bold")).pack(pady=5)
-        tk.Label(self.frame, text=self.metrics[1], font=("Arial", 12, "italic")).pack()
-
-        tk.Label(self.frame, text="Total Profit (€):", font=("Arial", 13, "bold")).pack(pady=5)
-        tk.Label(self.frame, text=self.metrics[2], font=("Arial", 12, "italic")).pack()
-
-        tk.Label(self.frame, text="Average Mileage Per Vehicle (km):", font=("Arial", 13, "bold")).pack(pady=5)
-        tk.Label(self.frame, text=self.metrics[3], font=("Arial", 12, "italic")).pack()
+        for idx, h in enumerate(headers):
+            tk.Label(self.frame, text=h, font=("Arial", 13, "bold")).pack(pady=5)
+            tk.Label(self.frame, text=metrics[0], font=("Arial", 12, "italic")).pack()
 
         tk.Button(self.frame, text="Query Metric", command=self.query_metric).pack(pady=20)
         tk.Button(self.frame, text="Download Full Report", command=self.generate_full_report).pack()
@@ -42,7 +38,7 @@ class MetricsInterface(BaseInterface):
         modal_window.geometry("360x400")
         
         tk.Label(modal_window, text="Input Query", font=("Arial", 16, "bold")).pack(pady=7)
-        tk.Label(modal_window, text="Use 'key:value' format\n(e.g. vehicle:id, booking:start_date, log:vehicle_id)", font=("Arial", 11, "italic")).pack()
+        tk.Label(modal_window, text="Use 'key:value' format\n(e.g. vehicle:id, booking:custome_name, log:vehicle_id)", font=("Arial", 11, "italic")).pack()
         
         query_entry = tk.Entry(modal_window, font=("Arial", 10))
         query_entry.pack(pady=10)

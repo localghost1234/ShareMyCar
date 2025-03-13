@@ -23,8 +23,6 @@ STATEMENT_CREATE_BOOKINGS_TABLE = """
                 rental_days INTEGER NOT NULL,
                 estimated_km INTEGER NOT NULL,
                 estimated_cost REAL NOT NULL,
-                start_date TEXT NOT NULL,
-                end_date TEXT NOT NULL,
                 customer_name TEXT NOT NULL,
                 FOREIGN KEY (vehicle_id) REFERENCES vehicles(id)
             )
@@ -38,6 +36,7 @@ STATEMENT_CREATE_LOGS_TABLE = """
                 revenue REAL NOT NULL,
                 additional_costs REAL DEFAULT 0.0,
                 customer_name TEXT NOT NULL,
+                transaction_type TEXT NOT NULL,
                 FOREIGN KEY (vehicle_id) REFERENCES vehicles(id)
             )
         """
@@ -48,17 +47,13 @@ class Database():
         self.conn = sqlite3.connect(DB_NAME)
         self.cursor = self.conn.cursor()
 
-        #cursor.execute("DROP TABLE IF EXISTS vehicles")
-        #cursor.execute("DROP TABLE IF EXISTS bookings")
-        #cursor.execute("DROP TABLE IF EXISTS logs")
-
         # Create the vehicles table
         self.cursor.execute(STATEMENT_CREATE_VEHICLES_TABLE)
         self.cursor.execute(STATEMENT_CREATE_BOOKINGS_TABLE)
         self.cursor.execute(STATEMENT_CREATE_LOGS_TABLE)
 
         # Commit the changes and close the connection
-        self.commit()
+        self.conn.commit()
 
     def execute_query(self, statement, params=()):
         self.cursor.execute(statement, params)
@@ -69,7 +64,7 @@ class Database():
     def close(self):
         try:
             # Commit any pending transactions
-            self.commit()
+            self.conn.commit()
         except Exception as e:
             print(f"Error committing transactions: \n{e}")
 

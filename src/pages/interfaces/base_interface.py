@@ -11,10 +11,10 @@ class BaseInterface:
         self.frame.pack(fill=tk.BOTH, expand=True)
 
         # Title label
-        tk.Label(self.frame, text=title, font=("Arial", 18)).pack(pady=10)
+        tk.Label(self.frame, text=title, font=("Arial", 18)).pack(pady=15)
 
         # Subtitle label
-        tk.Label(self.frame, text=subtitle, font=("Arial", 14)).pack(pady=10) if subtitle else None
+        tk.Label(self.frame, text=subtitle, font=("Arial", 14)).pack(pady=7) if subtitle else None
 
     def create_scrollable_listbox(self, headers=(), disable_clicking=True, font=("Courier", 10)):
         """

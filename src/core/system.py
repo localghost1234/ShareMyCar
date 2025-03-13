@@ -42,7 +42,7 @@ class System:
     def get_financial_metrics(self):
         """Fetches and calculates financial metrics from the database."""
         self.database.execute_query("SELECT * FROM logs")
-        is_there_log = self.database.cursor.fetchone()[0] or None
+        is_there_log = self.database.cursor.fetchone()
 
         if not is_there_log:
             return ()
@@ -101,23 +101,26 @@ class System:
             return None  # Vehicle is already booked
 
         # Calculate estimated cost
-        estimated_cost = (daily_price * rental_days) + (maintenance_cost * estimated_km)
-
-        # Calculate rental period
-        start_date = datetime.now()
-        end_date = start_date + timedelta(days=rental_days)
+        additional_cost = maintenance_cost * estimated_km
+        total_estimated_cost = (daily_price * rental_days) + additional_cost
 
         # Insert booking record
         self.database.execute_query("""
-            INSERT INTO bookings (vehicle_id, rental_days, estimated_km, estimated_cost, start_date, end_date, customer_name)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
-        """, (vehicle_id, rental_days, estimated_km, estimated_cost, start_date.strftime("%Y-%m-%d"), end_date.strftime("%Y-%m-%d"), customer_name))
+            INSERT INTO bookings (vehicle_id, rental_days, estimated_km, estimated_cost, customer_name)
+            VALUES (?, ?, ?, ?, ?)
+        """, (vehicle_id, rental_days, estimated_km, total_estimated_cost, customer_name))
+
+        # Insert booking record
+        self.database.execute_query("""
+            INSERT INTO logs (vehicle_id, rental_duration, revenue, additional_costs, customer_name, transaction_type)
+            VALUES (?, ?, ?, ?, ?, ?)
+        """, (vehicle_id, rental_days, total_estimated_cost, additional_cost, customer_name, "booking"))
 
         # Mark vehicle as unavailable
         self.database.execute_query("UPDATE vehicles SET available = 0 WHERE id = ?", (vehicle_id,))
 
         self.database.commit()
-        return estimated_cost
+        return total_estimated_cost
     
     def query_return(self, vehicle_id, actual_km, late_days, customer_name):
         # Check if the vehicle exists
@@ -154,9 +157,9 @@ class System:
         self.database.execute_query("UPDATE vehicles SET current_mileage = ?, available = 1 WHERE id = ?", (new_mileage, vehicle_id,))
 
         self.database.execute_query("""
-            INSERT INTO logs (vehicle_id, rental_duration, revenue, additional_costs, customer_name)
-            VALUES (?, ?, ?, ?, ?)
-        """, (vehicle_id, rental_days, total_revenue, additional_costs, customer_name))
+            INSERT INTO logs (vehicle_id, rental_duration, revenue, additional_costs, customer_name, transaction_type)
+            VALUES (?, ?, ?, ?, ?, ?)
+        """, (vehicle_id, rental_days, total_revenue, additional_costs, customer_name, "return"))
 
         # Commit changes
         self.database.commit()
