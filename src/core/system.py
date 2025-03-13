@@ -71,6 +71,7 @@ class System:
             table=SQL.TABLE.LOGS,
             fetch=SQL.FETCH.ONE
         )
+
         if not logs_exist:
             return ()
 

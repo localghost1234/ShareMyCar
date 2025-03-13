@@ -30,17 +30,21 @@ class Database():
         """
         query = f"{operation} {", ".join(columns)} FROM {table}" if operation == SQL.OPERATION.SELECT else ""
 
-        if operation == SQL.OPERATION.INSERT:
-            placeholders = ", ".join(["?"] * len(values))
-            query = f"INSERT INTO {table} ({', '.join(columns)}) VALUES ({placeholders})"
-        elif operation == SQL.OPERATION.UPDATE:
-            set_clause = ", ".join([f"{col} = ?" for col in columns])
-            query = f"UPDATE {table} SET {set_clause}"
-        elif operation == SQL.OPERATION.DELETE:
-            query = f"DELETE FROM {table}"
+        try:
+            if operation == SQL.OPERATION.INSERT:
+                placeholders = ", ".join(["?"] * len(values))
+                query = f"INSERT INTO {table} ({', '.join(columns)}) VALUES ({placeholders})"
+            elif operation == SQL.OPERATION.UPDATE:
+                set_clause = ", ".join([f"{col} = ?" for col in columns])
+                query = f"UPDATE {table} SET {set_clause}"
+            elif operation == SQL.OPERATION.DELETE:
+                query = f"DELETE FROM {table}"
 
-        if where:
-            query += f" WHERE {where}"
+            if where:
+                query += f" WHERE {where}"
+        except Exception as e:
+            print("Operational error, please ensure all params in 'execute_query()' are correct")
+            print(e)
 
         try:
             self.cursor.execute(query, values) if values else self.cursor.execute(query)
@@ -56,12 +60,6 @@ class Database():
 
     def commit(self):
         self.conn.commit()
-
-    def fetchall(self):
-        return self.cursor.fetchall()
-    
-    def fetchone(self):
-        return self.cursor.fetchone()
 
     def close(self):
         try:
