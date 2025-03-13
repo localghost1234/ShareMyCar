@@ -14,7 +14,7 @@ class App:
         self.current_interface = None
 
         self.root = tk.Tk()
-        self.root.geometry("900x720")
+        self.root.geometry("720x480")
         self.root.title("Carsharing Management System")
 
         self.button_frame = tk.Frame(self.root)

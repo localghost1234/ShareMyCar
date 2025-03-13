@@ -39,15 +39,15 @@ class MetricsInterface(BaseInterface):
         # Create a modal window
         modal_window = tk.Toplevel(self.frame)
         modal_window.title("Query Data")
-        modal_window.geometry("400x400")
+        modal_window.geometry("360x400")
         
         tk.Label(modal_window, text="Input Query", font=("Arial", 16, "bold")).pack(pady=7)
-        tk.Label(modal_window, text="Use 'key:value' format\n(e.g. vehicle:id, booking:start_date, log:vehicle_id)", font=("Arial", 10, "italic")).pack()
+        tk.Label(modal_window, text="Use 'key:value' format\n(e.g. vehicle:id, booking:start_date, log:vehicle_id)", font=("Arial", 11, "italic")).pack()
         
-        query_entry = tk.Entry(modal_window)
+        query_entry = tk.Entry(modal_window, font=("Arial", 10))
         query_entry.pack(pady=10)
 
-        def submit_query():
+        def submit_query():            
             nonlocal modal_window
             nonlocal query_entry
 
@@ -63,6 +63,16 @@ class MetricsInterface(BaseInterface):
             query_statement = f"SELECT {value} FROM {key}s"
             self.system.database.execute_query(query_statement)
             result_list = self.system.database.fetch(only_one=False)
+
+            for widget in modal_window.winfo_children():                
+                if isinstance(widget, tk.Listbox):
+                    widget.destroy()  # Destroy the existing Listbox
+                elif isinstance(widget, tk.Label) and widget.cget("text").startswith(f"{len(result_list)} results found:"):
+                    widget.destroy()
+                elif isinstance(widget, tk.Label) and widget.cget("text").startswith("No result found."):
+                    widget.destroy()
+                elif isinstance(widget, tk.Scrollbar):
+                    widget.destroy()
             
             if not len(result_list):
                 tk.Label(modal_window, text="No results found.", font=("Arial", 12)).pack(pady=15)
