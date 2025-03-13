@@ -2,10 +2,7 @@
 import tkinter as tk
 
 from src.core.system import System
-
-# TODO: change startup page to have a welcoming message
-from src.pages.interfaces.inventory_interface import InventoryInterface
-
+from src.pages.interfaces.home_interface import HomeInterface
 from src.misc.constants import INTERFACES_LIST
 
 class App:
@@ -17,15 +14,15 @@ class App:
         self.root.geometry("720x480")
         self.root.title("Carsharing Management System")
 
-        self.button_frame = tk.Frame(self.root)
-        self.button_frame.pack()
+        button_frame = tk.Frame(self.root)
+        button_frame.pack()
 
         for interface_name, interface_class in INTERFACES_LIST:
-            button = tk.Button(self.button_frame, text=interface_name, command=lambda i=interface_class: self.switch_interface(i))
+            button = tk.Button(button_frame, text=interface_name, command=lambda i=interface_class: self.switch_interface(i))
             button.pack(side=tk.LEFT)
 
-        # Start with the Inventory interface
-        self.switch_interface(InventoryInterface)
+        # Start with the HomeInterface
+        self.switch_interface(HomeInterface)
 
         # Register on_close() as the handler for the window close event
         self.root.protocol("WM_DELETE_WINDOW", self.on_close)
