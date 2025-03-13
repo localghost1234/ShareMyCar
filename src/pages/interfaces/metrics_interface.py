@@ -27,10 +27,10 @@ class MetricsInterface(BaseInterface):
             tk.Label(self.frame, text=h, font=("Arial", 13, "bold")).pack(pady=5)
             tk.Label(self.frame, text=metrics[0], font=("Arial", 12, "italic")).pack()
 
-        tk.Button(self.frame, text="Query Metric", command=self.query_metric).pack(pady=20)
+        tk.Button(self.frame, text="Make Query", command=self.show_querying_modal).pack(pady=20)
         tk.Button(self.frame, text="Download Full Report", command=self.generate_full_report).pack()
 
-    def query_metric(self):
+    def show_querying_modal(self):
         """Open a modal window to query specific data."""
         # Create a modal window
         modal_window = tk.Toplevel(self.frame)
@@ -38,7 +38,7 @@ class MetricsInterface(BaseInterface):
         modal_window.geometry("360x400")
         
         tk.Label(modal_window, text="Input Query", font=("Arial", 16, "bold")).pack(pady=7)
-        tk.Label(modal_window, text="Use 'key:value' format\n(e.g. vehicle:id, booking:custome_name, log:vehicle_id)", font=("Arial", 11, "italic")).pack()
+        tk.Label(modal_window, text="Use 'key:value' format\n(e.g. vehicles:id, bookings:custome_name, logs:vehicle_id)", font=("Arial", 11, "italic")).pack()
         
         query_entry = tk.Entry(modal_window, font=("Arial", 10))
         query_entry.pack(pady=10)
@@ -56,7 +56,7 @@ class MetricsInterface(BaseInterface):
             key = query_list[0]
             value = query_list[1]
 
-            query_statement = f"SELECT {value} FROM {key}s"
+            query_statement = f"SELECT {value} FROM {key}"
             self.system.database.execute_query(query_statement)
             result_list = self.system.database.cursor.fetchall()
 

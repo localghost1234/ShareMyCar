@@ -45,11 +45,11 @@ DATABASE_TABLES_STATEMENTS = (
         """
 )
 
-INTERFACES_LIST = [
+INTERFACES_LIST = (
             ("Inventory", InventoryInterface),
             ("Booking", BookingInterface),
             ("Return", ReturnInterface),
             ("Maintenance", MaintenanceInterface),
             ("Logs", LogsInterface),
             ("Metrics", MetricsInterface),
-        ]
+        )

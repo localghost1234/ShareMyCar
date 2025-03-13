@@ -25,7 +25,14 @@ class System:
         return self.database.fetchall()
     
     def get_vehicles_requiring_maintenance(self):
-        self.database.execute_query("SELECT id, brand, model, current_mileage, maintenance_mileage FROM vehicles WHERE current_mileage >= maintenance_mileage")
+        self.database.execute_query("""SELECT
+                                    id,
+                                    brand,
+                                    model,
+                                    current_mileage,
+                                    maintenance_mileage
+                                    FROM vehicles
+                                    WHERE current_mileage >= maintenance_mileage""")
         return self.database.fetchall()
     
     def get_unavailable_vehicles(self):
@@ -142,10 +149,10 @@ class System:
         estimated_cost = booking[4]  # Assuming column 4 is 'estimated_cost'
 
         # Cost calculation logic
-        km_exceeded = max(0, actual_km - estimated_km)  # Extra km
-        lateness_fee = late_days * 10  # Example: charge 10€ per late day
-        exceeded_mileage_fee = km_exceeded * 0.5 # 0.5€/extra km
         cleaning_fees = 20
+        km_exceeded = max(0, actual_km - estimated_km)  # Extra km
+        lateness_fee = late_days * 10  # charge 10€ per late day
+        exceeded_mileage_fee = km_exceeded * 0.5 # 0.5€ per extra km
         additional_costs = exceeded_mileage_fee + lateness_fee + cleaning_fees
         total_revenue = estimated_cost + additional_costs
 
