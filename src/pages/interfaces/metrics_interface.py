@@ -4,26 +4,19 @@ from src.pages.interfaces.base_interface import BaseInterface
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
 from datetime import datetime
-
-titles = ("Metrics Management", "Financial Metrics")
-headers = ("Total Revenue (€)", "Total Costs (€)", "Total Profit (€)", "Avg Mileage (km/vehicle)")
-empty_message = "No financial data available."
-
-vehicle_headers = ("ID", "Brand", "Model", "Mileage", "Daily Price", "Maintenance Cost", "Available", "Maintenance Mileage")
-booking_headers = ("ID", "Vehicle ID", "Rental Days", "Estimated KM", "Estimated Cost", "Customer Name")
-log_headers = ("ID", "Vehicle ID", "Rental Duration", "Revenue", "Additional Costs", "Customer Name", "Transaction Type")
+from src.misc.strings import METRICS
 
 class MetricsInterface(BaseInterface):
     def __init__(self, root, system):
-        super().__init__(root, system, *titles)
+        super().__init__(root, system, *METRICS.TITLES)
 
         metrics = self.system.get_financial_metrics()
 
         if not metrics:
-            tk.Label(self.frame, text=empty_message, font=("Arial", 18, "bold")).pack(padx=50, pady=50)
+            tk.Label(self.frame, text=METRICS.EMPTY_MESSAGE, font=("Arial", 18, "bold")).pack(padx=50, pady=50)
             return
 
-        for idx, h in enumerate(headers):
+        for idx, h in enumerate(METRICS.HEADERS):
             tk.Label(self.frame, text=h, font=("Arial", 13, "bold")).pack(pady=5)
             tk.Label(self.frame, text=round(metrics[idx], 2), font=("Arial", 12, "italic")).pack()
 
@@ -128,7 +121,7 @@ class MetricsInterface(BaseInterface):
 
         # Create PDF
         pdf = canvas.Canvas(file_path, pagesize=A4)
-        width, height = A4
+        _, height = A4
         y_position = height - 40  # Start position
 
         pdf.setFont("Helvetica-Bold", 16)
@@ -167,26 +160,26 @@ class MetricsInterface(BaseInterface):
                     pdf.setFont("Helvetica", font_size)
                     y_position = height - 50
 
-        vehicle_col_widths = compute_column_widths(vehicle_headers, all_vehicles)
-        booking_col_widths = compute_column_widths(booking_headers, all_bookings)
-        log_col_widths = compute_column_widths(log_headers, all_logs)
+        vehicle_col_widths = compute_column_widths(METRICS.PDF_HEADERS.VEHICLES, all_vehicles)
+        booking_col_widths = compute_column_widths(METRICS.PDF_HEADERS.BOOKINGS, all_bookings)
+        log_col_widths = compute_column_widths(METRICS.PDF_HEADERS.LOGS, all_logs)
 
         # **1. Add Vehicles Data**
         pdf.drawString(x_position, y_position, "Vehicles:")
         y_position -= 15
-        draw_table(vehicle_headers, all_vehicles, vehicle_col_widths)
+        draw_table(METRICS.PDF_HEADERS.VEHICLES, all_vehicles, vehicle_col_widths)
         y_position -= 20
 
         # **2. Add Booking Data**
         pdf.drawString(x_position, y_position, "Bookings:")
         y_position -= 15
-        draw_table(booking_headers, all_bookings, booking_col_widths)
+        draw_table(METRICS.PDF_HEADERS.VEHICLES, all_bookings, booking_col_widths)
         y_position -= 20
 
         # **3. Add Transaction Logs**
         pdf.drawString(x_position, y_position, "Transaction Logs:")
         y_position -= 15
-        draw_table(log_headers, all_logs, log_col_widths)
+        draw_table(METRICS.PDF_HEADERS.LOGS, all_logs, log_col_widths)
 
         pdf.save()
         print(f"Report saved as {file_path}")

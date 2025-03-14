@@ -1,12 +1,11 @@
 # booking_interface.py
 import tkinter as tk
 from src.pages.interfaces.base_interface import BaseInterface
-
-title = "Booking Management"
+from src.misc.strings import BOOKING
 
 class BookingInterface(BaseInterface):
     def __init__(self, root, system):
-        super().__init__(root, system, title)
+        super().__init__(root, system, BOOKING.TITLE)
 
         # Vehicle ID input
         tk.Label(self.frame, text="Vehicle ID:", font=("Arial", 12)).pack(pady=5)

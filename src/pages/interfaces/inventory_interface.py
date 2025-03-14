@@ -1,30 +1,17 @@
 import tkinter as tk
 from src.pages.interfaces.base_interface import BaseInterface
-
-titles = ("Inventory Management", "All existing vehicles")
-headers = ("ID", "Brand", "Model", "Mileage (kms)", "Daily Price", "Maintenance Cost", "Available")
-empty_message = "No vehicles available."
-
-generate_model = lambda content: (
-    f"{content[0]:<13} | "
-    f"{content[1]:<13} | "
-    f"{content[2]:<13} | "
-    f"{content[3]:<13} | "
-    f"€{content[4]:<13} | "
-    f"€{content[5]:<13} | "
-    f"{'Yes' if content[6] else 'No':<13}"
-)
+from src.misc.strings import INVENTORY
 
 class InventoryInterface(BaseInterface):
     def __init__(self, root, system):
-        super().__init__(root,  system, *titles)
+        super().__init__(root,  system, *INVENTORY.TITLES)
 
-        self.create_scrollable_listbox(headers)
+        self.create_scrollable_listbox(INVENTORY.HEADERS)
 
         self.load_content(
             get_content=self.system.get_all_vehicles,
-            generate_model=generate_model,
-            empty_message=empty_message,
+            generate_model=INVENTORY.GENERATE_MODEL,
+            empty_message=INVENTORY.EMPTY_MESSAGE,
         )
 
         self.add_button = tk.Button(self.frame, text="Add Vehicle", command=self.add_vehicle)
@@ -85,7 +72,7 @@ class InventoryInterface(BaseInterface):
             daily_price = float(daily_price)
             maintenance_cost = float(maintenance_cost)
         except ValueError:
-            self.show_error("Invalid input for mileage, daily price, or maintenance cost.")
+            self.show_error("Invalid input.")
             return
 
         self.system.add_vehicle(brand, model, mileage, daily_price, maintenance_cost)
@@ -94,6 +81,6 @@ class InventoryInterface(BaseInterface):
         dialog.destroy()
         self.load_content(
             get_content=self.system.get_all_vehicles,
-            generate_model=generate_model,
-            empty_message=empty_message,
+            generate_model=INVENTORY.GENERATE_MODEL,
+            empty_message=INVENTORY.GENERATE_MODEL,
         )

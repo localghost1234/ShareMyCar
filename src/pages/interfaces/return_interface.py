@@ -1,30 +1,18 @@
 import tkinter as tk
 from src.pages.interfaces.base_interface import BaseInterface
-
-titles = ("Return Management", "Select a booked vehicle:")
-headers = ("ID", "Brand", "Model", "Mileage", "Daily Price", "Maintenance Cost")
-empty_message = "No booked vehicles found."
-
-generate_model = lambda content: (
-    f"{content[0]:<15} | "
-    f"{content[1]:<15} | "
-    f"{content[2]:<15} | "
-    f"{content[3]:<15} | "
-    f"€{content[4]:<15} | "
-    f"€{content[5]:<15}"
-)
+from src.misc.strings import RETURN
 
 class ReturnInterface(BaseInterface):
     def __init__(self, root, system):
-        super().__init__(root, system, *titles)
+        super().__init__(root, system, *RETURN.TITLES)
 
         # Create a scrollable Listbox
-        self.create_scrollable_listbox(headers, disable_clicking=False)
+        self.create_scrollable_listbox(RETURN.HEADERS, disable_clicking=False)
 
         self.load_content(
             get_content=self.system.get_unavailable_vehicles,
-            generate_model=generate_model,
-            empty_message=empty_message,
+            generate_model=RETURN.GENERATE_MODEL,
+            empty_message=RETURN.EMPTY_MESSAGE,
         )
 
         # Bind double-click event to handle vehicle selection
@@ -99,8 +87,8 @@ class ReturnInterface(BaseInterface):
             # Refresh the list
             self.load_content(
                 get_content=self.system.get_unavailable_vehicles,
-                generate_model=generate_model,
-                empty_message=empty_message,
+                generate_model=RETURN.GENERATE_MODEL,
+                empty_message=RETURN.EMPTY_MESSAGE,
             )
         else:
             self.show_error("Vehicle not found or already returned.")
