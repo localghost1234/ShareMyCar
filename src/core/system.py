@@ -127,6 +127,122 @@ class System:
         )
         self.database.commit()  # Commit transaction
 
+    def query_booking(self, vehicle_id, rental_days, estimated_km, customer_name):
+        """Books a vehicle, calculates cost, and updates the database."""
+        # Check if the vehicle is available
+        vehicle = self.database.execute_query(
+            operation=SQL.OPERATION.SELECT,
+            table=SQL.TABLE.VEHICLES,
+            columns=["daily_price", "maintenance_cost", "available"],
+            where=f"id = {vehicle_id}",
+            fetch=SQL.FETCH.ONE
+        )
+
+        if not vehicle:
+            return None  # Vehicle does not exist
+
+        daily_price, maintenance_cost, available = vehicle
+
+        if available == 0:
+            return None  # Vehicle is already booked
+
+        # Calculate estimated cost
+        additional_cost = maintenance_cost * estimated_km
+        total_estimated_cost = (daily_price * rental_days) + additional_cost
+
+        # Insert booking record
+        self.database.execute_query(
+            operation=SQL.OPERATION.INSERT,
+            table=SQL.TABLE.BOOKINGS,
+            columns=["vehicle_id", "rental_days", "estimated_km", "estimated_cost", "customer_name"],
+            values=(vehicle_id, rental_days, estimated_km, total_estimated_cost, customer_name)
+        )
+
+        # Insert log record
+        self.database.execute_query(
+            operation=SQL.OPERATION.INSERT,
+            table=SQL.TABLE.LOGS,
+            columns=["vehicle_id", "rental_duration", "revenue", "additional_costs", "customer_name", "transaction_type"],
+            values=(vehicle_id, rental_days, total_estimated_cost, additional_cost, customer_name, "booking")
+        )
+
+        # Mark vehicle as unavailable
+        self.database.execute_query(
+            operation=SQL.OPERATION.UPDATE,
+            table=SQL.TABLE.VEHICLES,
+            columns=["available"],
+            values=(0,),
+            where=f"id = {vehicle_id}"
+        )
+
+        self.database.commit()
+        return total_estimated_cost
+
+    def query_return(self, vehicle_id, actual_km, late_days, customer_name):
+        # Check if the vehicle exists
+        vehicle = self.database.execute_query(
+            operation=SQL.OPERATION.SELECT,
+            table=SQL.TABLE.VEHICLES,
+            where=f"id = {vehicle_id}",
+            fetch=SQL.FETCH.ONE
+        )
+
+        if not vehicle:
+            return None  # Vehicle doesn't exist
+
+        # Check if the vehicle is currently booked
+        booking = self.database.execute_query(
+            operation=SQL.OPERATION.SELECT,
+            table=SQL.TABLE.BOOKINGS,
+            where=f"vehicle_id = {vehicle_id}",
+            fetch=SQL.FETCH.ONE
+        )
+
+        if not booking:
+            return None  # Vehicle is not currently booked
+
+        # Extract booking details
+        rental_days = booking[2]  # Assuming column 2 is 'rental_days'
+        estimated_km = booking[3]  # Assuming column 3 is 'estimated_km'
+        estimated_cost = booking[4]  # Assuming column 4 is 'estimated_cost'
+
+        # Cost calculation logic
+        cleaning_fees = 20
+        km_exceeded = max(0, actual_km - estimated_km)  # Extra km
+        lateness_fee = late_days * 10  # Charge 10€ per late day
+        exceeded_mileage_fee = km_exceeded * 0.5  # 0.5€ per extra km
+        additional_costs = exceeded_mileage_fee + lateness_fee + cleaning_fees
+        total_revenue = estimated_cost + additional_costs
+
+        new_mileage = vehicle[3] + actual_km
+
+        # Update database: Mark booking as returned and update vehicle availability
+        self.database.execute_query(
+            operation=SQL.OPERATION.DELETE,
+            table=SQL.TABLE.BOOKINGS,
+            where=f"vehicle_id = {vehicle_id}"
+        )
+
+        self.database.execute_query(
+            operation=SQL.OPERATION.UPDATE,
+            table=SQL.TABLE.VEHICLES,
+            columns=["current_mileage", "available"],
+            values=(new_mileage, 1),
+            where=f"id = {vehicle_id}"
+        )
+
+        # Insert log record
+        self.database.execute_query(
+            operation=SQL.OPERATION.INSERT,
+            table=SQL.TABLE.LOGS,
+            columns=["vehicle_id", "rental_duration", "revenue", "additional_costs", "customer_name", "transaction_type"],
+            values=(vehicle_id, rental_days, total_revenue, additional_costs, customer_name, "return")
+        )
+
+        # Commit changes
+        self.database.commit()
+        return total_revenue
+
     def close(self):
         """Closes the database connection."""
-        self.database.close()  # Close connection
+        self.database.close()  # Sends a 'close' signal to the DB object

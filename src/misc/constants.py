@@ -12,7 +12,7 @@ SQL = SimpleNamespace(
         SELECT="SELECT",
         INSERT="INSERT",
         UPDATE="UPDATE",
-        DELETE="DELETE"
+        DELETE="DELETE",
     ),
     TABLE=SimpleNamespace(
         VEHICLES="vehicles",

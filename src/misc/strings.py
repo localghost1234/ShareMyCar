@@ -1,6 +1,5 @@
 from types import SimpleNamespace
 
-
 INVENTORY=SimpleNamespace(
     TITLES = ("Inventory Management", "All existing vehicles"),
     HEADERS = ("ID", "Brand", "Model", "Mileage (kms)", "Daily Price", "Maintenance Cost", "Available"),
