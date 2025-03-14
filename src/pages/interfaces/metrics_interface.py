@@ -42,7 +42,7 @@ class MetricsInterface(BaseInterface):
         modal_window.geometry("360x400")
 
         tk.Label(modal_window, text="Input Query", font=("Arial", 16, "bold")).pack(pady=7)
-        tk.Label(modal_window, text="Use 'key:value' format\n(e.g. vehicles:id, bookings:custome_name, logs:vehicle_id)", font=("Arial", 9, "italic")).pack()
+        tk.Label(modal_window, text="Use '<table_name>:<column_name>' format\n(e.g. vehicles:id)", font=("Arial", 9, "italic")).pack()
 
         query_entry = tk.Entry(modal_window, font=("Arial", 10))  # Entry field for query
         query_entry.pack(pady=10)
@@ -52,7 +52,7 @@ class MetricsInterface(BaseInterface):
             query_list = query_entry.get().strip().split(':')  # Split the query into key and value
 
             if len(query_list) != 2:  # Validate the query format
-                self.show_error("Please, enter a 'key' and a 'value' only")
+                self.show_error("Please, enter a correct 'table' and a 'column'")
                 return
 
             key, value = query_list  # Extract key and value
@@ -69,7 +69,7 @@ class MetricsInterface(BaseInterface):
                     fetch="all"
                 )
             except Exception:  # Handle invalid queries
-                self.show_error(f"Please, enter a valid value for table {key}")
+                self.show_error(f"Please, enter a valid 'column' for table {key}")
                 return
 
             # Clear existing widgets in the modal window
