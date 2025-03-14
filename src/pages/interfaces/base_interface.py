@@ -3,22 +3,26 @@ from tkinter import messagebox
 from src.misc.utilities import generate_header_row
 
 class BaseInterface:
-    """Base class for creating a graphical user interface with Tkinter."""
+    """
+        Base class for creating a graphical user interface with Tkinter.
+        This ensures all interfaces are similar and the user can easily navigate around the app.
+    """
     
     def __init__(self, root, system, title, subtitle=""):
         """Initializes the interface with a title and optional subtitle."""
-        self.root = root  # Root window
-        self.system = system  # Reference to the system object
-        self.frame = tk.Frame(root)  # Main frame
-        self.frame.pack(fill=tk.BOTH, expand=True)  # Expand frame to fill window
+        self.root = root  # We take the 'root' (main tkinter Frame) to keep every new object inside the window
+        self.system = system  # We reference the original System class (which orchestrates the DB and its usage)
+        self.frame = tk.Frame(root)  # We generate an inner window where each interface's elements will remain until erased
+        self.frame.pack(fill=tk.BOTH, expand=True)  # We fill up the window's space with our new Frame
 
-        tk.Label(self.frame, text=title, font=("Arial", 18)).pack(pady=15)  # Title label
-        
-        if subtitle:
-            tk.Label(self.frame, text=subtitle, font=("Arial", 14)).pack(pady=7)  # Subtitle label (if provided)
+        tk.Label(self.frame, text=title, font=("Arial", 18)).pack(pady=15)  # We add a string with whatever title we prefer and give it some space from other vertical elements
+        tk.Label(self.frame, text=subtitle, font=("Arial", 14)).pack(pady=7) if subtitle else None  # An optional string, for extra information, in case some element is given
 
     def create_scrollable_listbox(self, headers=(), disable_clicking=True, font=("Courier", 10)):
-        """Creates a scrollable Listbox with optional headers and click disabling."""
+        """
+            Creates a scrollable Listbox object, which displays the given information.
+            It is an optional feature, and relies on its brother function load_content()
+        """
         if headers:
             tk.Label(self.frame, text=generate_header_row(headers)).pack()  # Insert headers
         

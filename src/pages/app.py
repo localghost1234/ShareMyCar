@@ -14,39 +14,42 @@ class App:
         """Initialize the application.
 
         Sets up the system, creates the main window, and initializes the interface.
+        By default, it opens up on a one-time usage of 'HomeInterface'
         """
-        self.system = System()  # Initialize the core system
+        self.system = System()  # Initialize the core system and database
         self.current_interface = None  # Track the currently active interface
 
         self.root = tk.Tk()  # Create the main application window
         self.root.geometry("720x480")  # Set window dimensions
         self.root.title("Share My Car")  # Set window title
-        self.root.protocol("WM_DELETE_WINDOW", self.on_close)  # Register on_close to handle window close events
+        self.root.protocol("WM_DELETE_WINDOW", self.on_close)  # This adds behaviour to the 'X' button on the window
 
-        button_frame = tk.Frame(self.root)  # Create a frame for navigation buttons
-        button_frame.pack()
+        button_frame = tk.Frame(self.root) # Another frame is created on top of the root window, this helps us change interfaces without starting over
+        button_frame.pack() # The .pack() function helps to organize the order of appearance inside a Frame object
 
-        for interface_name, interface_class in INTERFACES_LIST:  # Create buttons for each interface
+        # We iterate over a list with interface information, then assign it to a tkinter Button,
+        # which gets 'packed' or set to the leftmost side of the button_frame
+        for interface_name, interface_class in INTERFACES_LIST:
             tk.Button(button_frame, text=interface_name, command=lambda i=interface_class: self.switch_interface(i)).pack(side=tk.LEFT)
 
-        self.switch_interface(HomeInterface)  # Start with the HomeInterface
-        self.root.mainloop()  # Start the Tkinter event loop
+        self.switch_interface(HomeInterface)  # We direct the user to the HomeInterface
+        self.root.mainloop()  # Starts the lifecycle of tkinter, which keeps it running and responsive
 
     def switch_interface(self, interface_class):
         """Switch to a new application interface.
 
         Args:
-            interface_class: The class of the interface to switch to.
+            interface_class: The class object of the visual representation we wish to see.
         """
-        if self.current_interface:
-            self.current_interface.frame.destroy()  # Destroy the current interface
-        self.current_interface = interface_class(self.root, self.system)  # Initialize the new interface
+        if self.current_interface: # We ensure that the 'current_interface' we access is not a null object (None)
+            self.current_interface.frame.destroy()  # This closes/erases the current frame (space in the modal) to make space for a new one
+        self.current_interface = interface_class(self.root, self.system)  # We call the class we wish to see, and pass on information about the app
 
     def on_close(self):
-        """Handle application shutdown.
-
-        Closes the system and destroys the Tkinter root window.
         """
-        print('Shutting down.')
-        self.system.close()  # Close the system
-        self.root.destroy()  # Destroy the main window
+            Handle application shutdown.
+            Closes the system and destroys the Tkinter root window.
+        """
+        print('Shutting down.') # Shows a closing message on the terminal (not the app)
+        self.system.close()  # Direct command with database to shut it down carefully
+        self.root.destroy()  # Erases the main Frame/modal with the whole app

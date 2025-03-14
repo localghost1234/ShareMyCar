@@ -14,7 +14,7 @@ class System:
             columns=["brand", "model", "current_mileage", "daily_price", "maintenance_cost", "maintenance_mileage"],  # Columns to insert
             values=(brand, model, mileage, daily_price, maintenance_cost, mileage + 10000)  # Values to insert
         )
-        self.database.commit()  # Commit transaction
+        self.database.commit()  # this command tells the database to 'write' our data into the DB
 
     def get_all_vehicles(self):
         """Retrieves all vehicles from the database."""
