@@ -47,4 +47,4 @@ class BookingInterface(BaseInterface):
             else:
                 self.show_error("Vehicle not found or unavailable.")
         except ValueError:
-            self.show_error("Please enter valid numeric values.")
+            self.show_error("Please enter valid values.")
