@@ -1,5 +1,2 @@
-# Ignore the reports folder
-/reports/
-
 # Ignore the database file
 carsharing.db
