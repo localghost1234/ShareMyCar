@@ -69,7 +69,8 @@ class System:
         logs_exist = self.database.execute_query(
             operation=SQL.OPERATION.SELECT,
             table=SQL.TABLE.LOGS,
-            fetch=SQL.FETCH.ONE
+            fetch=SQL.FETCH.ONE,
+            where="transaction_type = 'return'"
         )
 
         if not logs_exist:
@@ -80,7 +81,8 @@ class System:
             operation=SQL.OPERATION.SELECT,
             table=SQL.TABLE.LOGS,
             columns=["SUM(revenue)"],
-            fetch=SQL.FETCH.ONE
+            fetch=SQL.FETCH.ONE,
+            where="transaction_type = 'return'"
         )[0] or 0
 
         # Get total maintenance costs from vehicles
@@ -88,7 +90,7 @@ class System:
             operation=SQL.OPERATION.SELECT,
             table=SQL.TABLE.VEHICLES,
             columns=["SUM(maintenance_cost)"],
-            fetch=SQL.FETCH.ONE
+            fetch=SQL.FETCH.ONE,
         )[0] or 0
 
         # Get total additional costs from logs
@@ -96,7 +98,8 @@ class System:
             operation=SQL.OPERATION.SELECT,
             table=SQL.TABLE.LOGS,
             columns=["SUM(additional_costs)"],
-            fetch=SQL.FETCH.ONE
+            fetch=SQL.FETCH.ONE,
+            where="transaction_type = 'return'"
         )[0] or 0
 
         # Calculate total operational costs
@@ -110,7 +113,7 @@ class System:
             operation=SQL.OPERATION.SELECT,
             table=SQL.TABLE.VEHICLES,
             columns=["AVG(current_mileage)"],
-            fetch=SQL.FETCH.ONE
+            fetch=SQL.FETCH.ONE,
         )[0] or 0
 
         metrics = (

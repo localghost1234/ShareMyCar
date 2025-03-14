@@ -25,7 +25,7 @@ class MetricsInterface(BaseInterface):
 
         for idx, h in enumerate(headers):
             tk.Label(self.frame, text=h, font=("Arial", 13, "bold")).pack(pady=5)
-            tk.Label(self.frame, text=metrics[0], font=("Arial", 12, "italic")).pack()
+            tk.Label(self.frame, text=round(metrics[idx], 2), font=("Arial", 12, "italic")).pack()
 
         tk.Button(self.frame, text="Make Query", command=self.show_querying_modal).pack(pady=20)
         tk.Button(self.frame, text="Download Full Report", command=self.generate_full_report).pack()
@@ -56,12 +56,22 @@ class MetricsInterface(BaseInterface):
             key = query_list[0]
             value = query_list[1]
 
-            results_list = self.system.database.execute_query(
-                operation="SELECT",
-                table=key,
-                columns=value,
-                fetch="all" 
-            )
+            if key != "vehicles" and key != "bookings" and key != "logs":
+                self.show_error("Please, enter a valid table name")
+                return
+
+            results_list = []
+            
+            try:
+                results_list = self.system.database.execute_query(
+                    operation="SELECT",
+                    table=key,
+                    columns=[value],
+                    fetch="all" 
+                )
+            except:
+                self.show_error(f"Please, enter a valid value for table {key}")
+                return
 
             for widget in modal_window.winfo_children():                
                 if isinstance(widget, tk.Listbox):

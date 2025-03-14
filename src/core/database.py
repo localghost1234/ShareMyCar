@@ -16,7 +16,7 @@ class Database():
         # Commit the changes and close the connection
         self.conn.commit()
 
-    def execute_query(self, operation, table, columns=["*"], values=[], where=[], fetch=SQL.FETCH.ALL):
+    def execute_query(self, operation, table, columns=["*"], values=(), where="", fetch=SQL.FETCH.ALL):
         """
         Generalized method to execute SQL queries.
         
@@ -28,10 +28,12 @@ class Database():
         :param fetch: Whether to fetch one row or all rows (SQL.FETCH.ONE or SQL.FETCH.ALL)
         :return: Query result (for SELECT) or None
         """
-        query = f"{operation} {", ".join(columns)} FROM {table}" if operation == SQL.OPERATION.SELECT else ""
+        query = ""
 
         try:
-            if operation == SQL.OPERATION.INSERT:
+            if operation == SQL.OPERATION.SELECT:
+                query = f"SELECT {", ".join(columns)} FROM {table}"
+            elif operation == SQL.OPERATION.INSERT:
                 placeholders = ", ".join(["?"] * len(values))
                 query = f"INSERT INTO {table} ({', '.join(columns)}) VALUES ({placeholders})"
             elif operation == SQL.OPERATION.UPDATE:
@@ -43,15 +45,15 @@ class Database():
             if where:
                 query += f" WHERE {where}"
         except Exception as e:
-            print("Operational error, please ensure all params in 'execute_query()' are correct")
+            print("Please ensure all params in 'execute_query()' are correct")
             print(e)
 
         try:
             self.cursor.execute(query, values) if values else self.cursor.execute(query)
         except Exception as e:
-            print("Error during database query:", e)
-            print("Query:", query)
-            return None
+            print("Error during database query\n", e)
+            print("Query ->", query)
+            raise Exception(e)
 
         if operation != SQL.OPERATION.SELECT:
             return None
