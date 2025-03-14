@@ -2,7 +2,7 @@ from src.core.database import Database  # Import the Database class
 from src.misc.constants import SQL  # Import SQL constants
 
 class System:
-    """Handles vehicle rentals, transactions, and database operations."""
+    """Handles direct communication with database and defines its several use cases."""
     def __init__(self):
         self.database = Database()  # Initialize database connection
 
@@ -17,7 +17,7 @@ class System:
         self.database.commit()  # this command tells the database to 'write' our data into the DB
 
     def get_all_vehicles(self):
-        """Retrieves all vehicles from the database."""
+        """Returns a list of all the vehicles from the database."""
         return self.database.execute_query(
             operation=SQL.OPERATION.SELECT,  # SQL select operation
             table=SQL.TABLE.VEHICLES,  # Target table
@@ -25,15 +25,15 @@ class System:
         )
 
     def get_all_bookings(self):
-        """Retrieves all bookings from the database."""
+        """Returns a list of all the bookings from the database."""
         return self.database.execute_query(
             operation=SQL.OPERATION.SELECT,  # SQL select operation
             table=SQL.TABLE.BOOKINGS,  # Target table
             fetch=SQL.FETCH.ALL  # Fetch all records
         )
 
-    def get_transaction_logs(self):
-        """Retrieves all transaction logs from the database."""
+    def get_all_transaction_logs(self):
+        """Returns a list of all the transactions done in the app."""
         return self.database.execute_query(
             operation=SQL.OPERATION.SELECT,  # SQL select operation
             table=SQL.TABLE.LOGS,  # Target table
@@ -41,7 +41,7 @@ class System:
         )
 
     def get_vehicles_requiring_maintenance(self):
-        """Retrieves vehicles that require maintenance."""
+        """Returns a list of vehicles which have surpassed their maintenance mileage."""
         return self.database.execute_query(
             operation=SQL.OPERATION.SELECT,  # SQL select operation
             table=SQL.TABLE.VEHICLES,  # Target table
@@ -51,7 +51,7 @@ class System:
         )
 
     def get_unavailable_vehicles(self):
-        """Retrieves vehicles that are currently unavailable."""
+        """Returns a list of currently booked vehicles."""
         return self.database.execute_query(
             operation=SQL.OPERATION.SELECT,  # SQL select operation
             table=SQL.TABLE.VEHICLES,  # Target table
@@ -60,7 +60,7 @@ class System:
         )
 
     def get_customer_name(self, vehicle_id):
-        """Retrieves the name of the customer who booked a specific vehicle."""
+        """Returns a string with the name of the customer who booked a specific vehicle. If not found, returns 'Unknown Customer'."""
         result = self.database.execute_query(
             operation=SQL.OPERATION.SELECT,  # SQL select operation
             table=SQL.TABLE.BOOKINGS,  # Target table
@@ -71,7 +71,14 @@ class System:
         return result[0] if result else "Unknown Customer"  # Return customer name or default value
 
     def get_financial_metrics(self):
-        """Fetches and calculates financial metrics from the database."""
+        """
+            Returns a tuple with the calculated financial metrics.\n
+            These metrics are:\n
+            - Total revenue\n
+            - Total operational costs\n
+            - Total profit (revenue - costs)\n
+            - Average mileage per vehicle
+        """
         logs_exist = self.database.execute_query(
             operation=SQL.OPERATION.SELECT,  # SQL select operation
             table=SQL.TABLE.LOGS,  # Target table
@@ -179,6 +186,7 @@ class System:
         return total_estimated_cost
 
     def query_return(self, vehicle_id, actual_km, late_days, customer_name):
+        """Updates a vehicles availability and calculates the rental costs."""
         # Check if the vehicle exists
         vehicle = self.database.execute_query(
             operation=SQL.OPERATION.SELECT,

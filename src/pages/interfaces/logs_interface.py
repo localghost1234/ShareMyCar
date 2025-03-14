@@ -27,7 +27,7 @@ class LogsInterface(BaseInterface):
         self.create_scrollable_listbox(LOGS.HEADERS)  # Create a scrollable listbox for log entries
 
         self.load_content(  # Populate the listbox with transaction logs
-            get_content=self.system.get_transaction_logs,  # Function to fetch log data
+            get_content=self.system.get_all_transaction_logs,  # Function to fetch log data
             generate_model=LOGS.GENERATE_MODEL,  # Formatting model for displaying logs
             empty_message=LOGS.EMPTY_MESSAGE,  # Message shown if no logs are available
         )

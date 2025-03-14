@@ -105,7 +105,7 @@ class MetricsInterface(BaseInterface):
         """Generate a full report in PDF format containing vehicles, bookings, and logs."""
         all_vehicles = self.system.get_all_vehicles()  # Retrieve all vehicles
         all_bookings = self.system.get_all_bookings()  # Retrieve all bookings
-        all_logs = self.system.get_transaction_logs()  # Retrieve all logs
+        all_logs = self.system.get_all_transaction_logs()  # Retrieve all logs
 
         current_datetime = datetime.now()  # Get the current date and time
 
