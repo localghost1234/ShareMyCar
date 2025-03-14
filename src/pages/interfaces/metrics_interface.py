@@ -49,27 +49,27 @@ class MetricsInterface(BaseInterface):
 
         def submit_query():
             """Submit the query and display results in the modal window."""
-            query_list = query_entry.get().strip().split(':')  # Split the query into key and value
+            query_list = query_entry.get().strip().split(':')  # Split the query into table_name and column_name
 
             if len(query_list) != 2:  # Validate the query format
                 self.show_error("Please, enter a correct 'table' and a 'column'")
                 return
 
-            key, value = query_list  # Extract key and value
+            table_name, column_name = query_list  # Extract table_name and column_name
 
-            if key not in ["vehicles", "bookings", "logs"]:  # Validate the table name
-                self.show_error("Please, enter a valid table name")
+            if table_name not in ["vehicles", "bookings", "logs"]:  # Validate the table name
+                self.show_error("Please, enter a valid 'table'")
                 return
 
             try:  # Execute the query
                 results_list = self.system.database.execute_query(
                     operation="SELECT",
-                    table=key,
-                    columns=[value],
+                    table=table_name,
+                    columns=[column_name],
                     fetch="all"
                 )
             except Exception:  # Handle invalid queries
-                self.show_error(f"Please, enter a valid 'column' for table {key}")
+                self.show_error(f"Please, enter a valid 'column' for table {table_name}")
                 return
 
             # Clear existing widgets in the modal window
