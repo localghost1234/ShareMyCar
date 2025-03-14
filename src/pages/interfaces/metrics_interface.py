@@ -41,11 +41,17 @@ class MetricsInterface(BaseInterface):
         modal_window.title("Query Data")
         modal_window.geometry("360x400")
 
-        tk.Label(modal_window, text="Input Query", font=("Arial", 16, "bold")).pack(pady=7)
-        tk.Label(modal_window, text="Use '<table_name>:<column_name>' format\n(e.g. vehicles:id)", font=("Arial", 9, "italic")).pack()
+        instructions_frame = tk.Frame(modal_window)
+        instructions_frame.pack(fill=tk.BOTH)
 
-        query_entry = tk.Entry(modal_window, font=("Arial", 10))  # Entry field for query
+        tk.Label(instructions_frame, text="Input Query", font=("Arial", 16, "bold")).pack(pady=7)
+        tk.Label(instructions_frame, text="Use '<table_name>:<column_name>' format\n(e.g. vehicles:id)", font=("Arial", 9, "italic")).pack()
+
+        query_entry = tk.Entry(instructions_frame, font=("Arial", 10))  # Entry field for query
         query_entry.pack(pady=10)
+
+        listbox_frame = tk.Frame(modal_window)
+        listbox_frame.pack(fill=tk.BOTH, expand=True, pady=15)
 
         def submit_query():
             """Submit the query and display results in the modal window."""
@@ -73,26 +79,19 @@ class MetricsInterface(BaseInterface):
                 return
 
             # Clear existing widgets in the modal window
-            for widget in modal_window.winfo_children():
-                if isinstance(widget, tk.Listbox):
-                    widget.destroy()  # Destroy the existing Listbox
-                elif isinstance(widget, tk.Label) and widget.cget("text").startswith(f"{len(results_list)} results found:"):
-                    widget.destroy()
-                elif isinstance(widget, tk.Label) and widget.cget("text").startswith("No result found."):
-                    widget.destroy()
-                elif isinstance(widget, tk.Scrollbar):
-                    widget.destroy()
+            for widget in listbox_frame.winfo_children():
+                widget.destroy()
 
             if not results_list:  # Handle no results
-                tk.Label(modal_window, text="No results found.", font=("Arial", 12)).pack(pady=15)
+                tk.Label(listbox_frame, text="No results found.", font=("Arial", 12)).pack(pady=15)
                 return
 
             # Display the number of results found
-            tk.Label(modal_window, text=f"{len(results_list)} results found:", font=("Arial", 12)).pack(pady=15)
+            tk.Label(listbox_frame, text=f"{len(results_list)} results found:", font=("Arial", 12)).pack(pady=15)
 
             # Add a scrollable listbox to display results
-            v_scrollbar = tk.Scrollbar(modal_window, orient=tk.VERTICAL)
-            listbox = tk.Listbox(modal_window, yscrollcommand=v_scrollbar.set, font=("Arial", 10))
+            v_scrollbar = tk.Scrollbar(listbox_frame, orient=tk.VERTICAL)
+            listbox = tk.Listbox(listbox_frame, yscrollcommand=v_scrollbar.set, font=("Arial", 10))
             v_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
             listbox.pack(fill=tk.Y)
             v_scrollbar.config(command=listbox.yview)
@@ -100,7 +99,7 @@ class MetricsInterface(BaseInterface):
             for item in results_list:  # Populate the listbox with results
                 listbox.insert(tk.END, item[0])
 
-        tk.Button(modal_window, text="Search", command=submit_query).pack()  # Query submission button
+        tk.Button(instructions_frame, text="Search", command=submit_query).pack()  # Query submission button
 
     def generate_full_report(self):
         """Generate a full report in PDF format containing vehicles, bookings, and logs."""
