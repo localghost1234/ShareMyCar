@@ -28,7 +28,7 @@ class Database():
         :param fetch: Whether to fetch one row or all rows (SQL.FETCH.ONE or SQL.FETCH.ALL)
         :return: Query result (for SELECT) or None
         """
-        query = ""
+        query = "" 
 
         try:
             if operation == SQL.OPERATION.SELECT:
