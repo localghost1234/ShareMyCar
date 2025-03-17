@@ -96,14 +96,14 @@ class System:
             columns=["SUM(revenue)", "SUM(additional_costs)"],  # Sum total revenue
             fetch=SQL.FETCH.ONE,  # Fetch a single record
             where="transaction_type = 'return'",  # Check only for 'return' type, because real earnings come from those only
-        ) or 0, 0  # Default to 0 for both if no data is available
+        ) or (0, 0)  # Default to 0 for both if no data is available
 
         total_maintenance_cost, average_vehicle_mileage = self.database.execute_query( # Obtains the aggregation of maintenance cost and average vehicle mileage of all existing vehicles
             operation=SQL.OPERATION.SELECT, # Indicates an SQL SELECT operation
             table=SQL.TABLE.VEHICLES,  # Target table
             columns=["SUM(maintenance_cost)", "AVG(current_mileage)"],  # Sum maintenance costs
             fetch=SQL.FETCH.ONE,  # Fetch a single record
-        ) or 0, 0  # Default to 0 for both if no data is available
+        ) or (0, 0)  # Default to 0 for both if no data is available
 
         total_operational_costs = total_maintenance_cost + total_additional_costs  # Calculate total costs
         total_profit = total_revenue - total_operational_costs  # Calculate profit

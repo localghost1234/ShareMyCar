@@ -27,7 +27,7 @@ class App:
         button_frame = tk.Frame(self.root) # Another frame is created on top of the root window, this helps us change interfaces without starting over
         button_frame.pack() # The .pack() function helps to organize the order of appearance inside a Frame object
 
-        # We iterate over a list with interface information, then assign it to a tkinter Button,
+        # Iterates over a list with interface information, then assign it to a tkinter Button,
         # which gets 'packed' or set to the leftmost side of the button_frame
         for interface_name, interface_class in INTERFACES_LIST:
             tk.Button(button_frame, text=interface_name, command=lambda i=interface_class: self.switch_interface(i)).pack(side=tk.LEFT)
@@ -50,6 +50,6 @@ class App:
             Handle application shutdown.
             Closes the system and destroys the Tkinter root window.
         """
-        print('Shutting down.') # Shows a closing message on the terminal (not the app)
+        print('Shutting down.') # Shows a closing message on the delevoper's console
         self.system.close()  # Direct command with database to shut it down carefully
         self.root.destroy()  # Erases the main Frame/modal with the whole app
