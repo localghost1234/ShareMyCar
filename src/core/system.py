@@ -9,7 +9,7 @@ class System:
     def add_vehicle(self, brand, model, mileage, daily_price, maintenance_cost):
         """Adds a new vehicle to the database."""
         self.database.execute_query(
-            operation=SQL.OPERATION.INSERT, # Asks database for an SQL INSERT operation
+            operation=SQL.OPERATION.INSERT, # Indicates an SQL INSERT operation
             table=SQL.TABLE.VEHICLES,  # Target table
             columns=["brand", "model", "current_mileage", "daily_price", "maintenance_cost", "maintenance_mileage"],  # Columns to insert
             values=[brand, model, mileage, daily_price, maintenance_cost, mileage + 10000]  # Values to insert
@@ -19,7 +19,7 @@ class System:
     def get_all_vehicles(self):
         """Returns a list of all the vehicles from the database."""
         return self.database.execute_query(
-            operation=SQL.OPERATION.SELECT, # Asks database for an SQL SELECT operation
+            operation=SQL.OPERATION.SELECT, # Indicates an SQL SELECT operation
             table=SQL.TABLE.VEHICLES,  # Target table
             fetch=SQL.FETCH.ALL, # Fetch all records
         )
@@ -27,7 +27,7 @@ class System:
     def get_all_bookings(self):
         """Returns a list of all the bookings from the database."""
         return self.database.execute_query(
-            operation=SQL.OPERATION.SELECT, # Asks database for an SQL SELECT operation
+            operation=SQL.OPERATION.SELECT, # Indicates an SQL SELECT operation
             table=SQL.TABLE.BOOKINGS,  # Target table
             fetch=SQL.FETCH.ALL, # Fetch all records
         )
@@ -35,7 +35,7 @@ class System:
     def get_all_transaction_logs(self):
         """Returns a list of all the transactions done in the app."""
         return self.database.execute_query(
-            operation=SQL.OPERATION.SELECT, # Asks database for an SQL SELECT operation
+            operation=SQL.OPERATION.SELECT, # Indicates an SQL SELECT operation
             table=SQL.TABLE.LOGS,  # Target table
             fetch=SQL.FETCH.ALL, # Fetch all records
         )
@@ -43,7 +43,7 @@ class System:
     def get_vehicles_requiring_maintenance(self):
         """Returns a list of vehicles which have surpassed their maintenance mileage."""
         return self.database.execute_query(
-            operation=SQL.OPERATION.SELECT, # Asks database for an SQL SELECT operation
+            operation=SQL.OPERATION.SELECT, # Indicates an SQL SELECT operation
             table=SQL.TABLE.VEHICLES,  # Target table
             columns=["id", "brand", "model", "current_mileage", "maintenance_mileage"],  # Relevant columns
             where="current_mileage >= maintenance_mileage",  # Condition for maintenance
@@ -53,7 +53,7 @@ class System:
     def get_unavailable_vehicles(self):
         """Returns a list of currently booked vehicles."""
         return self.database.execute_query(
-            operation=SQL.OPERATION.SELECT, # Asks database for an SQL SELECT operation
+            operation=SQL.OPERATION.SELECT, # Indicates an SQL SELECT operation
             table=SQL.TABLE.VEHICLES,  # Target table
             where="available = 0",  # Adds a condition in which the vehicle is unavailable
             fetch=SQL.FETCH.ALL, # Fetch all records
@@ -62,7 +62,7 @@ class System:
     def get_customer_name(self, vehicle_id):
         """Returns a string with the name of the customer who booked a specific vehicle. If not found, returns 'Unknown Customer'."""
         result = self.database.execute_query(
-            operation=SQL.OPERATION.SELECT, # Asks database for an SQL SELECT operation
+            operation=SQL.OPERATION.SELECT, # Indicates an SQL SELECT operation
             table=SQL.TABLE.BOOKINGS,  # Target table
             columns=["customer_name"],  # Retrieve customer's name
             where=f"vehicle_id = {vehicle_id}",  # Looks for a vehicle that matches the ID
@@ -80,8 +80,8 @@ class System:
             - Total profit (revenue - costs)\n
             - Average mileage per vehicle
         """
-        logs_exist = self.database.execute_query(
-            operation=SQL.OPERATION.SELECT, # Asks database for an SQL SELECT operation
+        logs_exist = self.database.execute_query( # Requests database for a log data
+            operation=SQL.OPERATION.SELECT, # Indicates an SQL SELECT operation
             table=SQL.TABLE.LOGS,  # Target table
             fetch=SQL.FETCH.ONE,  # Fetch a single record
             where="transaction_type = 'return'",  # Check only for 'return' type, because real earnings come from those only
@@ -91,7 +91,7 @@ class System:
             return ()  # Returns empty tuple if no logs exist
 
         total_revenue, total_additional_costs = self.database.execute_query( # Obtains the aggregation of 'revenue' and 'additional_costs' from all the 'return' transaction logs
-            operation=SQL.OPERATION.SELECT, # Asks database for an SQL SELECT operation
+            operation=SQL.OPERATION.SELECT, # Indicates an SQL SELECT operation
             table=SQL.TABLE.LOGS,  # Target table
             columns=["SUM(revenue)", "SUM(additional_costs)"],  # Sum total revenue
             fetch=SQL.FETCH.ONE,  # Fetch a single record
@@ -99,7 +99,7 @@ class System:
         ) or 0, 0  # Default to 0 for both if no data is available
 
         total_maintenance_cost, average_vehicle_mileage = self.database.execute_query( # Obtains the aggregation of maintenance cost and average vehicle mileage of all existing vehicles
-            operation=SQL.OPERATION.SELECT, # Asks database for an SQL SELECT operation
+            operation=SQL.OPERATION.SELECT, # Indicates an SQL SELECT operation
             table=SQL.TABLE.VEHICLES,  # Target table
             columns=["SUM(maintenance_cost)", "AVG(current_mileage)"],  # Sum maintenance costs
             fetch=SQL.FETCH.ONE,  # Fetch a single record
@@ -112,8 +112,8 @@ class System:
 
     def query_update_availability(self, vehicle_id, available: bool):
         """Updates the availability status of a vehicle."""
-        self.database.execute_query(
-            operation=SQL.OPERATION.UPDATE, # Asks database for an SQL UPDATE operation
+        self.database.execute_query( # Executes an update on existing database row
+            operation=SQL.OPERATION.UPDATE, # Indicates an SQL UPDATE operation
             table=SQL.TABLE.VEHICLES,  # Target table
             columns=["available"],  # Column to update
             values=[1 if available else 0],  # Set availability status
@@ -123,9 +123,8 @@ class System:
 
     def query_booking(self, vehicle_id, rental_days, estimated_km, customer_name):
         """Books a vehicle, estimates cost, and updates the database."""
-        # Check if the vehicle is available
-        vehicle = self.database.execute_query(
-            operation=SQL.OPERATION.SELECT, # Asks database for an SQL SELECT operation
+        vehicle = self.database.execute_query( # Requests database for vehicle data
+            operation=SQL.OPERATION.SELECT, # Indicates an SQL SELECT operation
             table=SQL.TABLE.VEHICLES, # Target table
             columns=["daily_price", "maintenance_cost", "available"], # Specifies variable names whose values are needed
             where=f"id = {vehicle_id}", # Matches the vehicle with the same ID
@@ -141,25 +140,22 @@ class System:
         duration_cost = daily_price * rental_days # Calculates price to be paid for every rented day
         total_estimated_cost = duration_cost + mileage_cost # Adds both costs
 
-        # Insert booking record in database
-        self.database.execute_query(
-            operation=SQL.OPERATION.INSERT, # Asks database for an SQL INSERT operation
+        self.database.execute_query( # Insert booking record in database
+            operation=SQL.OPERATION.INSERT, # Indicates an SQL INSERT operation
             table=SQL.TABLE.BOOKINGS, # Target table
             columns=["vehicle_id", "rental_days", "estimated_km", "estimated_cost", "customer_name"], # Variable names we look for
             values=[vehicle_id, rental_days, estimated_km, total_estimated_cost, customer_name], # Values to be put into columns
         )
 
-        # Insert log record in database
-        self.database.execute_query(
-            operation=SQL.OPERATION.INSERT, # Asks database for an SQL INSERT operation
+        self.database.execute_query( # Insert log record in database
+            operation=SQL.OPERATION.INSERT, # Indicates an SQL INSERT operation
             table=SQL.TABLE.LOGS, # Target table
             columns=["vehicle_id", "rental_duration", "revenue", "additional_costs", "customer_name", "transaction_type"], # Variable names we look for
             values=[vehicle_id, rental_days, total_estimated_cost, 0, customer_name, "booking"], # Values to be put into columns
         )
 
-        # Mark vehicle as unavailable in database
-        self.database.execute_query(
-            operation=SQL.OPERATION.UPDATE, # Asks database for an SQL UPDATE operation
+        self.database.execute_query( # Mark vehicle as unavailable in database
+            operation=SQL.OPERATION.UPDATE, # Indicates an SQL UPDATE operation
             table=SQL.TABLE.VEHICLES, # Target table
             columns=["available"], # The column we wish to change
             values=[0], # New value of the column
@@ -171,9 +167,8 @@ class System:
 
     def query_return(self, vehicle_id, actual_km, late_days, customer_name):
         """Updates a vehicles availability and calculates the rental costs."""
-        # Check if the vehicle exists
-        vehicle = self.database.execute_query(
-            operation=SQL.OPERATION.SELECT, # Asks database for an SQL SELECT operation
+        vehicle = self.database.execute_query( # Requests database for a vehicle data
+            operation=SQL.OPERATION.SELECT, # Indicates an SQL SELECT operation
             table=SQL.TABLE.VEHICLES, # Target table
             where=f"id = {vehicle_id}", # Matches the vehicle with the same ID
             fetch=SQL.FETCH.ONE,  # Fetch a single record
@@ -184,7 +179,7 @@ class System:
 
         # Check if the vehicle is currently booked
         booking = self.database.execute_query(
-            operation=SQL.OPERATION.SELECT, # Asks database for an SQL SELECT operation
+            operation=SQL.OPERATION.SELECT, # Indicates an SQL SELECT operation
             table=SQL.TABLE.BOOKINGS, # Target table
             where=f"vehicle_id = {vehicle_id}", # Matches the vehicle with the same ID
             fetch=SQL.FETCH.ONE,  # Fetch a single record
@@ -209,23 +204,22 @@ class System:
 
         # Deletes this booking from the table
         self.database.execute_query(
-            operation=SQL.OPERATION.DELETE, # Asks database for an SQL DELETE operation
+            operation=SQL.OPERATION.DELETE, # Indicates an SQL DELETE operation
             table=SQL.TABLE.BOOKINGS, # Target table
             where=f"vehicle_id = {vehicle_id}", # Looks for matching ID
         )
 
         # Updates the 'vehicles' table to change the driven mileage and availability of a vehicle
         self.database.execute_query(
-            operation=SQL.OPERATION.UPDATE, # Asks database for an SQL UPDATE operation
+            operation=SQL.OPERATION.UPDATE, # Indicates an SQL UPDATE operation
             table=SQL.TABLE.VEHICLES, # Target table
             columns=["current_mileage", "available"], # Variables which will receive the update
             values=[new_mileage, 1], # New values for specified 'columns'
             where=f"id = {vehicle_id}", # Looks for matching ID
         )
 
-        # Creates a new log in the DB with 'return' type
-        self.database.execute_query(
-            operation=SQL.OPERATION.INSERT, # Asks database for an SQL INSERT operation
+        self.database.execute_query( # Creates a new log in the DB with 'return' type
+            operation=SQL.OPERATION.INSERT, # Indicates an SQL INSERT operation
             table=SQL.TABLE.LOGS, # Target table
             columns=["vehicle_id", "rental_duration", "revenue", "additional_costs", "customer_name", "transaction_type"], # Initializes variables in the new row
             values=[vehicle_id, rental_days, total_revenue, additional_costs, customer_name, "return"], # Introduces values for the new row

@@ -21,7 +21,8 @@ class BaseInterface:
     def create_scrollable_listbox(self, headers=(), disable_clicking=True, font=("Courier", 10)):
         """
             Creates a scrollable Listbox object, which displays the given information.
-            It is an optional feature, and relies on its brother function load_content()
+            It is an optional feature, and relies on its sister function load_content()
+            to start/reset all the listbox's values.
         """
         if headers:
             tk.Label(self.frame, text=generate_header_row(headers)).pack()  # Insert headers
