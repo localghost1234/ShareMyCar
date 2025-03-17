@@ -1,1 +1,1 @@
-generate_header_row = lambda headers: "  |  ".join(f"{h:<15}" for h in headers)
+generate_header_row = lambda headers: "  |  ".join(f"{h:<15}" for h in headers) # Creates a string of separated values from a list
