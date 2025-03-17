@@ -28,7 +28,6 @@ class MetricsInterface(BaseInterface):
             metrics = self.system.get_financial_metrics()  # Retrieve financial metrics
         except Exception as err:
             print("Error obtaining financial metrics\n", err)
-            metrics = (0.0, 0.0, 0.0, 0.0)
 
         if not metrics:  # If no metrics are available, display an empty message
             tk.Label(self.frame, text=METRICS.EMPTY_MESSAGE, font=("Arial", 18, "bold")).pack(padx=50, pady=50)
