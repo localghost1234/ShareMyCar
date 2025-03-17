@@ -16,7 +16,7 @@ class Database():
         # Commit the changes and close the connection
         self.conn.commit()
 
-    def execute_query(self, operation, table, columns=["*"], values=(), where="", fetch=SQL.FETCH.ALL):
+    def execute_query(self, operation, table, columns=["*"], values=[], where="", fetch=SQL.FETCH.ALL):
         """
         Generalized method to execute SQL queries.
         

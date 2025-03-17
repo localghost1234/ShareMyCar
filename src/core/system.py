@@ -12,7 +12,7 @@ class System:
             operation=SQL.OPERATION.INSERT,  # SQL insert operation
             table=SQL.TABLE.VEHICLES,  # Target table
             columns=["brand", "model", "current_mileage", "daily_price", "maintenance_cost", "maintenance_mileage"],  # Columns to insert
-            values=(brand, model, mileage, daily_price, maintenance_cost, mileage + 10000)  # Values to insert
+            values=[brand, model, mileage, daily_price, maintenance_cost, mileage + 10000]  # Values to insert
         )
         self.database.commit()  # this command tells the database to 'write' our data into the DB
 
@@ -129,13 +129,13 @@ class System:
             operation=SQL.OPERATION.UPDATE,  # SQL update operation
             table=SQL.TABLE.VEHICLES,  # Target table
             columns=["available"],  # Column to update
-            values=(1 if available else 0,),  # Set availability status
+            values=[1 if available else 0],  # Set availability status
             where=f"id = {vehicle_id}"  # Target specific vehicle
         )
         self.database.commit()  # Commit transaction
 
     def query_booking(self, vehicle_id, rental_days, estimated_km, customer_name):
-        """Books a vehicle, calculates cost, and updates the database."""
+        """Books a vehicle, estimates cost, and updates the database."""
         # Check if the vehicle is available
         vehicle = self.database.execute_query(
             operation=SQL.OPERATION.SELECT,
@@ -162,7 +162,7 @@ class System:
             operation=SQL.OPERATION.INSERT,
             table=SQL.TABLE.BOOKINGS,
             columns=["vehicle_id", "rental_days", "estimated_km", "estimated_cost", "customer_name"],
-            values=(vehicle_id, rental_days, estimated_km, total_estimated_cost, customer_name)
+            values=[vehicle_id, rental_days, estimated_km, total_estimated_cost, customer_name]
         )
 
         # Insert log record
@@ -170,7 +170,7 @@ class System:
             operation=SQL.OPERATION.INSERT,
             table=SQL.TABLE.LOGS,
             columns=["vehicle_id", "rental_duration", "revenue", "additional_costs", "customer_name", "transaction_type"],
-            values=(vehicle_id, rental_days, total_estimated_cost, additional_cost, customer_name, "booking")
+            values=[vehicle_id, rental_days, total_estimated_cost, additional_cost, customer_name, "booking"]
         )
 
         # Mark vehicle as unavailable
@@ -178,7 +178,7 @@ class System:
             operation=SQL.OPERATION.UPDATE,
             table=SQL.TABLE.VEHICLES,
             columns=["available"],
-            values=(0,),
+            values=[0],
             where=f"id = {vehicle_id}"
         )
 
@@ -235,7 +235,7 @@ class System:
             operation=SQL.OPERATION.UPDATE,
             table=SQL.TABLE.VEHICLES,
             columns=["current_mileage", "available"],
-            values=(new_mileage, 1),
+            values=[new_mileage, 1],
             where=f"id = {vehicle_id}"
         )
 
@@ -244,7 +244,7 @@ class System:
             operation=SQL.OPERATION.INSERT,
             table=SQL.TABLE.LOGS,
             columns=["vehicle_id", "rental_duration", "revenue", "additional_costs", "customer_name", "transaction_type"],
-            values=(vehicle_id, rental_days, total_revenue, additional_costs, customer_name, "return")
+            values=[vehicle_id, rental_days, total_revenue, additional_costs, customer_name, "return"]
         )
 
         # Commit changes
