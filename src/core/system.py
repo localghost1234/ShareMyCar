@@ -152,9 +152,9 @@ class System:
 
         daily_price, maintenance_cost = vehicle # Unpacks needed values from vehicle
 
-        mileage_cost = maintenance_cost * estimated_km
-        duration_cost = daily_price * rental_days
-        total_estimated_cost = duration_cost + mileage_cost
+        mileage_cost = maintenance_cost * estimated_km # Calculates price to be paid for every driven km
+        duration_cost = daily_price * rental_days # Calculates price to be paid for every rented day
+        total_estimated_cost = duration_cost + mileage_cost # Adds both costs
 
         # Insert booking record in database
         self.database.execute_query(
@@ -214,9 +214,9 @@ class System:
         estimated_cost = booking[4]  # Assuming column 4 is 'estimated_cost', retrieves said value
 
         cleaning_fees = 20 # Static value, used for every vehicle
-        km_exceeded = max(0, actual_km - estimated_km)  # Checks if driven kms exceed expected kms, otherwise, returns 0
+        exceeded_kms = max(0, actual_km - estimated_km)  # Checks if driven kms exceed expected kms, otherwise, returns 0
         lateness_fee = late_days * 10 # Charge 10€ per late day
-        exceeded_mileage_fee = km_exceeded * 0.5  # Adds 0.5€ per extra km
+        exceeded_mileage_fee = exceeded_kms * 0.5  # Adds 0.5€ per extra km
         additional_costs = exceeded_mileage_fee + lateness_fee + cleaning_fees # Sums all extra costs
         total_revenue = estimated_cost + additional_costs # All the costs are put together (revenue for the company)
 
