@@ -4,8 +4,16 @@ from src.pages.interfaces.base_interface import BaseInterface
 from src.misc.strings import BOOKING
 
 class BookingInterface(BaseInterface):
+    """
+        This interface allows the user to enter which vehicle (if available) to rent.
+        In order make a booking, the user must enter:
+        - Vehicle ID
+        - Customer's name
+        - Estimated rent duration (in days)
+        - Estimated kilometers to be driven
+    """
     def __init__(self, root, system):
-        super().__init__(root, system, BOOKING.TITLE)
+        super().__init__(root, system, BOOKING.TITLE) # Initializes 'BaseInterface' with the pre-defined TITLES strings
 
         # Vehicle ID input
         tk.Label(self.frame, text="Vehicle ID:", font=("Arial", 12)).pack(pady=5)

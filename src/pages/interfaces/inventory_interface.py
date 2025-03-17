@@ -3,8 +3,12 @@ from src.pages.interfaces.base_interface import BaseInterface
 from src.misc.strings import INVENTORY
 
 class InventoryInterface(BaseInterface):
+    """
+        Represents the interface for showcasing all the existing vehicles in the database.
+        Inherits components from BaseInterface
+    """
     def __init__(self, root, system):
-        super().__init__(root,  system, *INVENTORY.TITLES)
+        super().__init__(root,  system, *INVENTORY.TITLES) # Initializes 'BaseInterface' with the pre-defined TITLES strings
 
         self.create_scrollable_listbox(INVENTORY.HEADERS)
 
@@ -18,7 +22,8 @@ class InventoryInterface(BaseInterface):
         self.add_button.pack(padx=10, pady=10)
 
     def add_vehicle(self):
-        dialog = tk.Toplevel(self.root)
+        """Opens dialog window to add a new vehicle to the database."""
+        dialog = tk.Toplevel(self.frame)
         dialog.title("Add Vehicle")
         dialog.geometry("300x200")
 
@@ -62,6 +67,17 @@ class InventoryInterface(BaseInterface):
         submit_button.grid(row=5, column=0, columnspan=2, pady=10)
 
     def submit_vehicle(self, brand, model, mileage, daily_price, maintenance_cost, dialog):
+        """
+            Submits the new vehicle data to the system and updates the interface.
+
+            Args:
+                brand (str): The brand of the vehicle.
+                model (str): The model of the vehicle.
+                mileage (str): The mileage of the vehicle.
+                daily_price (str): The daily rental price of the vehicle.
+                maintenance_cost (str): The maintenance cost per kilometer of the vehicle.
+                dialog (tk.Toplevel): The dialog window to be closed after submission.
+        """
         if not brand or not model or not mileage or not daily_price or not maintenance_cost:
             self.show_error("All fields are required.")
             return

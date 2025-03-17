@@ -4,14 +4,10 @@ from src.misc.strings import RETURN
 
 class ReturnInterface(BaseInterface):
     """
-    Represents the interface for returning a vehicle in the rental system.
-    
-    This interface displays a list of currently unavailable vehicles and allows users
-    to select a vehicle to return. A dialog prompts the user to enter the kilometers driven
-    and late return days, then calculates the total return cost.
-    
-    Attributes:
-        listbox (tk.Listbox): A scrollable list displaying unavailable vehicles.
+        This interface displays a list of currently unavailable vehicles and allows users
+        to select and return them.\n
+        A dialog prompts the user to enter the kilometers driven
+        and late return days, then calculates the total return cost.
     """
     
     def __init__(self, root, system):
@@ -22,7 +18,7 @@ class ReturnInterface(BaseInterface):
             root (tk.Tk or tk.Toplevel): The parent window for this interface.
             system: The backend system managing vehicle rentals.
         """
-        super().__init__(root, system, *RETURN.TITLES)
+        super().__init__(root, system, *RETURN.TITLES) # Initializes 'BaseInterface' with the pre-defined TITLES strings
 
         self.create_scrollable_listbox(RETURN.HEADERS, disable_clicking=False)  # Create a scrollable listbox for unavailable vehicles
         
@@ -109,14 +105,15 @@ class ReturnInterface(BaseInterface):
 
         total_cost = self.system.query_return(vehicle_id, actual_km, late_days, customer_name)  # Calculate total cost
 
-        if total_cost:
-            self.show_info(f"Vehicle returned! Total cost: €{total_cost}")  # Show confirmation message
-            dialog.destroy()  # Close return dialog
-            
-            self.load_content(
-                get_content=self.system.get_unavailable_vehicles,  # Refresh vehicle list
-                generate_model=RETURN.GENERATE_MODEL,
-                empty_message=RETURN.EMPTY_MESSAGE,
-            )
-        else:
+        if not total_cost:
             self.show_error("Vehicle not found or already returned.")  # Show error if vehicle return fails
+            return
+        
+        self.show_info(f"Vehicle returned! Total cost: €{total_cost}")  # Show confirmation message
+        dialog.destroy()  # Close return dialog
+        
+        self.load_content(
+            get_content=self.system.get_unavailable_vehicles,  # Refresh vehicle list
+            generate_model=RETURN.GENERATE_MODEL,
+            empty_message=RETURN.EMPTY_MESSAGE,
+        )

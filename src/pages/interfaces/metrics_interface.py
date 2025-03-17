@@ -20,7 +20,7 @@ class MetricsInterface(BaseInterface):
             root: The root Tkinter window.
             system: The core system instance.
         """
-        super().__init__(root, system, *METRICS.TITLES)  # Initialize the base interface with titles
+        super().__init__(root, system, *METRICS.TITLES) # Initializes 'BaseInterface' with the pre-defined TITLES strings
 
         metrics = ()
         
