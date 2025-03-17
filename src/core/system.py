@@ -14,7 +14,7 @@ class System:
             columns=["brand", "model", "current_mileage", "daily_price", "maintenance_cost", "maintenance_mileage"],  # Columns to insert
             values=[brand, model, mileage, daily_price, maintenance_cost, mileage + 10000]  # Values to insert
         )
-        self.database.commit() # This command tells the database to 'write' our data into the DB
+        self.database.commit() # This command tells the database to 'write' our new information into the DB
 
     def get_all_vehicles(self):
         """Returns a list of all the vehicles from the database."""
@@ -87,43 +87,28 @@ class System:
             where="transaction_type = 'return'",  # Check only for 'return' type, because real earnings come from those only
         )
 
-        if not logs_exist:
-            return ()  # Return empty tuple if no logs exist
+        if not logs_exist: # Checks if there are any logs
+            return ()  # Returns empty tuple if no logs exist
 
-        total_revenue = self.database.execute_query(
+        total_revenue, total_additional_costs = self.database.execute_query( # Obtains the aggregation of 'revenue' and 'additional_costs' from all the 'return' transaction logs
             operation=SQL.OPERATION.SELECT, # Asks database for an SQL SELECT operation
             table=SQL.TABLE.LOGS,  # Target table
-            columns=["SUM(revenue)"],  # Sum total revenue
+            columns=["SUM(revenue)", "SUM(additional_costs)"],  # Sum total revenue
             fetch=SQL.FETCH.ONE,  # Fetch a single record
             where="transaction_type = 'return'",  # Check only for 'return' type, because real earnings come from those only
-        )[0] or 0  # Default to 0 if no data
+        ) or 0, 0  # Default to 0 for both if no data is available
 
-        total_maintenance_cost = self.database.execute_query(
+        total_maintenance_cost, average_vehicle_mileage = self.database.execute_query( # Obtains the aggregation of maintenance cost and average vehicle mileage of all existing vehicles
             operation=SQL.OPERATION.SELECT, # Asks database for an SQL SELECT operation
             table=SQL.TABLE.VEHICLES,  # Target table
-            columns=["SUM(maintenance_cost)"],  # Sum maintenance costs
+            columns=["SUM(maintenance_cost)", "AVG(current_mileage)"],  # Sum maintenance costs
             fetch=SQL.FETCH.ONE,  # Fetch a single record
-        )[0] or 0  # Default to 0 if no data
-
-        total_additional_costs = self.database.execute_query(
-            operation=SQL.OPERATION.SELECT, # Asks database for an SQL SELECT operation
-            table=SQL.TABLE.LOGS,  # Target table
-            columns=["SUM(additional_costs)"],  # Sum additional costs
-            fetch=SQL.FETCH.ONE,  # Fetch a single record
-            where="transaction_type = 'return'",  # Check only for 'return' type, because real earnings come from those only
-        )[0] or 0  # Default to 0 if no data
+        ) or 0, 0  # Default to 0 for both if no data is available
 
         total_operational_costs = total_maintenance_cost + total_additional_costs  # Calculate total costs
         total_profit = total_revenue - total_operational_costs  # Calculate profit
 
-        avg_mileage = self.database.execute_query(
-            operation=SQL.OPERATION.SELECT, # Asks database for an SQL SELECT operation
-            table=SQL.TABLE.VEHICLES,  # Target table
-            columns=["AVG(current_mileage)"],  # Calculate average mileage
-            fetch=SQL.FETCH.ONE,  # Fetch a single record
-        )[0] or 0  # Default to 0 if no data
-
-        return total_revenue, total_operational_costs, total_profit, avg_mileage  # Return metrics
+        return total_revenue, total_operational_costs, total_profit, average_vehicle_mileage  # Return calculated values
 
     def query_update_availability(self, vehicle_id, available: bool):
         """Updates the availability status of a vehicle."""
@@ -134,7 +119,7 @@ class System:
             values=[1 if available else 0],  # Set availability status
             where=f"id = {vehicle_id}", # Matches the vehicle with the same ID
         )
-        self.database.commit() # This command tells the database to 'write' our data into the DB
+        self.database.commit() # This command tells the database to 'write' our new information into the DB
 
     def query_booking(self, vehicle_id, rental_days, estimated_km, customer_name):
         """Books a vehicle, estimates cost, and updates the database."""
@@ -181,7 +166,7 @@ class System:
             where=f"id = {vehicle_id}", # Matches the vehicle with the same ID
         )
 
-        self.database.commit() # This command tells the database to 'write' our data into the DB
+        self.database.commit() # This command tells the database to 'write' our new information into the DB
         return total_estimated_cost # Returns total value to be paid by the customer when returning the vehicle
 
     def query_return(self, vehicle_id, actual_km, late_days, customer_name):
@@ -214,8 +199,8 @@ class System:
         estimated_cost = booking[4]  # Assuming column 4 is 'estimated_cost', retrieves said value
 
         cleaning_fees = 20 # Static value, used for every vehicle
-        exceeded_kms = max(0, actual_km - estimated_km)  # Checks if driven kms exceed expected kms, otherwise, returns 0
         lateness_fee = late_days * 10 # Charge 10€ per late day
+        exceeded_kms = max(0, actual_km - estimated_km)  # Checks if driven kms exceed expected kms, otherwise, returns 0
         exceeded_mileage_fee = exceeded_kms * 0.5  # Adds 0.5€ per extra km
         additional_costs = exceeded_mileage_fee + lateness_fee + cleaning_fees # Sums all extra costs
         total_revenue = estimated_cost + additional_costs # All the costs are put together (revenue for the company)
@@ -246,7 +231,7 @@ class System:
             values=[vehicle_id, rental_days, total_revenue, additional_costs, customer_name, "return"], # Introduces values for the new row
         )
 
-        self.database.commit() # This command tells the database to 'write' our data into the DB
+        self.database.commit() # This command tells the database to 'write' our new information into the DB
         return total_revenue # Returns the total earnings made on this vehicle's booking to be later displayed
 
     def close(self):

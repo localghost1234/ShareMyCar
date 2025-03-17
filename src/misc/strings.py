@@ -63,7 +63,7 @@ LOGS=SimpleNamespace(
 
 METRICS=SimpleNamespace(
     TITLES = ("Metrics Management", "Financial Metrics"),
-    HEADERS = ("Total Revenue (€)", "Total Costs (€)", "Total Profit (€)", "Avg Mileage (km/vehicle)"),
+    HEADERS = ("Total Revenue (€)", "Total Operational Costs (€)", "Total Profit (€)", "Average Mileage (km/vehicle)"),
     EMPTY_MESSAGE = "No financial data available.",
     PDF_HEADERS=SimpleNamespace(
         VEHICLES = ("ID", "Brand", "Model", "Mileage", "Daily Price", "Maintenance Cost", "Available", "Maintenance Mileage"),
