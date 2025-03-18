@@ -60,68 +60,59 @@ class MetricsInterface(BaseInterface):
                 self.show_error("Please, enter a correct 'table' and a 'column'")
                 return
 
-            table_name, column_name = query_list  # Extract table_name and column_name
+            table_name, column_name = query_list                                        # Extract table_name and column_name
 
-            if table_name not in ["vehicles", "bookings", "logs"]:  # Validate the table name
-                self.show_error("Please, enter a valid 'table'")
+            if table_name not in ["vehicles", "bookings", "logs"]:                      # Validate the table name
+                self.show_error("Please, enter a valid 'table'")                        # Shows error modal in case not an actual table 
+                return                                                                  # Stops further code execution
+
+            try:                                                                            # Creates a scope for error handling
+                results_list = self.system.get_table_column(table_name, column_name)        # Extracts database info with specified params
+            except Exception:                                                               # Handle invalid queries
+                self.show_error(f"Please, enter a valid 'column' for table {table_name}")   # Displays error modal
+                return                                                                      # Stops further code execution
+
+            for widget in listbox_frame.winfo_children():               # Iterates over all components in the listbox Frame
+                widget.destroy()                                        # Deletes the component
+
+            if not results_list:                                                                        # Handle no results
+                tk.Label(listbox_frame, text="No results found.", font=("Arial", 12)).pack(pady=15)     # Displays text when no data is found
                 return
 
-            try:  # Execute the query
-                results_list = self.system.database.execute_query(
-                    operation="SELECT",
-                    table=table_name,
-                    columns=[column_name],
-                    fetch="all"
-                )
-            except Exception:  # Handle invalid queries
-                self.show_error(f"Please, enter a valid 'column' for table {table_name}")
-                return
+            tk.Label(listbox_frame, text=f"{len(results_list)} results found:", font=("Arial", 12)).pack(pady=15) # Displays and positions the number of results found
 
-            # Clear existing widgets in the modal window
-            for widget in listbox_frame.winfo_children():
-                widget.destroy()
+            v_scrollbar = tk.Scrollbar(listbox_frame, orient=tk.VERTICAL)                               # Create a Scrollbar component to move vertically around the Listbox
+            listbox = tk.Listbox(listbox_frame, yscrollcommand=v_scrollbar.set, font=("Arial", 10))     # Listbox object is created, stylized, and linked to Scrollbar
+            v_scrollbar.config(command=listbox.yview)                                                   # Scrollbar is linked to Listbox
+            v_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)                                                  # Scrollbar is positioned in the Frame
+            listbox.pack(fill=tk.Y)                                                                     # Listbox is positioned in the Frame
 
-            if not results_list:  # Handle no results
-                tk.Label(listbox_frame, text="No results found.", font=("Arial", 12)).pack(pady=15)
-                return
+            for item in results_list:                                                                   # Iterate over the list with the query results
+                listbox.insert(tk.END, item[0])                                                         # Extract the results from their tuples and add them to the listbox
 
-            # Display the number of results found
-            tk.Label(listbox_frame, text=f"{len(results_list)} results found:", font=("Arial", 12)).pack(pady=15)
-
-            # Add a scrollable listbox to display results
-            v_scrollbar = tk.Scrollbar(listbox_frame, orient=tk.VERTICAL)
-            listbox = tk.Listbox(listbox_frame, yscrollcommand=v_scrollbar.set, font=("Arial", 10))
-            v_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-            listbox.pack(fill=tk.Y)
-            v_scrollbar.config(command=listbox.yview)
-
-            for item in results_list:  # Populate the listbox with results
-                listbox.insert(tk.END, item[0])
-
-        tk.Button(instructions_frame, text="Search", command=submit_query).pack()  # Query submission button
+        tk.Button(instructions_frame, text="Search", command=submit_query).pack()                       # Creates Button component and links it to submission function
 
     def generate_full_report(self):
         """Generate a full report in PDF format containing vehicles, bookings, and logs."""
-        all_vehicles = self.system.get_all_vehicles()  # Retrieve all vehicles
-        all_bookings = self.system.get_all_bookings()  # Retrieve all bookings
-        all_logs = self.system.get_all_transaction_logs()  # Retrieve all logs
+        all_vehicles = self.system.get_all_vehicles()                                   # Retrieve all vehicles from database
+        all_bookings = self.system.get_all_bookings()                                   # Retrieve all bookings from database
+        all_logs = self.system.get_all_logs()                                           # Retrieve all logs from database
 
-        current_datetime = datetime.now()  # Get the current date and time
+        current_datetime = datetime.now()                                               # Get an object with the current date and time
 
-        # Prompt the user to choose a file path for the report
-        file_path = filedialog.asksaveasfilename(
-            defaultextension=".pdf",
-            filetypes=[("PDF Files", "*.pdf")],
-            title="Choose Report Folder",
-            initialfile=f"FullReport_{current_datetime.strftime('%Y-%m-%d_%H%M%S')}"
+        file_path = filedialog.asksaveasfilename(                                       # Opens a modal prompt for the user to choose a file path for the report
+            defaultextension=".pdf",                                                    # Appends extension to filename if none is given
+            filetypes=[("PDF Files", "*.pdf")],                                         # Filters all searches and saves to allow only PDF
+            title="Choose Report Folder",                                               # The title that appears at the top of the modal
+            initialfile=f"FullReport_{current_datetime.strftime('%Y-%m-%d_%H%M%S')}",   # Default filename with determined date and time format
         )
 
-        if not file_path:  # Exit if the user cancels the file dialog
-            return
+        if not file_path:                                                               # Exit if the user cancels the file dialog
+            return                                                                      # Stops further code execution
 
-        pdf = canvas.Canvas(file_path, pagesize=A4) # Create a PDF canvas
-        _, height = A4 # Obtain a variable with the PDF format's height
-        y_position = height - 40  # Start position for content
+        pdf = canvas.Canvas(file_path, pagesize=A4)                                     # Create a PDF file object to manipulate
+        _, height = A4                                                                  # Obtain a variable with the PDF format's height
+        y_position = height - 40                                                        # Start position for content
 
         # Add the report title
         pdf.setFont("Helvetica-Bold", 16)

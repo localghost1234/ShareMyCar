@@ -23,6 +23,15 @@ class System:
             table=SQL.TABLE.VEHICLES,                       # Target table
             fetch=SQL.FETCH.ALL,                            # Fetch all records
         )
+    
+    def get_table_column(self, table_name, column_name):
+        """Returns a list with all the database elements with the column label in the specified table"""
+        return self.database.execute_query(
+                    operation=SQL.OPERATION.SELECT,         # Indicates an SQL SELECT operation
+                    table=table_name,                       # Target table
+                    columns=[column_name],                  # Target column of the info
+                    fetch=SQL.FETCH.ALL,                    # Fetch all records
+                )
 
     def get_all_bookings(self):
         """Returns a list of all the bookings from the database."""
@@ -32,7 +41,7 @@ class System:
             fetch=SQL.FETCH.ALL,                            # Fetch all records
         )
 
-    def get_all_transaction_logs(self):
+    def get_all_logs(self):
         """Returns a list of all the transactions done in the app."""
         return self.database.execute_query(
             operation=SQL.OPERATION.SELECT,                 # Indicates an SQL SELECT operation

@@ -58,7 +58,7 @@ class Database():
             Writes whatever changes have been done DB.
             This is done so to avoid direct usage of 'conn' variable outside of database.py
         """
-        self.conn.commit()  # Writes whatever changes have been done to DB
+        self.conn.commit()                              # Writes whatever changes have been done to DB
 
     def close(self):
         """
@@ -67,8 +67,8 @@ class Database():
             and finally with the database itself.
         """
         try:
-            self.conn.commit()                       # Write down any pending transactions to avoid data loss
-            self.cursor.close()                      # Closes the iterator
-            self.conn.close()                        # Closes the database connection
-        except Exception as e:                       # If any error arises during any of these operations, it skips to this point
-            print("Error closing the database\n", e) # Displays error to developer consoles
+            self.conn.commit()                          # Write down any pending transactions to avoid data loss
+            self.cursor.close()                         # Closes the iterator
+            self.conn.close()                           # Closes the database connection
+        except Exception as e:                          # If any error arises during any of these operations, it skips to this point
+            print("Error closing the database\n", e)    # Displays error to developer consoles
