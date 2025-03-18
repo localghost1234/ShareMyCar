@@ -114,15 +114,13 @@ class MetricsInterface(BaseInterface):
         _, height = A4                                                                  # Obtain a variable with the PDF format's height
         y_position = height - 40                                                        # Start position for content
 
-        # Add the report title
-        pdf.setFont("Helvetica-Bold", 16)
-        pdf.drawString(200, y_position, f"Full Report - {current_datetime.strftime('%Y-%m-%d_%H:%M:%S')}")
-        y_position -= 30
+        pdf.setFont("Helvetica-Bold", 16)                                                                   # Set top text's font
+        pdf.drawString(200, y_position, f"Full Report - {current_datetime.strftime('%Y-%m-%d_%H:%M:%S')}")  # Write the title's string on top of the file
 
-        x_position = 50  # Start x position for content
-        y_position = height - 50
-        font_size = 8
-        pdf.setFont("Helvetica", font_size)
+        x_position = 50                                                                                     # Adjust horizontal position
+        y_position = height - 50                                                                            # Adjust vertical position for further text strings
+        font_size = 8                                                                                       # Define text size
+        pdf.setFont("Helvetica", font_size)                                                                 # Define text font and size for PDF object
 
         def compute_column_widths(headers, data):
             """Compute column widths based on the longest item in each column.
@@ -134,8 +132,8 @@ class MetricsInterface(BaseInterface):
             Returns:
                 list: A list of column widths.
             """
-            col_widths = [max(len(str(item)) for item in col) for col in zip(headers, *data)]
-            return [w * 5 + 10 for w in col_widths]  # Scale widths dynamically
+            col_widths = [max(len(str(item)) for item in col) for col in zip(headers, *data)]   # Gets the max width for each column by finding the longest string length in headers and data
+            return [w * 5 + 10 for w in col_widths]                                             # Changes the scale of each width dynamically and returns the result
 
         def draw_table(headers, data, col_widths):
             """Draw a table in the PDF.
@@ -145,12 +143,14 @@ class MetricsInterface(BaseInterface):
                 data: The data to be displayed.
                 col_widths: The computed column widths.
             """
-            nonlocal y_position
-            x_pos = x_position
-            pdf.setFont("Helvetica-Bold", font_size)
-            for i, header in enumerate(headers):  # Draw headers
+            nonlocal y_position                                         # Since variable 'y_position' is set outside of this scope, we need to remind the function to use its outter value
+            x_pos = x_position                                          # TODO: Improve this -- we create a new variable with the same value, but can lead to errors
+            pdf.setFont("Helvetica-Bold", font_size)                    # Set the font and size to be used in the PDF object
+            
+            for i, header in enumerate(headers):                        # Takes the index and inner value of the 'headers' list
                 pdf.drawString(x_pos, y_position, header)
                 x_pos += col_widths[i]
+            
             y_position -= 10
             pdf.setFont("Helvetica", font_size)
 
