@@ -46,38 +46,38 @@ class ReturnInterface(BaseInterface):
         """
         customer_name = self.system.get_customer_name(vehicle_id)                           # Retrieve customer name associated with the vehicle
 
-        dialog = tk.Toplevel(self.root)                                                     # Create a new modal window
-        dialog.title("Return Vehicle")                                                      # Set window title
-        dialog.geometry("300x200")                                                          # Define window size
+        modal_window = tk.Toplevel(self.frame)                                                     # Create a new modal window
+        modal_window.title("Return Vehicle")                                                      # Set window title
+        modal_window.geometry("300x200")                                                          # Define window size
 
-        tk.Label(dialog, text="Vehicle ID:").grid(row=0, column=0, padx=10, pady=5)         # Label for vehicle ID
-        vehicle_id_entry = tk.Entry(dialog)                                                 # Input field for vehicle ID
+        tk.Label(modal_window, text="Vehicle ID:").grid(row=0, column=0, padx=10, pady=5)         # Label for vehicle ID
+        vehicle_id_entry = tk.Entry(modal_window)                                                 # Input field for vehicle ID
         vehicle_id_entry.insert(0, str(vehicle_id))                                         # Populate with the vehicle ID
         vehicle_id_entry.config(state=tk.DISABLED)                                          # Make it read-only
         vehicle_id_entry.grid(row=0, column=1, padx=10, pady=5)                             # Positions Entry object around the grid
 
-        tk.Label(dialog, text="Customer Name:").grid(row=1, column=0, padx=10, pady=5)      # Label for customer name
-        customer_name_entry = tk.Entry(dialog)                                              # Input field for customer name
+        tk.Label(modal_window, text="Customer Name:").grid(row=1, column=0, padx=10, pady=5)      # Label for customer name
+        customer_name_entry = tk.Entry(modal_window)                                              # Input field for customer name
         customer_name_entry.insert(0, customer_name)                                        # Populate with the customer's name
         customer_name_entry.config(state=tk.DISABLED)                                       # Make it read-only
         customer_name_entry.grid(row=1, column=1, padx=10, pady=5)                          # Positions Entry object around the grid
 
-        tk.Label(dialog, text="Kilometers Driven:").grid(row=2, column=0, padx=10, pady=5)  # Label for kilometers driven
-        actual_km_entry = tk.Entry(dialog)                                                  # Input field for kilometers driven
+        tk.Label(modal_window, text="Kilometers Driven:").grid(row=2, column=0, padx=10, pady=5)  # Label for kilometers driven
+        actual_km_entry = tk.Entry(modal_window)                                                  # Input field for kilometers driven
         actual_km_entry.grid(row=2, column=1, padx=10, pady=5)                              # Positions Entry object around the grid
 
-        tk.Label(dialog, text="Late Days:").grid(row=3, column=0, padx=10, pady=5)          # Label for late days
-        late_days_entry = tk.Entry(dialog)                                                  # Input field for late days
+        tk.Label(modal_window, text="Late Days:").grid(row=3, column=0, padx=10, pady=5)          # Label for late days
+        late_days_entry = tk.Entry(modal_window)                                                  # Input field for late days
         late_days_entry.grid(row=3, column=1, padx=10, pady=5)                              # Positions Entry object around the grid
 
         tk.Button(
-            dialog, text="Submit",  # Submit button
+            modal_window, text="Submit",  # Submit button
             command=lambda: self.submit_return(
-                vehicle_id, actual_km_entry.get(), late_days_entry.get(), customer_name, dialog
+                vehicle_id, actual_km_entry.get(), late_days_entry.get(), customer_name, modal_window
             )
         ).grid(row=4, column=0, columnspan=2, pady=10)                                      # Position submit button
 
-    def submit_return(self, vehicle_id, actual_km, late_days, customer_name, dialog):
+    def submit_return(self, vehicle_id, actual_km, late_days, customer_name, modal):
         """
         Validates the return details, calculates total cost, and updates the system.
         
@@ -86,7 +86,7 @@ class ReturnInterface(BaseInterface):
             actual_km (str): The actual kilometers driven (to be validated and converted to int).
             late_days (str): The number of late days (to be validated and converted to int).
             customer_name (str): The name of the customer returning the vehicle.
-            dialog (tk.Toplevel): The return dialog window to be closed after processing.
+            modal (tk.Toplevel): The return modal window to be closed after processing.
         """
         try:
             actual_km = int(actual_km)                                                          # Convert kilometers driven to integer
@@ -102,7 +102,7 @@ class ReturnInterface(BaseInterface):
             return
         
         self.show_info(f"Vehicle returned! Total cost: €{total_cost}")                          # Show confirmation message
-        dialog.destroy()                                                                        # Close return dialog
+        modal.destroy()                                                                        # Close return dialog
         
         self.load_content(                                                                      # Reloads content with the same logic and variables (TODO: improve this)
             get_content=self.system.get_unavailable_vehicles,                                   # Sets the callback function for extracting booked vehicles
