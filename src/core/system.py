@@ -201,10 +201,10 @@ class System:
 
         new_mileage = current_mileage + actual_km                               # Adds driven mileage to the current_mileage
 
-        self.database.execute_query(                            # Deletes this booking from the table
-            operation=SQL.OPERATION.DELETE,                     # Indicates an SQL DELETE operation
-            table=SQL.TABLE.BOOKINGS,                           # Target table
-            where=f"vehicle_id = {vehicle_id}",                 # Looks for matching ID
+        self.database.execute_query(                                            # Deletes this booking from the table
+            operation=SQL.OPERATION.DELETE,                                     # Indicates an SQL DELETE operation
+            table=SQL.TABLE.BOOKINGS,                                           # Target table
+            where=f"vehicle_id = {vehicle_id}",                                 # Looks for matching ID
         )
 
         self.database.execute_query(                            # Updates the 'vehicles' table to change the driven mileage and availability of a vehicle
