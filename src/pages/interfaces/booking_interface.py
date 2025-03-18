@@ -13,45 +13,40 @@ class BookingInterface(BaseInterface):
         - Estimated kilometers to be driven
     """
     def __init__(self, root, system):
-        super().__init__(root, system, BOOKING.TITLE) # Initializes 'BaseInterface' with the pre-defined TITLES strings
+        super().__init__(root, system, BOOKING.TITLE)                                           # Initializes 'BaseInterface' with the pre-defined TITLES strings
 
-        # Vehicle ID input
-        tk.Label(self.frame, text="Vehicle ID:", font=("Arial", 12)).pack(pady=5)
-        self.vehicle_id_entry = tk.Entry(self.frame)
-        self.vehicle_id_entry.pack()
+        tk.Label(self.frame, text="Vehicle ID:", font=("Arial", 12)).pack(pady=5)               # Displays, stylizes and positions text on the Frame
+        self.vehicle_id_entry = tk.Entry(self.frame)                                            # Sets Entry component to receive user input
+        self.vehicle_id_entry.pack()                                                            # Positions the Entry component relative to the other components
 
-        # Customer Name input
-        tk.Label(self.frame, text="Customer Name:", font=("Arial", 12)).pack(pady=5)
-        self.customer_name_entry = tk.Entry(self.frame)
-        self.customer_name_entry.pack()
+        tk.Label(self.frame, text="Customer Name:", font=("Arial", 12)).pack(pady=5)            # Displays, stylizes and positions text on the Frame
+        self.customer_name_entry = tk.Entry(self.frame)                                         # Sets Entry component to receive user input
+        self.customer_name_entry.pack()                                                         # Positions the Entry component relative to the other components
 
-        # Rental days input
-        tk.Label(self.frame, text="Rental Duration (days):", font=("Arial", 12)).pack(pady=5)
-        self.rental_days_entry = tk.Entry(self.frame)
-        self.rental_days_entry.pack()
+        tk.Label(self.frame, text="Rental Duration (days):", font=("Arial", 12)).pack(pady=5)   # Displays, stylizes and positions text on the Frame
+        self.rental_days_entry = tk.Entry(self.frame)                                           # Sets Entry component to receive user input
+        self.rental_days_entry.pack()                                                           # Positions the Entry component relative to the other components
 
-        # Estimated kilometers input
-        tk.Label(self.frame, text="Estimated Kilometers:", font=("Arial", 12)).pack(pady=5)
-        self.estimated_km_entry = tk.Entry(self.frame)
-        self.estimated_km_entry.pack()
+        tk.Label(self.frame, text="Estimated Kilometers:", font=("Arial", 12)).pack(pady=5)     # Displays, stylizes and positions text on the Frame
+        self.estimated_km_entry = tk.Entry(self.frame)                                          # Sets Entry component to receive user input
+        self.estimated_km_entry.pack()                                                          # Positions the Entry component relative to the other components
 
-        # Book button
-        self.book_button = tk.Button(self.frame, text="Book Vehicle", command=self.create_booking)
-        self.book_button.pack(pady=25)
+        tk.Button(self.frame, text="Book Vehicle", command=self.create_booking).pack(pady=25)   # Sets Button component, positions it, and adds actions it will execute
 
     def create_booking(self):
         """Handles booking process by taking input values and calling system logic."""
-        try:
-            vehicle_id = int(self.vehicle_id_entry.get())
-            rental_days = int(self.rental_days_entry.get())
-            estimated_km = int(self.estimated_km_entry.get())
-            customer_name = str(self.customer_name_entry.get())
-
-            cost = self.system.query_booking(vehicle_id, rental_days, estimated_km, customer_name)
-            
-            if cost:
-                self.show_info(f"Vehicle booked! Estimated cost: €{cost}")
-            else:
-                self.show_error("Vehicle not found or unavailable.")
+        try:                                                                                    # Creates a scope where errors get handled accordingly
+            vehicle_id = int(self.vehicle_id_entry.get())                                       # Turns 'vehicle_id_entry' input into an integer, or raises an error
+            rental_days = int(self.rental_days_entry.get())                                     # Turns 'rental_days_entry' input into an integer, or raises an error
+            estimated_km = int(self.estimated_km_entry.get())                                   # Turns 'estimated_km_entry' input into an integer, or raises an error
+            customer_name = str(self.customer_name_entry.get())                                 # Turns 'customer_name_entry' input into a float, or raises an error
         except ValueError:
             self.show_error("Please enter valid values.")
+            return
+
+        cost = self.system.query_booking(vehicle_id, rental_days, estimated_km, customer_name)  # Calls the system variable's function to add a booking to the database; returns the cost of said booking
+        
+        if cost:                                                                                # Checks if the returned value is truthy (cost should always be above 0) 
+            self.show_info(f"Vehicle booked! Estimated cost: €{cost}")                          # Displays success modal with calculated cost for the client
+        else:                                                                                   # Alternate condition, in case the former was falsy
+            self.show_error("Vehicle not found or unavailable.")                                # Displays error modal
