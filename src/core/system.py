@@ -143,7 +143,7 @@ class System:
         if not vehicle and not vehicle[2]:                              # Checks vehicle's existance in database and its 3rd value ('available')
             return None                                                 # Returns falsy value
 
-        daily_price, maintenance_cost = vehicle                         # Unpacks needed values from vehicle
+        daily_price, maintenance_cost, _ = vehicle                         # Unpacks needed values from vehicle
 
         mileage_cost = maintenance_cost * estimated_km                  # Calculates price to be paid for every driven km
         duration_cost = daily_price * rental_days                       # Calculates price to be paid for every rented day
