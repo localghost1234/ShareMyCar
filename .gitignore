@@ -2,4 +2,4 @@
 carsharing.db
 
 # Ignore anything related to Pyinstaller and its build
-build/main
+build
