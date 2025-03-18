@@ -11,38 +11,31 @@ class ReturnInterface(BaseInterface):
     """
     
     def __init__(self, root, system):
-        """
-        Initializes the return interface.
-        
-        Args:
-            root (tk.Tk or tk.Toplevel): The parent window for this interface.
-            system: The backend system managing vehicle rentals.
-        """
-        super().__init__(root, system, *RETURN.TITLES) # Initializes 'BaseInterface' with the pre-defined TITLES strings
+        super().__init__(root, system, *RETURN.TITLES)                          # Initializes 'BaseInterface' with the pre-defined TITLES strings
 
         self.create_scrollable_listbox(RETURN.HEADERS, disable_clicking=False)  # Create a scrollable listbox for unavailable vehicles
         
-        self.load_content(
-            get_content=self.system.get_unavailable_vehicles,  # Fetch unavailable vehicles
-            generate_model=RETURN.GENERATE_MODEL,  # Define how vehicle data is displayed
-            empty_message=RETURN.EMPTY_MESSAGE  # Message if no vehicles are found
+        self.load_content(                                                      # Executes necessary modules to extract database content and display it accordingly
+            get_content=self.system.get_unavailable_vehicles,                   # Fetch unavailable vehicles
+            generate_model=RETURN.GENERATE_MODEL,                               # Define how vehicle data is displayed
+            empty_message=RETURN.EMPTY_MESSAGE                                  # Message if no vehicles are found
         )
 
-        self.listbox.bind("<Double-Button-1>", self.on_vehicle_double_click)  # Bind double-click event to handle vehicle selection
+        self.listbox.bind("<Double-Button-1>", self.on_vehicle_double_click)    # Bind double-click event to handle vehicle selection
 
     def on_vehicle_double_click(self, event):
         """
         Handles double-clicking on a vehicle in the list, extracting its ID and opening the return dialog.
         
         Args:
-            event (tk.Event): The event triggered by the double-click.
+            event (tk.Event): The event's builtin modules.
         """
-        selected_index = self.listbox.curselection()  # Get the selected item index
+        selected_index = self.listbox.curselection()                    # Get the selected item index
         
         if selected_index:
-            selected_vehicle = self.listbox.get(selected_index)  # Get selected vehicle details
+            selected_vehicle = self.listbox.get(selected_index)         # Get selected vehicle details
             vehicle_id = int(selected_vehicle.split(" | ")[0].strip())  # Extract vehicle ID from the list entry
-            self.show_return_dialog(vehicle_id)  # Open return dialog with vehicle ID
+            self.show_return_dialog(vehicle_id)                         # Open return dialog with vehicle ID
 
     def show_return_dialog(self, vehicle_id):
         """
@@ -51,39 +44,38 @@ class ReturnInterface(BaseInterface):
         Args:
             vehicle_id (int): The unique identifier of the vehicle being returned.
         """
-        customer_name = self.system.get_customer_name(vehicle_id)  # Retrieve customer name associated with the vehicle
+        customer_name = self.system.get_customer_name(vehicle_id)                           # Retrieve customer name associated with the vehicle
 
-        dialog = tk.Toplevel(self.root)  # Create a new top-level window
-        dialog.title("Return Vehicle")  # Set window title
-        dialog.geometry("300x200")  # Define window size
+        dialog = tk.Toplevel(self.root)                                                     # Create a new modal window
+        dialog.title("Return Vehicle")                                                      # Set window title
+        dialog.geometry("300x200")                                                          # Define window size
 
-        tk.Label(dialog, text="Vehicle ID:").grid(row=0, column=0, padx=10, pady=5)  # Label for vehicle ID
-        vehicle_id_entry = tk.Entry(dialog)  # Input field for vehicle ID
-        vehicle_id_entry.insert(0, str(vehicle_id))  # Populate with the vehicle ID
-        vehicle_id_entry.config(state=tk.DISABLED)  # Make it read-only
-        vehicle_id_entry.grid(row=0, column=1, padx=10, pady=5)
+        tk.Label(dialog, text="Vehicle ID:").grid(row=0, column=0, padx=10, pady=5)         # Label for vehicle ID
+        vehicle_id_entry = tk.Entry(dialog)                                                 # Input field for vehicle ID
+        vehicle_id_entry.insert(0, str(vehicle_id))                                         # Populate with the vehicle ID
+        vehicle_id_entry.config(state=tk.DISABLED)                                          # Make it read-only
+        vehicle_id_entry.grid(row=0, column=1, padx=10, pady=5)                             # Positions Entry object around the grid
 
-        tk.Label(dialog, text="Customer Name:").grid(row=1, column=0, padx=10, pady=5)  # Label for customer name
-        customer_name_entry = tk.Entry(dialog)  # Input field for customer name
-        customer_name_entry.insert(0, customer_name)  # Populate with the customer's name
-        customer_name_entry.config(state=tk.DISABLED)  # Make it read-only
-        customer_name_entry.grid(row=1, column=1, padx=10, pady=5)
+        tk.Label(dialog, text="Customer Name:").grid(row=1, column=0, padx=10, pady=5)      # Label for customer name
+        customer_name_entry = tk.Entry(dialog)                                              # Input field for customer name
+        customer_name_entry.insert(0, customer_name)                                        # Populate with the customer's name
+        customer_name_entry.config(state=tk.DISABLED)                                       # Make it read-only
+        customer_name_entry.grid(row=1, column=1, padx=10, pady=5)                          # Positions Entry object around the grid
 
         tk.Label(dialog, text="Kilometers Driven:").grid(row=2, column=0, padx=10, pady=5)  # Label for kilometers driven
-        actual_km_entry = tk.Entry(dialog)  # Input field for kilometers driven
-        actual_km_entry.grid(row=2, column=1, padx=10, pady=5)
+        actual_km_entry = tk.Entry(dialog)                                                  # Input field for kilometers driven
+        actual_km_entry.grid(row=2, column=1, padx=10, pady=5)                              # Positions Entry object around the grid
 
-        tk.Label(dialog, text="Late Days:").grid(row=3, column=0, padx=10, pady=5)  # Label for late days
-        late_days_entry = tk.Entry(dialog)  # Input field for late days
-        late_days_entry.grid(row=3, column=1, padx=10, pady=5)
+        tk.Label(dialog, text="Late Days:").grid(row=3, column=0, padx=10, pady=5)          # Label for late days
+        late_days_entry = tk.Entry(dialog)                                                  # Input field for late days
+        late_days_entry.grid(row=3, column=1, padx=10, pady=5)                              # Positions Entry object around the grid
 
-        submit_button = tk.Button(
+        tk.Button(
             dialog, text="Submit",  # Submit button
             command=lambda: self.submit_return(
                 vehicle_id, actual_km_entry.get(), late_days_entry.get(), customer_name, dialog
             )
-        )
-        submit_button.grid(row=4, column=0, columnspan=2, pady=10)  # Position submit button
+        ).grid(row=4, column=0, columnspan=2, pady=10)                                          # Position submit button
 
     def submit_return(self, vehicle_id, actual_km, late_days, customer_name, dialog):
         """
@@ -97,23 +89,23 @@ class ReturnInterface(BaseInterface):
             dialog (tk.Toplevel): The return dialog window to be closed after processing.
         """
         try:
-            actual_km = int(actual_km)  # Convert kilometers driven to integer
-            late_days = int(late_days)  # Convert late days to integer
+            actual_km = int(actual_km)                                                          # Convert kilometers driven to integer
+            late_days = int(late_days)                                                          # Convert late days to integer
         except ValueError:
-            self.show_error("Please enter valid numbers for kilometers and late days.")  # Display error for invalid input
+            self.show_error("Please enter valid numbers for kilometers and late days.")         # Display error for invalid input
             return
 
         total_cost = self.system.query_return(vehicle_id, actual_km, late_days, customer_name)  # Calculate total cost
 
         if not total_cost:
-            self.show_error("Vehicle not found or already returned.")  # Show error if vehicle return fails
+            self.show_error("Vehicle not found or already returned.")                           # Show error if vehicle return fails
             return
         
-        self.show_info(f"Vehicle returned! Total cost: €{total_cost}")  # Show confirmation message
-        dialog.destroy()  # Close return dialog
+        self.show_info(f"Vehicle returned! Total cost: €{total_cost}")                          # Show confirmation message
+        dialog.destroy()                                                                        # Close return dialog
         
-        self.load_content(
-            get_content=self.system.get_unavailable_vehicles,  # Refresh vehicle list
-            generate_model=RETURN.GENERATE_MODEL,
-            empty_message=RETURN.EMPTY_MESSAGE,
+        self.load_content(                                                                      # Reloads content with the same logic and variables (TODO: improve this)
+            get_content=self.system.get_unavailable_vehicles,                                   # Sets the callback function for extracting booked vehicles
+            generate_model=RETURN.GENERATE_MODEL,                                               # Sets callback to generate row strings
+            empty_message=RETURN.EMPTY_MESSAGE,                                                 # Sets message displayed in case of finding no contents
         )

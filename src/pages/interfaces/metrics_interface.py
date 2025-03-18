@@ -9,60 +9,54 @@ from src.misc.strings import METRICS
 class MetricsInterface(BaseInterface):
     """Interface for displaying financial metrics and generating reports.
 
-    This class provides functionality to view financial metrics, query specific data,
-    and generate a full report in PDF format.
+        This class provides functionality to view financial metrics, query specific data,
+        and generate a full report in PDF format.
     """
 
     def __init__(self, root, system):
-        """Initialize the MetricsInterface.
+        super().__init__(root, system, *METRICS.TITLES)                                                          # Initializes 'BaseInterface' with the pre-defined TITLES strings
 
-        Args:
-            root: The root Tkinter window.
-            system: The core system instance.
-        """
-        super().__init__(root, system, *METRICS.TITLES) # Initializes 'BaseInterface' with the pre-defined TITLES strings
-
-        metrics = ()
+        metrics = ()                                                                                             # Initializes tuple with the metrics info
         
-        try:
-            metrics = self.system.get_financial_metrics()  # Retrieve financial metrics
-        except Exception as err:
-            print("Error obtaining financial metrics\n", err)
+        try:                                                                                                     # Creates a scope to handle errors
+            metrics = self.system.get_financial_metrics()                                                        # Retrieve financial metrics
+        except Exception as err:                                                                                 # If any error is found, this block is executed
+            print("Error obtaining financial metrics\n", err)                                                    # Prints error message
 
-        if not metrics:  # If no metrics are available, display an empty message
-            tk.Label(self.frame, text=METRICS.EMPTY_MESSAGE, font=("Arial", 18, "bold")).pack(padx=50, pady=50)
-            return
+        if not metrics:                                                                                          # If no metrics are available, display an empty message
+            tk.Label(self.frame, text=METRICS.EMPTY_MESSAGE, font=("Arial", 18, "bold")).pack(padx=50, pady=50)  # Displays empty text and positions it in the Frame
+            return                                                                                               # Further code execution is stopped
 
-        for idx, h in enumerate(METRICS.HEADERS):  # Display each metric with its header
-            tk.Label(self.frame, text=h, font=("Arial", 13, "bold")).pack(pady=5)
-            tk.Label(self.frame, text=round(metrics[idx], 2), font=("Arial", 12, "italic")).pack()
+        for idx, h in enumerate(METRICS.HEADERS):                                                                # Prepares to iterate over a list with the info subtitles, giving out its index and inner value
+            tk.Label(self.frame, text=h, font=("Arial", 13, "bold")).pack(pady=5)                                # Displays text with the header and positions it in the Frame
+            tk.Label(self.frame, text=round(metrics[idx], 2), font=("Arial", 12, "italic")).pack()               # Displays text with the data collected from the database
 
-        tk.Button(self.frame, text="Make Query", command=self.show_querying_modal).pack(pady=20)  # Query button
-        tk.Button(self.frame, text="Download Full Report", command=self.generate_full_report).pack()  # Report button
+        tk.Button(self.frame, text="Make Query", command=self.show_querying_modal).pack(pady=20)                 # Sets a button which opens the querying making modal
+        tk.Button(self.frame, text="Download Full Report", command=self.generate_full_report).pack()             # Sets a button which opens allows saving a PDF with a report
 
     def show_querying_modal(self):
         """Open a modal window to query specific data from the database."""
-        modal_window = tk.Toplevel(self.frame)  # Create a modal window
-        modal_window.title("Query Data")
-        modal_window.geometry("360x400")
+        modal_window = tk.Toplevel(self.frame)                                                                                               # Creates a modal component and links it to the main Frame
+        modal_window.title("Query Data")                                                                                                     # Puts a title on the modal
+        modal_window.geometry("360x400")                                                                                                     # Sets modal's size
 
-        instructions_frame = tk.Frame(modal_window)
-        instructions_frame.pack(fill=tk.BOTH)
+        instructions_frame = tk.Frame(modal_window)                                                                                          # Creates a new Frame inside the modal window
+        instructions_frame.pack(fill=tk.BOTH)                                                                                                # Positions the frame and expands it to fill the modal
 
-        tk.Label(instructions_frame, text="Input Query", font=("Arial", 16, "bold")).pack(pady=7)
-        tk.Label(instructions_frame, text="Use '<table_name>:<column_name>' format\n(e.g. vehicles:id)", font=("Arial", 9, "italic")).pack()
+        tk.Label(instructions_frame, text="Input Query", font=("Arial", 16, "bold")).pack(pady=7)                                            # Sets a text in the new frame and positions it
+        tk.Label(instructions_frame, text="Use '<table_name>:<column_name>' format\n(e.g. vehicles:id)", font=("Arial", 9, "italic")).pack() # Sets a text in the new frame and positions it
 
-        query_entry = tk.Entry(instructions_frame, font=("Arial", 10))  # Entry field for query
-        query_entry.pack(pady=10)
+        query_entry = tk.Entry(instructions_frame, font=("Arial", 10))                                                                       # Creates an Entry component to receive user input
+        query_entry.pack(pady=10)                                                                                                            # Positions the Entry component
 
-        listbox_frame = tk.Frame(modal_window)
-        listbox_frame.pack(fill=tk.BOTH, expand=True, pady=15)
+        listbox_frame = tk.Frame(modal_window)                                                                                               # Creates a new Frame linked to the modal window, where the query results will be set
+        listbox_frame.pack(fill=tk.BOTH, expand=True, pady=15)                                                                               # Positions the frame and makes it expand around the modal, below the 'instructions_frame'
 
         def submit_query():
             """Submit the query and display results in the modal window."""
-            query_list = query_entry.get().strip().split(':')  # Split the query into table_name and column_name
+            query_list = query_entry.get().strip().split(':')                           # Retrieves user input from Entry, deletes trailing spaces and splits it into a list of strings (separated by ':')
 
-            if len(query_list) != 2:  # Validate the query format
+            if len(query_list) != 2:                                                    # Condition to check if the input follows the format
                 self.show_error("Please, enter a correct 'table' and a 'column'")
                 return
 
