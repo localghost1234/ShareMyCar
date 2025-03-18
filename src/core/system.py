@@ -23,15 +23,6 @@ class System:
             table=SQL.TABLE.VEHICLES,                       # Target table
             fetch=SQL.FETCH.ALL,                            # Fetch all records
         )
-    
-    def get_table_column(self, table_name, column_name):
-        """Returns a list with all the database elements with the column label in the specified table"""
-        return self.database.execute_query(
-                    operation=SQL.OPERATION.SELECT,         # Indicates an SQL SELECT operation
-                    table=table_name,                       # Target table
-                    columns=[column_name],                  # Target column of the info
-                    fetch=SQL.FETCH.ALL,                    # Fetch all records
-                )
 
     def get_all_bookings(self):
         """Returns a list of all the bookings from the database."""
@@ -42,7 +33,7 @@ class System:
         )
 
     def get_all_logs(self):
-        """Returns a list of all the transactions done in the app."""
+        """Returns a list of all the transactions done with clients."""
         return self.database.execute_query(
             operation=SQL.OPERATION.SELECT,                 # Indicates an SQL SELECT operation
             table=SQL.TABLE.LOGS,                           # Target table
@@ -67,6 +58,15 @@ class System:
             where="available = 0",                              # Adds a condition in which the vehicle is unavailable
             fetch=SQL.FETCH.ALL,                                # Fetch all records
         )
+    
+    def get_table_column(self, table_name, column_name):
+        """Returns a list with all the database elements with the column label in a specified table"""
+        return self.database.execute_query(
+                    operation=SQL.OPERATION.SELECT,         # Indicates an SQL SELECT operation
+                    table=table_name,                       # Target table
+                    columns=[column_name],                  # Target column of the info
+                    fetch=SQL.FETCH.ALL,                    # Fetch all records
+                )
 
     def get_customer_name(self, vehicle_id):
         """Returns a string with the name of the customer who booked a specific vehicle. If not found, returns 'Unknown Customer'."""

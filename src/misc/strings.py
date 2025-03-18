@@ -15,8 +15,8 @@ INVENTORY=SimpleNamespace(                                                      
     )
 )
 
-BOOKING=SimpleNamespace(            # Variable with strings to be used in BookingInterface
-    TITLE = "Booking Management"    # Title of interface
+BOOKING=SimpleNamespace(                                                                # Variable with strings to be used in BookingInterface
+    TITLE = "Booking Management"                                                        # Title of interface
 )
 
 RETURN=SimpleNamespace(                                                                 # Variable with strings to be used in ReturnInterface

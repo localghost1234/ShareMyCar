@@ -122,20 +122,7 @@ class MetricsInterface(BaseInterface):
         font_size = 8                                                                                       # Define text size
         pdf.setFont("Helvetica", font_size)                                                                 # Define text font and size for PDF object
 
-        def compute_column_widths(headers, data):
-            """Compute column widths based on the longest item in each column.
-
-            Args:
-                headers: The column headers.
-                data: The data to be displayed.
-
-            Returns:
-                list: A list of column widths.
-            """
-            col_widths = [max(len(str(item)) for item in col) for col in zip(headers, *data)]   # Gets the max width for each column by finding the longest string length in headers and data
-            return [w * 5 + 10 for w in col_widths]                                             # Changes the scale of each width dynamically and returns the result
-
-        def draw_table(headers, data, col_widths):
+        def draw_table(headers, data):
             """Draw a table in the PDF.
 
             Args:
@@ -143,18 +130,20 @@ class MetricsInterface(BaseInterface):
                 data: The data to be displayed.
                 col_widths: The computed column widths.
             """
-            nonlocal y_position                                         # Since variable 'y_position' is set outside of this scope, we need to remind the function to use its outter value
-            x_pos = x_position                                          # TODO: Improve this -- we create a new variable with the same value, but can lead to errors
-            pdf.setFont("Helvetica-Bold", font_size)                    # Set the font and size to be used in the PDF object
+            col_widths = [w * 5 + 10 for w in [max(len(str(item)) for item in col) for col in zip(headers, *data)]]     # Gets the max width for each column by finding the longest string length in headers and data and changes the scale of each width dynamically and returns the results
             
-            for i, header in enumerate(headers):                        # Takes the index and inner value of the 'headers' list
-                pdf.drawString(x_pos, y_position, header)
-                x_pos += col_widths[i]
+            nonlocal y_position                                                                                         # Since variable 'y_position' is set outside of this scope, we need to remind the function to use its outter value
+            x_pos = x_position                                                                                          # TODO: Improve this -- we create a new variable with the same value, but can lead to errors
+            pdf.setFont("Helvetica-Bold", font_size)                                                                    # Set the font and size to be used in the PDF object
             
-            y_position -= 10
-            pdf.setFont("Helvetica", font_size)
+            for i, header in enumerate(headers):                                                                        # Takes the index and inner value of the 'headers' list
+                pdf.drawString(x_pos, y_position, header)                                                               # Writes the column names (headers) at the indicated position of the PDF
+                x_pos += col_widths[i]                                                                                  # Depending on the amount of columns, the horizontal position is moved
+            
+            y_position -= 10                                                                                            # Lower the vertical position of the pointer
+            pdf.setFont("Helvetica", font_size)                                                                         # Set the rows' font and size
 
-            for row in data:  # Draw rows
+            for row in data:  # Iterate over the list of data
                 x_pos = x_position
                 for i, cell in enumerate(row):
                     pdf.drawString(x_pos, y_position, str(cell))
@@ -165,27 +154,22 @@ class MetricsInterface(BaseInterface):
                     pdf.setFont("Helvetica", font_size)
                     y_position = height - 50
 
-        # Compute column widths for each table
-        vehicle_col_widths = compute_column_widths(METRICS.PDF_HEADERS.VEHICLES, all_vehicles)
-        booking_col_widths = compute_column_widths(METRICS.PDF_HEADERS.BOOKINGS, all_bookings)
-        log_col_widths = compute_column_widths(METRICS.PDF_HEADERS.LOGS, all_logs)
-
         # Add vehicles data to the PDF
         pdf.drawString(x_position, y_position, "Vehicles:")
         y_position -= 15
-        draw_table(METRICS.PDF_HEADERS.VEHICLES, all_vehicles, vehicle_col_widths)
+        draw_table(METRICS.PDF_HEADERS.VEHICLES, all_vehicles)
         y_position -= 20
 
         # Add bookings data to the PDF
         pdf.drawString(x_position, y_position, "Bookings:")
         y_position -= 15
-        draw_table(METRICS.PDF_HEADERS.BOOKINGS, all_bookings, booking_col_widths)
+        draw_table(METRICS.PDF_HEADERS.BOOKINGS, all_bookings)
         y_position -= 20
 
         # Add transaction logs to the PDF
         pdf.drawString(x_position, y_position, "Transaction Logs:")
         y_position -= 15
-        draw_table(METRICS.PDF_HEADERS.LOGS, all_logs, log_col_widths)
+        draw_table(METRICS.PDF_HEADERS.LOGS, all_logs)
 
         pdf.save()  # Save the PDF
         print(f"Report saved as {file_path}")
