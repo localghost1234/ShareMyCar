@@ -140,36 +140,32 @@ class MetricsInterface(BaseInterface):
                 pdf.drawString(x_pos, y_position, header)                                                               # Writes the column names (headers) at the indicated position of the PDF
                 x_pos += col_widths[i]                                                                                  # Depending on the amount of columns, the horizontal position is moved
             
-            y_position -= 10                                                                                            # Lower the vertical position of the pointer
+            y_position -= font_size * 1.25                                                                              # Lowers the vertical position of the pointer, in accordance to the row's text size
             pdf.setFont("Helvetica", font_size)                                                                         # Set the rows' font and size
 
-            for row in data:                                                                                            # Iterate over the list of data
+            for row in data:                                                                                            # Iterate over the list of database content
                 x_pos = x_position                                                                                      # TODO: Improve this -- we create a new variable with the same value, but can lead to errors
-                for i, cell in enumerate(row):          # 
-                    pdf.drawString(x_pos, y_position, str(cell))
-                    x_pos += col_widths[i]
-                y_position -= 10
-                if y_position < 50:  # Start a new page if the current page is full
-                    pdf.showPage()
-                    pdf.setFont("Helvetica", font_size)
-                    y_position = height - 50
+                for i, cell in enumerate(row):                                                                          # Extract each piece of information from the row's list and their index
+                    pdf.drawString(x_pos, y_position, str(cell))                                                        # Writes the information to the PDF, aligned with its corresponding column
+                    x_pos += col_widths[i]                                                                              # Moves the PDF object's pointer to the next column's horizontal position
+                y_position -= font_size * 1.25                                                                          # Move the vertical pointer to the next row's position, in accordance to the row's text size
+                if y_position < 50:                                                                                     # Checks if vertical position is close to the end of the page
+                    pdf.showPage()                                                                                      # Closes current page and if needed, starts a new one
+                    y_position = height - 50                                                                            # Resets the vertical pointer at the top of the page's size
 
-        # Add vehicles data to the PDF
-        pdf.drawString(x_position, y_position, "Vehicles:")
-        y_position -= 15
-        draw_table(METRICS.PDF_HEADERS.VEHICLES, all_vehicles)
-        y_position -= 20
+        pdf.drawString(x_position, y_position, "Vehicles:")                                                             # Writes text to PDF with the displayed table's name
+        y_position -= font_size * 1.5                                                                                   # Moves vertical pointer down according to the text's size
+        draw_table(METRICS.PDF_HEADERS.VEHICLES, all_vehicles)                                                          # Uses table information to generate, format, and print the PDF's contents
+        y_position -= font_size * 2.5                                                                                   # Moves vertical pointer down according to the text's size
 
-        # Add bookings data to the PDF
-        pdf.drawString(x_position, y_position, "Bookings:")
-        y_position -= 15
-        draw_table(METRICS.PDF_HEADERS.BOOKINGS, all_bookings)
-        y_position -= 20
+        pdf.drawString(x_position, y_position, "Bookings:")                                                             # Writes text to PDF with the displayed table's name
+        y_position -= font_size * 1.5                                                                                   # Moves vertical pointer down according to the text's size
+        draw_table(METRICS.PDF_HEADERS.BOOKINGS, all_bookings)                                                          # Uses table information to generate, format, and print the PDF's contents
+        y_position -= font_size * 2.5                                                                                   # Moves vertical pointer down according to the text's size
 
-        # Add transaction logs to the PDF
-        pdf.drawString(x_position, y_position, "Transaction Logs:")
-        y_position -= 15
-        draw_table(METRICS.PDF_HEADERS.LOGS, all_logs)
+        pdf.drawString(x_position, y_position, "Transaction Logs:")                                                     # Writes text to PDF with the displayed table's name
+        y_position -= font_size * 1.5                                                                                   # Moves vertical pointer down according to the text's size
+        draw_table(METRICS.PDF_HEADERS.LOGS, all_logs)                                                                  # Uses table information to generate, format, and print the PDF's contents
 
-        pdf.save()  # Save the PDF
-        print(f"Report saved as {file_path}")
+        pdf.save()                                                                                                      # Generate the final PDF file in the previously accorded path
+        print(f"Report saved as {file_path}")                                                                           # Show a success message on the developer's console with the new file's path
