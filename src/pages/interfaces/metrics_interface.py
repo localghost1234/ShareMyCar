@@ -79,7 +79,7 @@ class MetricsInterface(BaseInterface):
                 tk.Label(listbox_frame, text="No results found.", font=("Arial", 12)).pack(pady=15)     # Displays text when no data is found
                 return
 
-            tk.Label(listbox_frame, text=f"{len(results_list)} results found:", font=("Arial", 12)).pack(pady=15) # Displays and positions the number of results found
+            tk.Label(listbox_frame, text=f"{len(results_list)} results found:", font=("Arial", 12)).pack(pady=15)   # Displays and positions the number of results found
 
             v_scrollbar = tk.Scrollbar(listbox_frame, orient=tk.VERTICAL)                               # Create a Scrollbar component to move vertically around the Listbox
             listbox = tk.Listbox(listbox_frame, yscrollcommand=v_scrollbar.set, font=("Arial", 10))     # Listbox object is created, stylized, and linked to Scrollbar

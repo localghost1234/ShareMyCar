@@ -11,17 +11,17 @@ class ReturnInterface(BaseInterface):
     """
     
     def __init__(self, root, system):
-        super().__init__(root, system, *RETURN.TITLES)                          # Initializes 'BaseInterface' with the pre-defined TITLES strings
+        super().__init__(root, system, *RETURN.TITLES)                              # Initializes 'BaseInterface' with the pre-defined TITLES strings
 
-        self.create_scrollable_listbox(RETURN.HEADERS, disable_clicking=False)  # Create a scrollable listbox for unavailable vehicles
+        self.create_scrollable_listbox(RETURN.HEADERS, disable_clicking=False)      # Create a scrollable listbox for unavailable vehicles
         
-        self.load_content(                                                      # Executes necessary modules to extract database content and display it accordingly
-            get_content=self.system.get_unavailable_vehicles,                   # Fetch unavailable vehicles
-            generate_model=RETURN.GENERATE_MODEL,                               # Define how vehicle data is displayed
-            empty_message=RETURN.EMPTY_MESSAGE                                  # Message if no vehicles are found
+        self.load_content(                                                          # Executes necessary modules to extract database content and display it accordingly
+            get_content=self.system.get_unavailable_vehicles,                       # Fetch unavailable vehicles
+            generate_model=RETURN.GENERATE_MODEL,                                   # Define how vehicle data is displayed
+            empty_message=RETURN.EMPTY_MESSAGE                                      # Message if no vehicles are found
         )
 
-        self.listbox.bind("<Double-Button-1>", self.on_vehicle_double_click)    # Bind double-click event to handle vehicle selection
+        self.listbox.bind("<Double-Button-1>", self.on_vehicle_double_click)        # Bind double-click event to handle vehicle selection
 
     def on_vehicle_double_click(self, event):
         """
@@ -30,12 +30,12 @@ class ReturnInterface(BaseInterface):
         Args:
             event (tk.Event): The event's builtin modules.
         """
-        selected_index = self.listbox.curselection()                    # Get the selected item index
+        selected_index = self.listbox.curselection()                        # Get the selected item index
         
         if selected_index:
-            selected_vehicle = self.listbox.get(selected_index)         # Get selected vehicle details
-            vehicle_id = int(selected_vehicle.split(" | ")[0].strip())  # Extract vehicle ID from the list entry
-            self.show_return_dialog(vehicle_id)                         # Open return dialog with vehicle ID
+            selected_vehicle = self.listbox.get(selected_index)             # Get selected vehicle details
+            vehicle_id = int(selected_vehicle.split(" | ")[0].strip())      # Extract vehicle ID from the list entry
+            self.show_return_dialog(vehicle_id)                             # Open return dialog with vehicle ID
 
     def show_return_dialog(self, vehicle_id):
         """
@@ -75,7 +75,7 @@ class ReturnInterface(BaseInterface):
             command=lambda: self.submit_return(
                 vehicle_id, actual_km_entry.get(), late_days_entry.get(), customer_name, dialog
             )
-        ).grid(row=4, column=0, columnspan=2, pady=10)                                          # Position submit button
+        ).grid(row=4, column=0, columnspan=2, pady=10)                                      # Position submit button
 
     def submit_return(self, vehicle_id, actual_km, late_days, customer_name, dialog):
         """

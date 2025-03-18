@@ -16,12 +16,12 @@ class MaintenanceInterface(BaseInterface):
             root (tk.Tk or tk.Toplevel): The main application window.
             system (object): The system instance handling vehicle maintenance data.
         """
-        super().__init__(root, system, *MAINTENANCE.TITLES)              # Initializes 'BaseInterface' with the pre-defined TITLES strings
+        super().__init__(root, system, *MAINTENANCE.TITLES)                 # Initializes 'BaseInterface' with the pre-defined TITLES strings
 
-        self.create_scrollable_listbox(MAINTENANCE.HEADERS)              # Sets a Listbox component with the column names of the displayed info
+        self.create_scrollable_listbox(MAINTENANCE.HEADERS)                 # Sets a Listbox component with the column names of the displayed info
 
-        self.load_content(                                               # Loads the list with vehicles that need maintenance
-            get_content=self.system.get_vehicles_requiring_maintenance,  # Function to fetch vehicles requiring maintenance
-            generate_model=MAINTENANCE.GENERATE_MODEL,                   # Formatting function for vehicle data
-            empty_message=MAINTENANCE.EMPTY_MESSAGE,                     # Message to display if no vehicles require maintenance
+        self.load_content(                                                  # Loads the list with vehicles that need maintenance
+            get_content=self.system.get_vehicles_requiring_maintenance,     # Function to fetch vehicles requiring maintenance
+            generate_model=MAINTENANCE.GENERATE_MODEL,                      # Formatting function for vehicle data
+            empty_message=MAINTENANCE.EMPTY_MESSAGE,                        # Message to display if no vehicles require maintenance
         )
