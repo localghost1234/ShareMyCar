@@ -94,7 +94,7 @@ class MetricsInterface(BaseInterface):
 
     def generate_full_report(self):
         """Generate a full report in PDF format containing vehicles, bookings, and logs."""
-        all_vehicles = self.system.get_all_vehicles()                                   # Retrieve all vehicles from database
+        all_vehicles = self.system.get_all_vehicles()                                   # Retrieve a list with all vehicles from database
         all_bookings = self.system.get_all_bookings()                                   # Retrieve all bookings from database
         all_logs = self.system.get_all_logs()                                           # Retrieve all logs from database
 
@@ -143,9 +143,9 @@ class MetricsInterface(BaseInterface):
             y_position -= 10                                                                                            # Lower the vertical position of the pointer
             pdf.setFont("Helvetica", font_size)                                                                         # Set the rows' font and size
 
-            for row in data:  # Iterate over the list of data
-                x_pos = x_position
-                for i, cell in enumerate(row):
+            for row in data:                                                                                            # Iterate over the list of data
+                x_pos = x_position                                                                                      # TODO: Improve this -- we create a new variable with the same value, but can lead to errors
+                for i, cell in enumerate(row):          # 
                     pdf.drawString(x_pos, y_position, str(cell))
                     x_pos += col_widths[i]
                 y_position -= 10
