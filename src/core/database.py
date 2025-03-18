@@ -13,15 +13,15 @@ class Database():
 
     def execute_query(self, operation, table, columns=["*"], values=[], where="", fetch=SQL.FETCH.ALL):
         """
-        Generalized method to execute SQL queries.
-        
-        :param operation: SQL operation (SELECT, INSERT, UPDATE, DELETE)
-        :param table: Table name
-        :param columns: Columns to select/insert/update (default is "*")
-        :param values: Values for INSERT or UPDATE (tuple or list)
-        :param where: WHERE clause (string)
-        :param fetch: Whether to fetch one row or all rows (SQL.FETCH.ONE or SQL.FETCH.ALL)
-        :return: Query result (for SELECT) or None
+            Generalized method to execute SQL queries.
+            
+            :param operation: SQL operation (SELECT, INSERT, UPDATE, DELETE)
+            :param table: Table name
+            :param columns: Columns to select/insert/update (default is "*")
+            :param values: Values for INSERT or UPDATE (tuple or list)
+            :param where: WHERE clause (string)
+            :param fetch: Whether to fetch one row or all rows (SQL.FETCH.ONE or SQL.FETCH.ALL)
+            :return: Query result (for SELECT) or None
         """
         query = ""                                                                              # Initializes the string to be executed
 

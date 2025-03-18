@@ -42,9 +42,14 @@ class BookingInterface(BaseInterface):
         except ValueError:
             self.show_error("Please enter valid values.")
             return
-
-        cost = self.system.query_booking(vehicle_id, rental_days, estimated_km, customer_name)  # Calls the system variable's function to add a booking to the database; returns the cost of said booking
         
+        cost = 0.0                                                                              # Initialize 'cost' variable outside the scope
+
+        try:                                                                                        # Creates error handling scope
+            cost = self.system.query_booking(vehicle_id, rental_days, estimated_km, customer_name)  # Calls the system variable's function to add a booking to the database; returns the cost of said booking
+        except Exception as err:                                                                    # If error is found, this block is executed
+            print("Error in 'query_booking()'\n", err)                                              # Displays message on developer's console
+
         if cost:                                                                                # Checks if the returned value is truthy (cost should always be above 0) 
             self.show_info(f"Vehicle booked! Estimated cost: €{cost}")                          # Displays success modal with calculated cost for the client
         else:                                                                                   # Alternate condition, in case the former was falsy
