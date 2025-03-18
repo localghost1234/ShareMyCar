@@ -78,7 +78,7 @@ class System:
             fetch=SQL.FETCH.ONE,                                # Fetch a single record
         )
         
-        return result[0] if result else "Unknown Customer"      # Return customer name or a default value
+        return result[0] if result else "Unknown Customer"      # Return customer name or a default value if nothing is found
 
     def get_financial_metrics(self):
         """
@@ -235,5 +235,5 @@ class System:
         return total_revenue                                            # Returns the total earnings made on this vehicle's booking to be later displayed
 
     def close(self):
-        """Closes the database connection."""
-        self.database.close()                                           # Sends a 'close' signal to the DB object
+        """Sends a 'close' signal to the database object."""
+        self.database.close()
