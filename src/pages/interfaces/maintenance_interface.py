@@ -1,6 +1,5 @@
-import tkinter as tk
-from src.pages.interfaces.base_interface import BaseInterface
-from src.misc.strings import MAINTENANCE
+from src.pages.interfaces.base_interface import BaseInterface       # Import the BaseInterface class, a parent class providing common functionality for other interfaces
+from src.misc.strings import MAINTENANCE                            # Import the MAINTENANCE constant, containing strings or configurations for the maintenance interface
 
 class MaintenanceInterface(BaseInterface):
     """ 
@@ -9,13 +8,6 @@ class MaintenanceInterface(BaseInterface):
     """
 
     def __init__(self, root, system):
-        """ 
-        Initializes the maintenance interface, displaying a list of vehicles that require service.
-        
-        Args:
-            root (tk.Tk or tk.Toplevel): The main application window.
-            system (object): The system instance handling vehicle maintenance data.
-        """
         super().__init__(root, system, *MAINTENANCE.TITLES)                 # Initializes 'BaseInterface' with the pre-defined TITLES strings
 
         self.create_scrollable_listbox(MAINTENANCE.HEADERS)                 # Sets a Listbox component with the column names of the displayed info

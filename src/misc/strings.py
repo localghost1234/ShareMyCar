@@ -1,4 +1,4 @@
-from types import SimpleNamespace                # Brings the namespace module to be used here, which helps us identify variables
+from types import SimpleNamespace                       # Brings the namespace module to be used here, which helps us identify variables
 
 INVENTORY=SimpleNamespace(                                                                                  # Variable with strings to be used in InventoryInterface
     TITLES = ("Inventory Management", "All existing vehicles"),                                             # Title and subtitle of interface

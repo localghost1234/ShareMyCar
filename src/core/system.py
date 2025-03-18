@@ -1,5 +1,5 @@
-from src.core.database import Database  # Import the Database class
-from src.misc.constants import SQL  # Import SQL constants
+from src.core.database import Database      # Import the Database class
+from src.misc.constants import SQL          # Import SQL strings
 
 class System:
     """Handles direct communication with database and defines its several use cases."""

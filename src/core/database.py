@@ -1,7 +1,5 @@
-# database.py
-import sqlite3
-
-from src.misc.constants import DATABASE_TABLE_STATEMENTS, DB_NAME, SQL
+import sqlite3                                                              # Import the sqlite3 library to interact with a lightweight database
+from src.misc.constants import DATABASE_TABLE_STATEMENTS, DB_NAME, SQL      # Import constant strings for database table creation, database name, and SQL-related configurations
 
 class Database():
     def __init__(self):

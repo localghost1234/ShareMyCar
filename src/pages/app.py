@@ -1,7 +1,7 @@
-import tkinter as tk
-from src.core.system import System
-from src.pages.interfaces.home_interface import HomeInterface
-from src.misc.constants import INTERFACES_LIST
+import tkinter as tk                                                        # Import the tkinter library for GUI creation, aliased as 'tk' for convenience
+from src.core.system import System                                          # Import the System class, which manages the core functionality of the application and its relationship with the database
+from src.pages.interfaces.home_interface import HomeInterface               # Import the HomeInterface class, representing the home page (welcoming interface)
+from src.misc.constants import INTERFACES_LIST                              # Import INTERFACES_LIST, a constant containing a list of interfaces and their corresponding classes
 
 class App:
     """Main application class for Share My Car.

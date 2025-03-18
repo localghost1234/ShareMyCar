@@ -1,6 +1,6 @@
-import tkinter as tk
-from tkinter import messagebox
-from src.misc.utilities import generate_header_row
+import tkinter as tk                                    # Import the tkinter library for creating the GUI, aliased as 'tk' for convenience
+from tkinter import messagebox                          # Import the messagebox module from tkinter for displaying pop-up messages (e.g., alerts, warnings)
+from src.misc.utilities import generate_header_row      # Import the generate_header_row function, which returns a formatted string to use as column names
 
 class BaseInterface:
     """

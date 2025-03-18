@@ -1,6 +1,6 @@
-import tkinter as tk
-from src.pages.interfaces.base_interface import BaseInterface
-from src.misc.strings import INVENTORY
+import tkinter as tk                                                # Import the tkinter library for creating the GUI, aliased as 'tk' for convenience
+from src.pages.interfaces.base_interface import BaseInterface       # Import the BaseInterface class, which serves as a parent class for other interfaces
+from src.misc.strings import INVENTORY                              # Import the INVENTORY constant, which contains strings or configurations related to the inventory interface
 
 class InventoryInterface(BaseInterface):
     """

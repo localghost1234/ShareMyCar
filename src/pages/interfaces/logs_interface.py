@@ -1,6 +1,5 @@
-import tkinter as tk
-from src.pages.interfaces.base_interface import BaseInterface
-from src.misc.strings import LOGS
+from src.pages.interfaces.base_interface import BaseInterface       # Import the BaseInterface class, a parent class providing common functionality for other interfaces
+from src.misc.strings import LOGS                                   # Import the LOGS constant, containing strings or configurations for the logs interface
 
 class LogsInterface(BaseInterface):
     """ 
