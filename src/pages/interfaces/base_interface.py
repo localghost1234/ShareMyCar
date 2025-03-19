@@ -61,7 +61,7 @@ class BaseInterface:
         
         if not content:                                     # Checks if there is available content in DB
             self.listbox.insert(tk.END, empty_message)      # Displays 'empty_message' if no data
-            return None                                     # Returns a falsy value, in case something is expected
+            return None                                     # Returns a falsy value and stops further code execution
         
         for c in content:                                   # Iterates over the extracted DB content (given that the previous condition was false)
             self.listbox.insert(tk.END, generate_model(c))  # Converts data into the necessary format string and inserts it into the listbox
