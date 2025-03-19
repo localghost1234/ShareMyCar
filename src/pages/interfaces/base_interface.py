@@ -10,7 +10,6 @@ class BaseInterface:
     
     def __init__(self, root, system, title, subtitle=""):
         """Initializes the interface with a title and optional subtitle."""
-        self.root = root                                                                            # We take the 'root' (main tkinter Frame) to keep every new object inside the window
         self.system = system                                                                        # We reference the original System class (which orchestrates the DB and its usage)
         self.frame = tk.Frame(root)                                                                 # We generate an inner window where each interface's elements will remain until erased
         self.frame.pack(fill=tk.BOTH, expand=True)                                                  # We fill up the window's space with our new Frame

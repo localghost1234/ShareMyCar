@@ -12,11 +12,15 @@ class InventoryInterface(BaseInterface):
 
         self.create_scrollable_listbox(INVENTORY.HEADERS)                                           # Initializes the Listbox with the column names
 
-        self.load_content(                                                                          # Executes necessary modules to extract database content and display it accordingly
-            get_content=self.system.get_all_vehicles,                                               # Enters function to extract database content
-            generate_model=INVENTORY.GENERATE_MODEL,                                                # Enters string generator for each listbox row
-            empty_message=INVENTORY.EMPTY_MESSAGE,                                                  # Message to be displayed in case no content is found
+        self.refresh_listbox = lambda: (                                                            # Creates an executable function to be used around interface
+            self.load_content(                                                                      # Executes necessary modules to extract database content and display it accordingly
+                get_content=self.system.get_all_vehicles,                                           # Enters function to extract database content
+                generate_model=INVENTORY.GENERATE_MODEL,                                            # Enters string generator for each listbox row
+                empty_message=INVENTORY.EMPTY_MESSAGE,                                              # Message to be displayed in case no content is found
+            )
         )
+
+        self.refresh_listbox()
 
         tk.Button(self.frame, text="Add Vehicle", command=self.add_vehicle).pack(padx=10, pady=10)  # Sets a button with necessary command and positions it
 
@@ -46,9 +50,8 @@ class InventoryInterface(BaseInterface):
         maintenance_cost_entry = tk.Entry(modal_window)                                         # Adds a component where input can be given and links it to the current Frame
         maintenance_cost_entry.grid(row=4, column=1, padx=10, pady=5)                           # Positions the Entry component
 
-        tk.Button(                                                                              # Creates a Button compponent
-            modal_window, text="Submit",                                                        # Sets the Button's Frame and inner text
-            command=lambda: self.submit_vehicle(                                                # Sets the action function to be executed by the Button
+        def extract_data_and_submit():                                                          # Defines in-scope function to then add it to the Button
+            self.submit_vehicle(                                                                # Uses local callback function
                 brand_entry.get(),                                                              # Delivers content in Entry component
                 model_entry.get(),                                                              # Delivers content in Entry component
                 mileage_entry.get(),                                                            # Delivers content in Entry component
@@ -56,7 +59,8 @@ class InventoryInterface(BaseInterface):
                 maintenance_cost_entry.get(),                                                   # Delivers content in Entry component
                 modal_window,                                                                   # Gives a reference to the current modal
             )
-        ).grid(row=5, column=0, columnspan=2, pady=10)                                          # Sets the position of the Button throughout the modal
+
+        tk.Button(modal_window, text="Submit", command=extract_data_and_submit).grid(row=5, column=0, columnspan=2, pady=10)  # Creates a Button, adds functionality, and positions it around the modal
 
     def submit_vehicle(self, brand, model, mileage, daily_price, maintenance_cost, modal):
         """
@@ -86,8 +90,4 @@ class InventoryInterface(BaseInterface):
         self.show_info("Vehicle added successfully!")                                           # Displays success message
 
         modal.destroy()                                                                         # Modal for adding vehicles is destroyed
-        self.load_content(                                                                      # The load_content module is executed again to refresh the listbox with new data (TODO: improve this)
-            get_content=self.system.get_all_vehicles,                                           # Sets database retrieval module
-            generate_model=INVENTORY.GENERATE_MODEL,                                            # Sets model (row string) creation module
-            empty_message=INVENTORY.EMPTY_MESSAGE,                                              # Sets message to be displayed if no content is found
-        )
+        self.refresh_listbox()                                                                  # Uses local callback to reload all the new info

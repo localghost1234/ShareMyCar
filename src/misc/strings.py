@@ -3,7 +3,7 @@ from types import SimpleNamespace                       # Brings the namespace m
 INVENTORY=SimpleNamespace(                                                                                  # Variable with strings to be used in InventoryInterface
     TITLES = ("Inventory Management", "All existing vehicles"),                                             # Title and subtitle of interface
     HEADERS = ("ID", "Brand", "Model", "Mileage (kms)", "Daily Price", "Maintenance Cost", "Available"),    # Column names shown on top of displayed data
-    EMPTY_MESSAGE = "No vehicles in existance.",                                                            # Message displayed when no data is found
+    EMPTY_MESSAGE = "No vehicles in existence.",                                                            # Message displayed when no data is found
     GENERATE_MODEL = lambda content: (                                                                      # Function used to generate strings of rows with the provided data
         f"{content[0]:<13} | "                                                                              # Formatted strings to take in content and add at least 13 blank spaces, regardless of string size
         f"{content[1]:<13} | "
@@ -34,7 +34,7 @@ RETURN=SimpleNamespace(                                                         
 )
 
 MAINTENANCE=SimpleNamespace(                                                        # Variable with strings to be used in MaintenanceInterface
-    TITLES = ("Maintenance Management", "Vehicles Needing Maintenance"),            # Title and subtitle of interface
+    TITLES = ("Maintenance Management", "Vehicles Needing Maintenance:"),            # Title and subtitle of interface
     HEADERS = ("ID", "Brand", "Model", "Current Mileage", "Maintenance Cost"),      # Column names shown on top of displayed data
     EMPTY_MESSAGE = "All vehicles are in good condition.",                          # Message displayed when no data is found
     GENERATE_MODEL = lambda content: (                                              # Function used to generate strings of rows with the provided data

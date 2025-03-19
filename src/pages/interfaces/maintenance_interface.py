@@ -12,11 +12,11 @@ class MaintenanceInterface(BaseInterface):
         super().__init__(root, system, *MAINTENANCE.TITLES)                               # Initializes 'BaseInterface' with the pre-defined TITLES strings
 
         self.create_scrollable_listbox(MAINTENANCE.HEADERS, disable_clicking=False)       # Sets a Listbox component with the column names of the displayed info
-        self.refresh_listbox = lambda: (                                        # Creates on-air expression (lambda) to be used around interface
-            self.load_content(                                                  # Loads the list with vehicles that need maintenance
-                get_content=self.system.get_vehicles_requiring_maintenance,     # Function to fetch vehicles requiring maintenance
-                generate_model=MAINTENANCE.GENERATE_MODEL,                      # Formatting function for vehicle data
-                empty_message=MAINTENANCE.EMPTY_MESSAGE,                        # Message to display if no vehicles require maintenance
+        self.refresh_listbox = lambda: (                                                  # Creates an executable function to be used around interface
+            self.load_content(                                                            # Loads the list with vehicles that need maintenance
+                get_content=self.system.get_vehicles_requiring_maintenance,               # Function to fetch vehicles requiring maintenance
+                generate_model=MAINTENANCE.GENERATE_MODEL,                                # Formatting function for vehicle data
+                empty_message=MAINTENANCE.EMPTY_MESSAGE,                                  # Message to display if no vehicles require maintenance
             )
         )
 
@@ -47,18 +47,18 @@ class MaintenanceInterface(BaseInterface):
             vehicle_id (int): The unique identifier of the vehicle being returned.
         """
         modal_window = tk.Toplevel(self.frame)                                                                                                     # Create a new modal window
-        modal_window.title("Return Vehicle")                                                                                                       # Set window title
+        modal_window.title("Maintenance Checkup")                                                                                                       # Set window title
         modal_window.geometry("500x100")                                                                                                           # Define window size
 
-        tk.Label(modal_window, text="Remove from maintenance list and update maintenance mileage?", font=("Arial", 10, "bold")).pack(pady=10)      # Label for vehicle ID
+        tk.Label(modal_window, text="Remove from maintenance list and update maintenance mileage?", font=("Arial", 11)).pack(pady=10)      # Label for vehicle ID
         
         button_frame = tk.Frame(modal_window)
         button_frame.pack()
 
-        def confirm_maintenance_update():
+        def confirm_maintenance_update(): # Defines in-scope function to then add it to the Button
             self.system.query_update_maintenance_mileage(vehicle_id)
             self.refresh_listbox()
             modal_window.destroy()
 
-        tk.Button(button_frame, text="Yes", command=confirm_maintenance_update).pack(side=tk.LEFT)
+        tk.Button(button_frame, text="Yes", command=confirm_maintenance_update).pack(side=tk.LEFT, padx=5)
         tk.Button(button_frame, text="Cancel", command=lambda: (modal_window.destroy())).pack(side=tk.LEFT)

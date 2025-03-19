@@ -15,11 +15,15 @@ class ReturnInterface(BaseInterface):
 
         self.create_scrollable_listbox(RETURN.HEADERS, disable_clicking=False)      # Create a scrollable listbox for unavailable vehicles
         
-        self.load_content(                                                          # Executes necessary modules to extract database content and display it accordingly
-            get_content=self.system.get_unavailable_vehicles,                       # Fetch unavailable vehicles
-            generate_model=RETURN.GENERATE_MODEL,                                   # Define how vehicle data is displayed
-            empty_message=RETURN.EMPTY_MESSAGE                                      # Message if no vehicles are found
+        self.refresh_listbox = lambda: (                                                # Creates an executable function to be used around interface
+            self.load_content(                                                          # Executes necessary modules to extract database content and display it accordingly
+                get_content=self.system.get_unavailable_vehicles,                       # Fetch unavailable vehicles
+                generate_model=RETURN.GENERATE_MODEL,                                   # Define how vehicle data is displayed
+                empty_message=RETURN.EMPTY_MESSAGE                                      # Message if no vehicles are found
+            )
         )
+
+        self.refresh_listbox()
 
         self.listbox.bind("<Double-Button-1>", self.on_vehicle_double_click)        # Bind double-click event to handle vehicle selection
 
@@ -47,35 +51,33 @@ class ReturnInterface(BaseInterface):
         customer_name = self.system.get_customer_name(vehicle_id)                           # Retrieve customer name associated with the vehicle
 
         modal_window = tk.Toplevel(self.frame)                                                     # Create a new modal window
-        modal_window.title("Return Vehicle")                                                      # Set window title
-        modal_window.geometry("300x200")                                                          # Define window size
+        modal_window.title("Return Vehicle")                                                       # Set window title
+        modal_window.geometry("300x200")                                                           # Define window size
 
-        tk.Label(modal_window, text="Vehicle ID:").grid(row=0, column=0, padx=10, pady=5)         # Label for vehicle ID
-        vehicle_id_entry = tk.Entry(modal_window)                                                 # Input field for vehicle ID
-        vehicle_id_entry.insert(0, str(vehicle_id))                                         # Populate with the vehicle ID
-        vehicle_id_entry.config(state=tk.DISABLED)                                          # Make it read-only
-        vehicle_id_entry.grid(row=0, column=1, padx=10, pady=5)                             # Positions Entry object around the grid
+        tk.Label(modal_window, text="Vehicle ID:").grid(row=0, column=0, padx=10, pady=5)          # Label for vehicle ID
+        vehicle_id_entry = tk.Entry(modal_window)                                                  # Input field for vehicle ID
+        vehicle_id_entry.insert(0, str(vehicle_id))                                                # Populate with the vehicle ID
+        vehicle_id_entry.config(state=tk.DISABLED)                                                 # Make it read-only
+        vehicle_id_entry.grid(row=0, column=1, padx=10, pady=5)                                    # Positions Entry object around the grid
 
-        tk.Label(modal_window, text="Customer Name:").grid(row=1, column=0, padx=10, pady=5)      # Label for customer name
-        customer_name_entry = tk.Entry(modal_window)                                              # Input field for customer name
-        customer_name_entry.insert(0, customer_name)                                        # Populate with the customer's name
-        customer_name_entry.config(state=tk.DISABLED)                                       # Make it read-only
-        customer_name_entry.grid(row=1, column=1, padx=10, pady=5)                          # Positions Entry object around the grid
+        tk.Label(modal_window, text="Customer Name:").grid(row=1, column=0, padx=10, pady=5)       # Label for customer name
+        customer_name_entry = tk.Entry(modal_window)                                               # Input field for customer name
+        customer_name_entry.insert(0, customer_name)                                               # Populate with the customer's name
+        customer_name_entry.config(state=tk.DISABLED)                                              # Make it read-only
+        customer_name_entry.grid(row=1, column=1, padx=10, pady=5)                                 # Positions Entry object around the grid
 
-        tk.Label(modal_window, text="Kilometers Driven:").grid(row=2, column=0, padx=10, pady=5)  # Label for kilometers driven
-        actual_km_entry = tk.Entry(modal_window)                                                  # Input field for kilometers driven
-        actual_km_entry.grid(row=2, column=1, padx=10, pady=5)                              # Positions Entry object around the grid
+        tk.Label(modal_window, text="Kilometers Driven:").grid(row=2, column=0, padx=10, pady=5)   # Label for kilometers driven
+        actual_km_entry = tk.Entry(modal_window)                                                   # Input field for kilometers driven
+        actual_km_entry.grid(row=2, column=1, padx=10, pady=5)                                     # Positions Entry object around the grid
 
-        tk.Label(modal_window, text="Late Days:").grid(row=3, column=0, padx=10, pady=5)          # Label for late days
-        late_days_entry = tk.Entry(modal_window)                                                  # Input field for late days
-        late_days_entry.grid(row=3, column=1, padx=10, pady=5)                              # Positions Entry object around the grid
+        tk.Label(modal_window, text="Late Days:").grid(row=3, column=0, padx=10, pady=5)           # Label for late days
+        late_days_entry = tk.Entry(modal_window)                                                   # Input field for late days
+        late_days_entry.grid(row=3, column=1, padx=10, pady=5)                                     # Positions Entry object around the grid
 
-        tk.Button(
-            modal_window, text="Submit",  # Submit button
-            command=lambda: self.submit_return(
-                vehicle_id, actual_km_entry.get(), late_days_entry.get(), customer_name, modal_window
-            )
-        ).grid(row=4, column=0, columnspan=2, pady=10)                                      # Position submit button
+        def extract_data_and_submit():                                                                                  # Defines in-scope function to then add it to the Button
+            self.submit_return(vehicle_id, actual_km_entry.get(), late_days_entry.get(), customer_name, modal_window)   # Gets all data from Entries and runs submission logic
+    
+        tk.Button(modal_window, text="Submit", command=extract_data_and_submit).grid(row=4, column=0, columnspan=2, pady=10)
 
     def submit_return(self, vehicle_id, actual_km, late_days, customer_name, modal):
         """
@@ -104,8 +106,4 @@ class ReturnInterface(BaseInterface):
         self.show_info(f"Vehicle returned! Total cost: €{total_cost}")                          # Show confirmation message
         modal.destroy()                                                                        # Close return dialog
         
-        self.load_content(                                                                      # Reloads content with the same logic and variables (TODO: improve this)
-            get_content=self.system.get_unavailable_vehicles,                                   # Sets the callback function for extracting booked vehicles
-            generate_model=RETURN.GENERATE_MODEL,                                               # Sets callback to generate row strings
-            empty_message=RETURN.EMPTY_MESSAGE,                                                 # Sets message displayed in case of finding no contents
-        )
+        self.refresh_listbox()
