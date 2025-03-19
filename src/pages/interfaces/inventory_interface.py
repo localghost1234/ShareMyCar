@@ -5,13 +5,12 @@ from src.misc.strings import INVENTORY                              # Import the
 class InventoryInterface(BaseInterface):
     """
         Represents the interface for showcasing all the existing vehicles in the database.
-        Inherits components from BaseInterface
+        Inherits components from BaseInterface.
     """
     def __init__(self, root, system):
         super().__init__(root,  system, *INVENTORY.TITLES)                                          # Initializes 'BaseInterface' with the pre-defined TITLES strings
 
         self.create_scrollable_listbox(INVENTORY.HEADERS)                                           # Initializes the Listbox with the column names
-
         self.refresh_listbox = lambda: (                                                            # Creates an executable function to be used around interface
             self.load_content(                                                                      # Executes necessary modules to extract database content and display it accordingly
                 get_content=self.system.get_all_vehicles,                                           # Enters function to extract database content

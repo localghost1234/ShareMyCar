@@ -5,16 +5,16 @@ from src.misc.strings import RETURN                             # Import the RET
 class ReturnInterface(BaseInterface):
     """
         This interface displays a list of currently unavailable vehicles and allows users
-        to select and return them.\n
+        to select and return them.
+        
         A dialog prompts the user to enter the kilometers driven
         and late return days, then calculates the total return cost.
     """
     
     def __init__(self, root, system):
-        super().__init__(root, system, *RETURN.TITLES)                              # Initializes 'BaseInterface' with the pre-defined TITLES strings
+        super().__init__(root, system, *RETURN.TITLES)                                  # Initializes 'BaseInterface' with the pre-defined TITLES strings
 
-        self.create_scrollable_listbox(RETURN.HEADERS, disable_clicking=False)      # Create a scrollable listbox for unavailable vehicles
-        
+        self.create_scrollable_listbox(RETURN.HEADERS, disable_clicking=False)          # Create a scrollable listbox for unavailable vehicles
         self.refresh_listbox = lambda: (                                                # Creates an executable function to be used around interface
             self.load_content(                                                          # Executes necessary modules to extract database content and display it accordingly
                 get_content=self.system.get_unavailable_vehicles,                       # Fetch unavailable vehicles
@@ -23,9 +23,8 @@ class ReturnInterface(BaseInterface):
             )
         )
 
-        self.refresh_listbox()                                                      # Loads content using locally created callback
-
-        self.listbox.bind("<Double-Button-1>", self.on_vehicle_double_click)        # Bind double-click event to handle vehicle selection
+        self.refresh_listbox()                                                          # Loads content using locally created callback
+        self.listbox.bind("<Double-Button-1>", self.on_vehicle_double_click)            # Bind double-click event to handle vehicle selection
 
     def on_vehicle_double_click(self, event):
         """

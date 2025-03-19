@@ -21,7 +21,6 @@ class MaintenanceInterface(BaseInterface):
         )
 
         self.refresh_listbox()                                                          # Loads content using locally created callback
-
         self.listbox.bind("<Double-Button-1>", self.on_vehicle_double_click)            # Bind double-click event to handle vehicle selection
 
     def on_vehicle_double_click(self, event):

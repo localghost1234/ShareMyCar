@@ -5,7 +5,7 @@ from src.misc.strings import BOOKING                                # Import the
 class BookingInterface(BaseInterface):
     """
         This interface allows the user to enter which vehicle (if available) to rent.
-        In order make a booking, the user must enter:
+        To make a booking, the user must enter:
         - Vehicle ID
         - Customer's name
         - Estimated rent duration (in days)
@@ -43,14 +43,14 @@ class BookingInterface(BaseInterface):
             self.show_error("Please enter valid values.")
             return
         
-        cost = 0.0                                                                              # Initialize 'cost' variable outside the scope
+        cost = 0.0                                                                                  # Initialize 'cost' variable outside the scope
 
         try:                                                                                        # Creates error handling scope
             cost = self.system.query_booking(vehicle_id, rental_days, estimated_km, customer_name)  # Calls the system variable's function to add a booking to the database; returns the cost of said booking
         except Exception as err:                                                                    # If error is found, this block is executed
             print("Error in 'query_booking()'\n", err)                                              # Displays message on developer's console
 
-        if cost:                                                                                # Checks if the returned value is truthy (cost should always be above 0) 
-            self.show_info(f"Vehicle booked! Estimated cost: €{cost}")                          # Displays success modal with calculated cost for the client
-        else:                                                                                   # Alternate condition, in case the former was falsy
-            self.show_error("Vehicle not found or unavailable.")                                # Displays error modal
+        if cost:                                                                                    # Checks if the returned value is truthy (cost should always be above 0) 
+            self.show_info(f"Vehicle booked! Estimated cost: €{cost}")                              # Displays success modal with calculated cost for the client
+        else:                                                                                       # Alternate condition, in case the former was falsy
+            self.show_error("Vehicle not found or unavailable.")                                    # Displays error modal

@@ -11,7 +11,7 @@ class BaseInterface:
     def __init__(self, root, system, title, subtitle=""):
         """Initializes the interface with a title and optional subtitle."""
         self.system = system                                                                        # We reference the original System class (which orchestrates the DB and its usage)
-        self.frame = tk.Frame(root)                                                                 # We generate an inner window where each interface's elements will remain until erased
+        self.frame = tk.Frame(root)                                                                 # We generate an inner window for the root window where each interface will be displayed
         self.frame.pack(fill=tk.BOTH, expand=True)                                                  # We fill up the window's space with our new Frame
 
         tk.Label(self.frame, text=title, font=("Arial", 18)).pack(pady=15)                          # We add a string with whatever title we prefer and give it some space from other vertical elements
