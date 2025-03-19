@@ -56,7 +56,7 @@ class Database():
             Writes whatever changes have been done DB.
             This is done so to avoid direct usage of 'conn' variable outside of database.py
         """
-        self.conn.commit()                              # Writes whatever changes have been done to DB
+        self.conn.commit()
 
     def close(self):
         """
