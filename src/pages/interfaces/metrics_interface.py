@@ -54,26 +54,26 @@ class MetricsInterface(BaseInterface):
 
         def submit_query():
             """Submit the query and display results in the modal window."""
-            query_list = query_entry.get().strip().split(':')                           # Retrieves user input from Entry, deletes trailing spaces and splits it into a list of strings (separated by ':')
+            query_list = query_entry.get().strip().split(':')                                           # Retrieves user input from Entry, deletes trailing spaces and splits it into a list of strings (separated by ':')
 
-            if len(query_list) != 2:                                                    # Condition to check if the input follows the format
-                self.show_error("Please, enter a correct 'table' and a 'column'")
-                return
+            if len(query_list) != 2:                                                                    # Condition to check if the input follows the format
+                self.show_error("Please, enter a correct 'table' and a 'column'")                       # Displays modal with error message
+                return                                                                                  # Stops further code execution
 
-            table_name, column_name = query_list                                        # Extract table_name and column_name
+            table_name, column_name = query_list                                                        # Extract table_name and column_name
 
-            if table_name not in ["vehicles", "bookings", "logs"]:                      # Validate the table name
-                self.show_error("Please, enter a valid 'table'")                        # Shows error modal in case not an actual table 
-                return                                                                  # Stops further code execution
+            if table_name not in ["vehicles", "bookings", "logs"]:                                      # Validate the table name
+                self.show_error("Please, enter a valid 'table'")                                        # Shows error modal in case not an actual table 
+                return                                                                                  # Stops further code execution
 
-            try:                                                                            # Creates a scope for error handling
-                results_list = self.system.get_table_column(table_name, column_name)        # Extracts database info with specified params
-            except Exception:                                                               # Handle invalid queries
-                self.show_error(f"Please, enter a valid 'column' for table {table_name}")   # Displays error modal
-                return                                                                      # Stops further code execution
+            try:                                                                                        # Creates a scope for error handling
+                results_list = self.system.get_table_column(table_name, column_name)                    # Extracts database info with specified params
+            except Exception:                                                                           # Handle invalid queries
+                self.show_error(f"Please, enter a valid 'column' for table {table_name}")               # Displays error modal
+                return                                                                                  # Stops further code execution
 
-            for widget in listbox_frame.winfo_children():               # Iterates over all components in the listbox Frame
-                widget.destroy()                                        # Deletes the component
+            for widget in listbox_frame.winfo_children():                                               # Iterates over all components in the listbox Frame
+                widget.destroy()                                                                        # Deletes the component
 
             if not results_list:                                                                        # Handle no results
                 tk.Label(listbox_frame, text="No results found.", font=("Arial", 12)).pack(pady=15)     # Displays text when no data is found

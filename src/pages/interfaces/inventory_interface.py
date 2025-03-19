@@ -20,7 +20,7 @@ class InventoryInterface(BaseInterface):
             )
         )
 
-        self.refresh_listbox()
+        self.refresh_listbox()                                                                      # Loads content using locally created callback
 
         tk.Button(self.frame, text="Add Vehicle", command=self.add_vehicle).pack(padx=10, pady=10)  # Sets a button with necessary command and positions it
 

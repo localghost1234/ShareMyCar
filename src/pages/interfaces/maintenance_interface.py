@@ -9,20 +9,20 @@ class MaintenanceInterface(BaseInterface):
     """
 
     def __init__(self, root, system):
-        super().__init__(root, system, *MAINTENANCE.TITLES)                               # Initializes 'BaseInterface' with the pre-defined TITLES strings
+        super().__init__(root, system, *MAINTENANCE.TITLES)                             # Initializes 'BaseInterface' with the pre-defined TITLES strings
 
-        self.create_scrollable_listbox(MAINTENANCE.HEADERS, disable_clicking=False)       # Sets a Listbox component with the column names of the displayed info
-        self.refresh_listbox = lambda: (                                                  # Creates an executable function to be used around interface
-            self.load_content(                                                            # Loads the list with vehicles that need maintenance
-                get_content=self.system.get_vehicles_requiring_maintenance,               # Function to fetch vehicles requiring maintenance
-                generate_model=MAINTENANCE.GENERATE_MODEL,                                # Formatting function for vehicle data
-                empty_message=MAINTENANCE.EMPTY_MESSAGE,                                  # Message to display if no vehicles require maintenance
+        self.create_scrollable_listbox(MAINTENANCE.HEADERS, disable_clicking=False)     # Sets a Listbox component with the column names of the displayed info
+        self.refresh_listbox = lambda: (                                                # Creates an executable function to be used around interface
+            self.load_content(                                                          # Loads the list with vehicles that need maintenance
+                get_content=self.system.get_vehicles_requiring_maintenance,             # Function to fetch vehicles requiring maintenance
+                generate_model=MAINTENANCE.GENERATE_MODEL,                              # Formatting function for vehicle data
+                empty_message=MAINTENANCE.EMPTY_MESSAGE,                                # Message to display if no vehicles require maintenance
             )
         )
 
-        self.refresh_listbox()
+        self.refresh_listbox()                                                          # Loads content using locally created callback
 
-        self.listbox.bind("<Double-Button-1>", self.on_vehicle_double_click)        # Bind double-click event to handle vehicle selection
+        self.listbox.bind("<Double-Button-1>", self.on_vehicle_double_click)            # Bind double-click event to handle vehicle selection
 
     def on_vehicle_double_click(self, event):
             """

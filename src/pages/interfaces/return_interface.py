@@ -23,7 +23,7 @@ class ReturnInterface(BaseInterface):
             )
         )
 
-        self.refresh_listbox()
+        self.refresh_listbox()                                                      # Loads content using locally created callback
 
         self.listbox.bind("<Double-Button-1>", self.on_vehicle_double_click)        # Bind double-click event to handle vehicle selection
 
@@ -77,7 +77,7 @@ class ReturnInterface(BaseInterface):
         def extract_data_and_submit():                                                                                  # Defines in-scope function to then add it to the Button
             self.submit_return(vehicle_id, actual_km_entry.get(), late_days_entry.get(), customer_name, modal_window)   # Gets all data from Entries and runs submission logic
     
-        tk.Button(modal_window, text="Submit", command=extract_data_and_submit).grid(row=4, column=0, columnspan=2, pady=10)
+        tk.Button(modal_window, text="Submit", command=extract_data_and_submit).grid(row=4, column=0, columnspan=2, pady=10) # Creates and positions Button component with submission logic
 
     def submit_return(self, vehicle_id, actual_km, late_days, customer_name, modal):
         """
@@ -104,6 +104,5 @@ class ReturnInterface(BaseInterface):
             return
         
         self.show_info(f"Vehicle returned! Total cost: €{total_cost}")                          # Show confirmation message
-        modal.destroy()                                                                        # Close return dialog
-        
-        self.refresh_listbox()
+        modal.destroy()                                                                         # Close return dialog
+        self.refresh_listbox()                                                                  # Uses local callback to reload all the new info
