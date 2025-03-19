@@ -45,7 +45,7 @@ class System:
         return self.database.execute_query(
             operation=SQL.OPERATION.SELECT,                                                 # Indicates an SQL SELECT operation
             table=SQL.TABLE.VEHICLES,                                                       # Target table
-            columns=["id", "brand", "model", "current_mileage", "maintenance_mileage"],     # Relevant columns
+            columns=["id", "brand", "model", "current_mileage", "maintenance_cost"],     # Relevant columns
             where="current_mileage >= maintenance_mileage",                                 # Condition to give maintenance
             fetch=SQL.FETCH.ALL,                                                            # Fetch all records
         )
@@ -129,6 +129,23 @@ class System:
             where=f"id = {vehicle_id}",                     # Matches the vehicle with the same ID
         )
         self.database.commit()                              # This command tells the database to 'write' our new information into the DB
+
+    def query_update_maintenance_mileage(self, vehicle_id):
+        current_mileage = self.database.execute_query(             # Requests database for vehicle data
+            operation=SQL.OPERATION.SELECT,                        # Indicates an SQL SELECT operation
+            table=SQL.TABLE.VEHICLES,                              # Target table
+            columns=["current_mileage"],                           # Specifies variable names whose values are needed
+            where=f"id = {vehicle_id}",                            # Matches the vehicle with the same ID
+            fetch=SQL.FETCH.ONE,                                   # Fetch a single record
+        )[0]                                                       # fetchone() operation returns a tuple, so we obtain the single value in it
+
+        self.database.execute_query(                                # Request specific info from database
+            operation=SQL.OPERATION.UPDATE,                         # Indicates an SQL UPDATE operation
+            table=SQL.TABLE.VEHICLES,                               # Target table
+            columns=["maintenance_mileage"],                        # The column we wish to change
+            values=[current_mileage + 10000],                       # New value of the column
+            where=f"id = {vehicle_id}",                             # Checks the vehicle IDs match
+        )
 
     def query_booking(self, vehicle_id, rental_days, estimated_km, customer_name):
         """Books a vehicle, estimates cost, and updates the database."""
