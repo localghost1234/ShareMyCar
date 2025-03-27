@@ -1,7 +1,7 @@
 from types import SimpleNamespace                       # Brings the namespace module to be used here, which helps us identify variables
 
 INVENTORY=SimpleNamespace(                                                                                  # Variable with strings to be used in InventoryInterface
-    TITLES = ("Inventory Management", "All existing vehicles:"),                                             # Title and subtitle of interface
+    TITLES = ("Inventory Management", "All existing vehicles:"),                                            # Title and subtitle of interface
     HEADERS = ("ID", "Brand", "Model", "Mileage (kms)", "Daily Price", "Maintenance Cost", "Available"),    # Column names shown on top of displayed data
     EMPTY_MESSAGE = "No vehicles in existence.",                                                            # Message displayed when no data is found
     GENERATE_MODEL = lambda content: (                                                                      # Function used to generate strings of rows with the provided data
@@ -34,7 +34,7 @@ RETURN=SimpleNamespace(                                                         
 )
 
 MAINTENANCE=SimpleNamespace(                                                        # Variable with strings to be used in MaintenanceInterface
-    TITLES = ("Maintenance Management", "Vehicles needing maintenance:"),            # Title and subtitle of interface
+    TITLES = ("Maintenance Management", "Select a vehicle needing maintenance:"),   # Title and subtitle of interface
     HEADERS = ("ID", "Brand", "Model", "Current Mileage", "Maintenance Cost"),      # Column names shown on top of displayed data
     EMPTY_MESSAGE = "All vehicles are in good condition.",                          # Message displayed when no data is found
     GENERATE_MODEL = lambda content: (                                              # Function used to generate strings of rows with the provided data
