@@ -8,6 +8,11 @@ class App:
 
     This class initializes the Tkinter root window, manages the user interface,
     and handles switching between different application interfaces.
+
+    Attributes:
+        system (System): The core system managing application functionality.
+        current_interface: The currently active interface.
+        root (tk.Tk): The main application window.
     """
 
     def __init__(self):
@@ -15,6 +20,12 @@ class App:
 
         Sets up the system, creates the main window, and initializes the interface.
         By default, it opens up on a one-time usage of 'HomeInterface'
+
+        Initializes:
+            - system (System): Core system and database
+            - current_interface: Tracks currently active interface (None initially)
+            - root (tk.Tk): Main application window with specified geometry and title
+            - button_frame (tk.Frame): Frame containing interface navigation buttons
         """
         self.system = System()                                                          # Initialize the core system and database
         self.current_interface = None                                                   # Track the currently active interface
@@ -37,16 +48,18 @@ class App:
         """Switch to a new application interface.
 
         Args:
-            interface_class: The class object of the visual representation we wish to see.
+            interface_class (class): The class object of the visual representation we wish to see.
+                Must be a class that implements a Tkinter interface with a 'frame' attribute.
         """
         if self.current_interface:                                              # We ensure that the 'current_interface' we access is not a null object (None)
             self.current_interface.frame.destroy()                              # This closes/erases the current frame (space in the modal) to make space for a new one
         self.current_interface = interface_class(self.root, self.system)        # We call the class we wish to see, and pass on information about the app
 
     def on_close(self):
-        """
-            Handle application shutdown.
-            Closes the system and destroys the Tkinter root window.
+        """Handle application shutdown.
+        
+        Closes the system and destroys the Tkinter root window.
+        Executed when the user clicks the window's close button.
         """
         print('Shutting down.')             # Shows a closing message on the delevoper's console
         self.system.close()                 # Direct command with database to shut it down carefully

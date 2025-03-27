@@ -4,12 +4,24 @@ from src.misc.utilities import generate_header_row      # Import the generate_he
 
 class BaseInterface:
     """
-        Base class for creating a graphical user interface with Tkinter.
-        This ensures all interfaces are similar and the user can easily navigate around the app.
+    Base class for creating a graphical user interface with Tkinter.
+    This ensures all interfaces are similar and the user can easily navigate around the app.
+
+    Attributes:
+        system: Reference to the application's System instance
+        frame: The main container frame for the interface
+        listbox: The scrollable listbox widget (if created)
     """
     
     def __init__(self, root, system, title, subtitle=""):
-        """Initializes the interface with a title and optional subtitle."""
+        """Initializes the interface with a title and optional subtitle.
+        
+        Args:
+            root (tk.Tk): The root window
+            system: Reference to the application's System instance
+            title (str): Main title for the interface
+            subtitle (str, optional): Secondary title text
+        """
         self.system = system                                                                        # We reference the original System class (which orchestrates the DB and its usage)
         self.frame = tk.Frame(root)                                                                 # We generate an inner window for the root window where each interface will be displayed
         self.frame.pack(fill=tk.BOTH, expand=True)                                                  # We fill up the window's space with our new Frame
@@ -19,9 +31,14 @@ class BaseInterface:
 
     def create_scrollable_listbox(self, headers=(), disable_clicking=True, font=("Courier", 10)):
         """
-            Creates a scrollable Listbox object, which displays the given information.
-            It is an optional feature, and relies on its sister function load_content()
-            to start/reset all the listbox's values.
+        Creates a scrollable Listbox object, which displays the given information.
+        It is an optional feature, and relies on its sister function load_content()
+        to start/reset all the listbox's values.
+
+        Args:
+            headers (tuple): Column headers to display above the listbox
+            disable_clicking (bool): Whether to disable item selection
+            font (tuple): Font specification for the listbox (family, size)
         """
         if headers:
             tk.Label(self.frame, text=generate_header_row(headers)).pack()  # If 'headers' has any values in it, they get displayed on top of the listbox
@@ -55,7 +72,13 @@ class BaseInterface:
         self.listbox.pack(fill=tk.BOTH, expand=True)                        # Positions Listbox and expands it within Frame
 
     def load_content(self, get_content, generate_model, empty_message):
-        """Loads content into the Listbox based on provided data retrieval functions."""
+        """Loads content into the Listbox based on provided data retrieval functions.
+        
+        Args:
+            get_content (callable): Function that retrieves content to display
+            generate_model (callable): Function that formats content for display
+            empty_message (str): Message to show when no content is available
+        """
         self.listbox.delete(0, tk.END)                      # Clear existing listbox content
         content = get_content()                             # Fetch data from system's function
         
@@ -67,9 +90,17 @@ class BaseInterface:
             self.listbox.insert(tk.END, generate_model(c))  # Converts data into the necessary format string and inserts it into the listbox
 
     def show_info(self, message):
-        """Displays an informational message in a popup window."""
+        """Displays an informational message in a popup window.
+        
+        Args:
+            message (str): The information message to display
+        """
         messagebox.showinfo("Info", message)
 
     def show_error(self, message):
-        """Displays an error message in a popup window."""
+        """Displays an error message in a popup window.
+        
+        Args:
+            message (str): The error message to display
+        """
         messagebox.showerror("Error", message)
