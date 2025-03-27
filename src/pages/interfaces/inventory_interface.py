@@ -1,14 +1,23 @@
 import tkinter as tk                                                # Import the tkinter library for creating the GUI, aliased as 'tk' for convenience
 from src.pages.interfaces.base_interface import BaseInterface       # Import the BaseInterface class, which serves as a parent class for other interfaces
-from src.misc.strings import INVENTORY                              # Import the INVENTORY constant, which contains strings or configurations related to the inventory interface
+from src.misc.strings import INVENTORY                              # Import the INVENTORY namespace, which contains strings or configurations related to the inventory interface
 
 class InventoryInterface(BaseInterface):
     """
-        Represents the interface for showcasing all the existing vehicles in the database.
-        Inherits components from BaseInterface.
+    Represents the interface for showcasing all the existing vehicles in the database.
+    Inherits components from BaseInterface.
+
+    Attributes:
+        refresh_listbox (function): Callback function to refresh the listbox content
     """
     def __init__(self, root, system):
-        super().__init__(root,  system, *INVENTORY.TITLES)                                          # Initializes 'BaseInterface' with the pre-defined TITLES strings
+        """Initialize the inventory interface.
+        
+        Args:
+            root (tk.Tk): The root window
+            system: Reference to the application's System instance
+        """
+        super().__init__(root, system, *INVENTORY.TITLES)                                          # Initializes 'BaseInterface' with the pre-defined TITLES strings
 
         self.create_scrollable_listbox(INVENTORY.HEADERS)                                           # Initializes the Listbox with the column names
         self.refresh_listbox = lambda: (                                                            # Creates an executable function to be used around interface
@@ -24,7 +33,17 @@ class InventoryInterface(BaseInterface):
         tk.Button(self.frame, text="Add Vehicle", command=self.add_vehicle).pack(padx=10, pady=10)  # Sets a button with necessary command and positions it
 
     def add_vehicle(self):
-        """Opens modal window to add a new vehicle to the database."""
+        """Opens modal window to add a new vehicle to the database.
+        
+        Creates a Toplevel window with entry fields for:
+        - Brand
+        - Model 
+        - Mileage
+        - Daily price
+        - Maintenance cost
+        
+        Includes validation and submission functionality.
+        """
         modal_window = tk.Toplevel(self.frame)                                                  # Creates a modal where all the necessary components will be shown
         modal_window.title("Add Vehicle")                                                       # Adds a name to it
         modal_window.geometry("300x200")                                                        # Sets its size
@@ -63,15 +82,18 @@ class InventoryInterface(BaseInterface):
 
     def submit_vehicle(self, brand, model, mileage, daily_price, maintenance_cost, modal):
         """
-            Submits the new vehicle data to the system and updates the interface.
+        Submits the new vehicle data to the system and updates the interface.
 
-            Args:
-                brand (str): The brand of the vehicle.
-                model (str): The model of the vehicle.
-                mileage (str): The mileage of the vehicle.
-                daily_price (str): The daily rental price of the vehicle.
-                maintenance_cost (str): The maintenance cost per kilometer of the vehicle.
-                modal (tk.Toplevel): The modal window to be closed after submission.
+        Args:
+            brand (str): The brand of the vehicle.
+            model (str): The model of the vehicle.
+            mileage (str): The mileage of the vehicle.
+            daily_price (str): The daily rental price of the vehicle.
+            maintenance_cost (str): The maintenance cost per kilometer of the vehicle.
+            modal (tk.Toplevel): The modal window to be closed after submission.
+            
+        Performs validation on all inputs before submitting to the system.
+        Shows appropriate error messages if validation fails.
         """
         if not brand or not model or not mileage or not daily_price or not maintenance_cost:    # Checks whether any of the Entry components is empty
             self.show_error("All fields are required.")                                         # Display modal with error message

@@ -9,11 +9,26 @@ from src.misc.strings import METRICS                            # Import the MET
 class MetricsInterface(BaseInterface):
     """Interface for displaying financial metrics and generating reports.
 
-        This class provides functionality to view financial metrics, query specific data,
-        and generate a full report in PDF format.
+    This class provides functionality to:
+    - View financial metrics (revenue, costs, profit, etc.)
+    - Query specific data from database tables
+    - Generate comprehensive PDF reports containing:
+        - Vehicle inventory
+        - Booking records
+        - Transaction logs
+
+    Attributes:
+        system: Reference to the application's System instance
+        frame: The main container frame for the interface
     """
 
     def __init__(self, root, system):
+        """Initialize the metrics interface with financial data display.
+
+        Args:
+            root (tk.Tk): The root window
+            system: Reference to the application's System instance
+        """
         super().__init__(root, system, *METRICS.TITLES)                                                          # Initializes 'BaseInterface' with the pre-defined TITLES strings
 
         metrics = ()                                                                                             # Initializes tuple with the metrics info
@@ -35,7 +50,13 @@ class MetricsInterface(BaseInterface):
         tk.Button(self.frame, text="Download Full Report", command=self.generate_full_report).pack()             # Sets a button which opens allows saving a PDF with a report
 
     def show_querying_modal(self):
-        """Open a modal window to query specific data from the database."""
+        """Open a modal window to query specific data from the database.
+        
+        The modal allows users to:
+        - Input queries in 'table:column' format
+        - View query results in a scrollable listbox
+        - Handle invalid queries with error messages
+        """
         modal_window = tk.Toplevel(self.frame)                                                                                               # Creates a modal component and links it to the main Frame
         modal_window.title("Query Data")                                                                                                     # Puts a title on the modal
         modal_window.geometry("360x400")                                                                                                     # Sets modal's size
@@ -53,7 +74,13 @@ class MetricsInterface(BaseInterface):
         listbox_frame.pack(fill=tk.BOTH, expand=True, pady=15)                                                                               # Positions the frame and makes it expand around the modal, below the 'instructions_frame'
 
         def submit_query():
-            """Submit the query and display results in the modal window."""
+            """Submit the query and display results in the modal window.
+            
+            Validates the query format and:
+            - Checks for valid table names (vehicles, bookings, logs)
+            - Handles invalid column names
+            - Displays results or appropriate error messages
+            """
             query_list = query_entry.get().strip().split(':')                                           # Retrieves user input from Entry, deletes trailing spaces and splits it into a list of strings (separated by ':')
 
             if len(query_list) != 2:                                                                    # Condition to check if the input follows the format
@@ -93,7 +120,17 @@ class MetricsInterface(BaseInterface):
         tk.Button(instructions_frame, text="Search", command=submit_query).pack()                       # Creates Button component and links it to submission function
 
     def generate_full_report(self):
-        """Generate a full report in PDF format containing vehicles, bookings, and logs."""
+        """Generate a comprehensive PDF report containing:
+        - Vehicle inventory
+        - Booking records
+        - Transaction logs
+        
+        The report includes:
+        - Timestamp in filename
+        - Automatic pagination
+        - Dynamic column sizing
+        - Clear section headers
+        """
         all_vehicles = self.system.get_all_vehicles()                                   # Retrieve a list with all vehicles from database
         all_bookings = self.system.get_all_bookings()                                   # Retrieve all bookings from database
         all_logs = self.system.get_all_logs()                                           # Retrieve all logs from database
@@ -123,12 +160,16 @@ class MetricsInterface(BaseInterface):
         pdf.setFont("Helvetica", font_size)                                                          # Define text font and size for PDF object
 
         def draw_table(headers, data):
-            """Draw a table in the PDF.
-
+            """Draw a formatted table in the PDF document.
+            
             Args:
-                headers: The column headers.
-                data: The data to be displayed.
-                col_widths: The computed column widths.
+                headers (list): Column headers for the table
+                data (list): List of rows to display in the table
+                
+            Handles:
+                - Dynamic column widths based on content
+                - Automatic page breaks
+                - Consistent formatting
             """
             col_widths = [w * 5 + 10 for w in [max(len(str(item)) for item in col) for col in zip(headers, *data)]]     # Gets the max width for each column by finding the longest string length in headers and data and changes the scale of each width dynamically and returns the results
             

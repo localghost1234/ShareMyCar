@@ -1,17 +1,27 @@
 import tkinter as tk                                            # Import the tkinter library for creating the GUI, aliased as 'tk' for convenience
 from src.pages.interfaces.base_interface import BaseInterface   # Import the BaseInterface class, a parent class providing common functionality for other interfaces
-from src.misc.strings import RETURN                             # Import the RETURN constant, containing strings or configurations for the return interface
+from src.misc.strings import RETURN                             # Import the RETURN namespace, containing strings or configurations for the return interface
 
 class ReturnInterface(BaseInterface):
     """
-        This interface displays a list of currently unavailable vehicles and allows users
-        to select and return them.
-        
-        A dialog prompts the user to enter the kilometers driven
-        and late return days, then calculates the total return cost.
+    Interface for returning rented vehicles.
+    
+    Displays a list of currently unavailable vehicles and allows users to:
+    - Select vehicles by double-clicking
+    - Enter return details (kilometers driven and late days)
+    - Calculate and process the total return cost
+    
+    Attributes:
+        refresh_listbox (function): Callback to refresh the vehicle list
     """
     
     def __init__(self, root, system):
+        """Initialize the return interface with vehicle list and event bindings.
+        
+        Args:
+            root (tk.Tk): The root window
+            system: Reference to the application's System instance
+        """
         super().__init__(root, system, *RETURN.TITLES)                                  # Initializes 'BaseInterface' with the pre-defined TITLES strings
 
         self.create_scrollable_listbox(RETURN.HEADERS, disable_clicking=False)          # Create a scrollable listbox for unavailable vehicles
@@ -31,7 +41,7 @@ class ReturnInterface(BaseInterface):
         Handles double-clicking on a vehicle in the list, extracting its ID and opening the return dialog.
         
         Args:
-            event (tk.Event): The event's builtin modules.
+            event (tk.Event): The event object containing mouse click details.
         """
         selected_index = self.listbox.curselection()                        # Get the selected item index
         
@@ -42,10 +52,14 @@ class ReturnInterface(BaseInterface):
 
     def show_return_dialog(self, vehicle_id):
         """
-        Opens a dialog window for returning a vehicle, displaying its details and input fields for kilometers driven and late days.
+        Opens a dialog window for returning a vehicle.
+        
+        Displays vehicle details and provides input fields for:
+        - Kilometers driven
+        - Late return days
         
         Args:
-            vehicle_id (int): The unique identifier of the vehicle being returned.
+            vehicle_id (int): The ID of the vehicle being returned.
         """
         customer_name = self.system.get_customer_name(vehicle_id)                           # Retrieve customer name associated with the vehicle
 
@@ -80,14 +94,17 @@ class ReturnInterface(BaseInterface):
 
     def submit_return(self, vehicle_id, actual_km, late_days, customer_name, modal):
         """
-        Validates the return details, calculates total cost, and updates the system.
+        Processes vehicle return by validating inputs and updating system records.
         
         Args:
-            vehicle_id (int): The ID of the vehicle being returned.
-            actual_km (str): The actual kilometers driven (to be validated and converted to int).
-            late_days (str): The number of late days (to be validated and converted to int).
-            customer_name (str): The name of the customer returning the vehicle.
-            modal (tk.Toplevel): The return modal window to be closed after processing.
+            vehicle_id (int): The ID of the vehicle being returned
+            actual_km (str): The kilometers driven (to be converted to int)
+            late_days (str): The number of late days (to be converted to int)
+            customer_name (str): The name of the customer
+            modal (tk.Toplevel): The modal window to close after processing
+            
+        Returns:
+            None: Shows success/error messages via popups rather than returning values
         """
         try:
             actual_km = int(actual_km)                                                          # Convert kilometers driven to integer

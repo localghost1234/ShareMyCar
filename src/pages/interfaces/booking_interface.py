@@ -1,17 +1,30 @@
 import tkinter as tk                                                # Import the tkinter library for creating the GUI, aliased as 'tk' for convenience
 from src.pages.interfaces.base_interface import BaseInterface       # Import the BaseInterface class, which serves as a parent class for other interfaces
-from src.misc.strings import BOOKING                                # Import the BOOKING constant, which contains strings or configurations related to the booking interface
+from src.misc.strings import BOOKING                                # Import the BOOKING namespace, which contains strings or configurations related to the booking interface
 
 class BookingInterface(BaseInterface):
     """
-        This interface allows the user to enter which vehicle (if available) to rent.
-        To make a booking, the user must enter:
-        - Vehicle ID
-        - Customer's name
-        - Estimated rent duration (in days)
-        - Estimated kilometers to be driven
+    This interface allows the user to enter which vehicle (if available) to rent.
+    
+    To make a booking, the user must enter:
+    - Vehicle ID
+    - Customer's name
+    - Estimated rent duration (in days)
+    - Estimated kilometers to be driven
+    
+    Attributes:
+        vehicle_id_entry (tk.Entry): Input field for vehicle ID
+        customer_name_entry (tk.Entry): Input field for customer name
+        rental_days_entry (tk.Entry): Input field for rental duration
+        estimated_km_entry (tk.Entry): Input field for estimated kilometers
     """
     def __init__(self, root, system):
+        """Initialize the booking interface with input fields and booking button.
+        
+        Args:
+            root (tk.Tk): The root window
+            system: Reference to the application's System instance
+        """
         super().__init__(root, system, BOOKING.TITLE)                                           # Initializes 'BaseInterface' with the pre-defined TITLES strings
 
         tk.Label(self.frame, text="Vehicle ID:", font=("Arial", 12)).pack(pady=5)               # Displays, stylizes and positions text on the Frame
@@ -33,7 +46,11 @@ class BookingInterface(BaseInterface):
         tk.Button(self.frame, text="Book Vehicle", command=self.create_booking).pack(pady=25)   # Sets Button component, positions it, and adds actions it will execute
 
     def create_booking(self):
-        """Handles booking process by taking input values and calling system logic."""
+        """Handles booking process by taking input values and calling system logic.
+        
+        Validates input fields and attempts to create a booking through the system.
+        Displays appropriate success/error messages to the user.
+        """
         try:                                                                                    # Creates a scope where errors get handled accordingly
             vehicle_id = int(self.vehicle_id_entry.get())                                       # Turns 'vehicle_id_entry' input into an integer, or raises an error
             rental_days = int(self.rental_days_entry.get())                                     # Turns 'rental_days_entry' input into an integer, or raises an error
