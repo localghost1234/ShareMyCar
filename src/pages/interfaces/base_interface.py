@@ -1,5 +1,3 @@
-import tkinter as tk                                    # Import the tkinter library for creating the GUI, aliased as 'tk' for convenience
-from tkinter import messagebox                          # Import the messagebox module from tkinter for displaying pop-up messages (e.g., alerts, warnings)
 from src.misc.utilities import generate_header_row      # Import the generate_header_row function, which returns a formatted string to use as column names
 
 class BaseInterface:
@@ -13,65 +11,22 @@ class BaseInterface:
         listbox: The scrollable listbox widget (if created)
     """
     
-    def __init__(self, root, system, title, subtitle=""):
+    def __init__(self, system, title, subtitle=""):
         """Initializes the interface with a title and optional subtitle.
         
         Args:
-            root (tk.Tk): The root window
             system: Reference to the application's System instance
             title (str): Main title for the interface
             subtitle (str, optional): Secondary title text
         """
-        self.system = system                                                                        # We reference the original System class (which orchestrates the DB and its usage)
-        self.frame = tk.Frame(root)                                                                 # We generate an inner window for the root window where each interface will be displayed
-        self.frame.pack(fill=tk.BOTH, expand=True)                                                  # We fill up the window's space with our new Frame
+        self.system = system
+        self.current_interface = None
 
-        tk.Label(self.frame, text=title, font=("Arial", 18)).pack(pady=15)                          # We add a string with whatever title we prefer and give it some space from other vertical elements
-        tk.Label(self.frame, text=subtitle, font=("Arial", 14)).pack(pady=7) if subtitle else None  # An optional string, for extra information, in case some element is given
+        print(title)
+        print(subtitle)
+        print()
 
-    def create_scrollable_listbox(self, headers=(), disable_clicking=True, font=("Courier", 10)):
-        """
-        Creates a scrollable Listbox object, which displays the given information.
-        It is an optional feature, and relies on its sister function load_content()
-        to start/reset all the listbox's values.
-
-        Args:
-            headers (tuple): Column headers to display above the listbox
-            disable_clicking (bool): Whether to disable item selection
-            font (tuple): Font specification for the listbox (family, size)
-        """
-        if headers:
-            tk.Label(self.frame, text=generate_header_row(headers)).pack()  # If 'headers' has any values in it, they get displayed on top of the listbox
-        
-        self.frame.pack(fill=tk.BOTH, expand=True)                          # Ensure frame fills the window
-
-        v_scrollbar = tk.Scrollbar(self.frame, orient=tk.VERTICAL)          # Initializes vertical scrollbar
-        h_scrollbar = tk.Scrollbar(self.frame, orient=tk.HORIZONTAL)        # Initializes horizontal scrollbar
-
-        self.listbox = tk.Listbox(                                          # Initializes listbox object, and adds its reference to the class object
-            self.frame,                                                     # Indicates the parent Frame, to keep the content from spilling outside the visual scope
-            yscrollcommand=v_scrollbar.set,                                 # Link vertical scrollbar to listbox
-            xscrollcommand=h_scrollbar.set,                                 # Link horizontal scrollbar to listbox
-            font=font
-        )
-
-        if disable_clicking:                                                # Checks whether content is to be clicked on
-            self.listbox.config(                                            # Opens Listbox configuration module
-                selectbackground=self.listbox.cget("bg"),                   # Prevent selection highlight
-                selectforeground=self.listbox.cget("fg"),                   # Keep text color unchanged
-                selectmode=tk.NONE,                                         # Disable selection mode
-                highlightthickness=0,                                       # Remove focus border
-                activestyle="none",                                         # Disable underline/active style
-            )
-
-        v_scrollbar.config(command=self.listbox.yview)                      # Link vertical scrollbar to Listbox
-        h_scrollbar.config(command=self.listbox.xview)                      # Link horizontal scrollbar to Listbox
-
-        v_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)                          # Positions vertical scrollbar within Frame
-        h_scrollbar.pack(side=tk.BOTTOM, fill=tk.X)                         # Positions horizontal scrollbar within Frame
-        self.listbox.pack(fill=tk.BOTH, expand=True)                        # Positions Listbox and expands it within Frame
-
-    def load_content(self, get_content, generate_model, empty_message):
+    def load_content(self, headers, get_content, generate_model, empty_message):
         """Loads content into the Listbox based on provided data retrieval functions.
         
         Args:
@@ -79,15 +34,15 @@ class BaseInterface:
             generate_model (callable): Function that formats content for display
             empty_message (str): Message to show when no content is available
         """
-        self.listbox.delete(0, tk.END)                      # Clear existing listbox content
+        print(generate_header_row(headers))
         content = get_content()                             # Fetch data from system's function
         
         if not content:                                     # Checks if there is available content in DB
-            self.listbox.insert(tk.END, empty_message)      # Displays 'empty_message' if no data
+            print(empty_message)                            # Displays 'empty_message' if no data
             return None                                     # Returns a falsy value and stops further code execution
         
         for c in content:                                   # Iterates over the extracted DB content (given that the previous condition was false)
-            self.listbox.insert(tk.END, generate_model(c))  # Converts data into the necessary format string and inserts it into the listbox
+            print(generate_model(c))                        # Converts data into the necessary format string and inserts it into the listbox
 
     def show_info(self, message):
         """Displays an informational message in a popup window.
@@ -95,7 +50,7 @@ class BaseInterface:
         Args:
             message (str): The information message to display
         """
-        messagebox.showinfo("Info", message)
+        print("Info --", message)
 
     def show_error(self, message):
         """Displays an error message in a popup window.
@@ -103,4 +58,4 @@ class BaseInterface:
         Args:
             message (str): The error message to display
         """
-        messagebox.showerror("Error", message)
+        print("Error --", message)

@@ -1,4 +1,3 @@
-import tkinter as tk                                                # Import the tkinter library for creating the GUI, aliased as 'tk' for convenience
 from src.pages.interfaces.base_interface import BaseInterface       # Import the BaseInterface class, which serves as a parent class for other interfaces
 from src.misc.strings import BOOKING                                # Import the BOOKING namespace, which contains strings or configurations related to the booking interface
 

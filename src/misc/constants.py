@@ -65,11 +65,11 @@ DATABASE_TABLE_STATEMENTS = (           # Define SQL statements for creating dat
     """
 )
 
-INTERFACES_LIST = (                         # Define a list of interfaces for the application, mapping names to their corresponding classes
-    ("Inventory", InventoryInterface),      # Interface for managing vehicle inventory
-    ("Booking", BookingInterface),          # Interface for handling vehicle bookings
-    ("Return", ReturnInterface),            # Interface for handling vehicle returns
-    ("Maintenance", MaintenanceInterface),  # Interface for managing vehicle maintenance
-    ("Logs", LogsInterface),                # Interface for viewing transaction logs
-    ("Metrics", MetricsInterface),          # Interface for viewing metrics and analytics
-)
+INTERFACES_LIST = [                        # Define a list of interfaces for the application, mapping names to their corresponding classes
+    InventoryInterface,                     # Interface for managing vehicle inventory
+    BookingInterface,                       # Interface for handling vehicle bookings
+    ReturnInterface,                        # Interface for handling vehicle returns
+    MaintenanceInterface,                   # Interface for managing vehicle maintenance
+    LogsInterface,                          # Interface for viewing transaction logs
+    MetricsInterface,                       # Interface for viewing metrics and querying
+]

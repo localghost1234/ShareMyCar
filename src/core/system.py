@@ -9,7 +9,7 @@ class System:
     """
     def __init__(self):
         """Initialize the System with a database connection."""
-        self.database = Database()  # Initialize database connection
+        self.database = Database()
 
     def add_vehicle(self, brand, model, mileage, daily_price, maintenance_cost):
         """Adds a new vehicle to the database.
