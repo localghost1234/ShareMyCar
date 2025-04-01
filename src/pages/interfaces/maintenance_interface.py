@@ -37,7 +37,7 @@ class MaintenanceInterface(BaseInterface):
         self.refresh_listbox()                                                          # Loads content using locally created callback
 
         is_valid = lambda num: num < 1 or num > 2
-        message = """Choose an action (1-2):
+        message = """Choose an action:
                         1) Remove vehicle from list
                         2) Return to main menu
                         

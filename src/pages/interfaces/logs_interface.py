@@ -28,5 +28,5 @@ class LogsInterface(BaseInterface):
             empty_message=LOGS.EMPTY_MESSAGE,                   # Message shown if no logs are available
         )
 
-        print()
+        print('\n')
         on_switch_interface(0)

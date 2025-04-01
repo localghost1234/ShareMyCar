@@ -71,7 +71,7 @@ class MetricsInterface(BaseInterface):
         print("Input Query")                                                                        # Sets a text in the new frame and positions it
         print("Use '<table_name>:<column_name>' format\n(e.g. vehicles:id)")                        # Sets a text in the new frame and positions it
         query_entry = input()                                                                       # Creates an Entry component to receive user input
-        query_list = query_entry.get().strip().split(':')                                           # Retrieves user input from Entry, deletes trailing spaces and splits it into a list of strings (separated by ':')
+        query_list = query_entry.strip().split(':')                                           # Retrieves user input from Entry, deletes trailing spaces and splits it into a list of strings (separated by ':')
 
         if len(query_list) != 2:                                                                    # Condition to check if the input follows the format
             print("Please, enter a correct 'table' and a 'column'")                                 # Displays modal with error message
@@ -98,6 +98,8 @@ class MetricsInterface(BaseInterface):
 
         for item in results_list:                                                                   # Iterate over the list with the query results
             print(item[0])                                                         # Extract the results from their tuples and add them to the listbox
+
+        print('\n')
 
     def generate_full_report(self):
         """Generate a comprehensive PDF report containing:

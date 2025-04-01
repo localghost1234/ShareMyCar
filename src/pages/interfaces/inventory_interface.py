@@ -30,7 +30,7 @@ class InventoryInterface(BaseInterface):
         self.refresh_listbox()                                                                      # Loads content using locally created callback
 
         is_valid = lambda num: num < 1 or num > 2
-        message = """Choose an action (1-2):
+        message = """Choose an action:
                         1) Add Vehicle
                         2) Back to main menu
                         
@@ -40,8 +40,8 @@ class InventoryInterface(BaseInterface):
 
         if action_number == 1:
             add_vehicle()
-        elif action_number == 2:
-            on_switch_interface(0)
+
+        on_switch_interface(0)
 
     def add_vehicle(self):
         """Shows controlled input to add a new vehicle to the database.
