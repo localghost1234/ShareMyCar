@@ -137,7 +137,7 @@ class MetricsInterface(BaseInterface):
         font_size = 8                                                                                # Define text size
         pdf.setFont("Helvetica", font_size)                                                          # Define text font and size for PDF object
 
-        def draw_table(headers, data):
+        def draw_table(title, headers, data):
             """Draw a formatted table in the PDF document.
             
             Args:
@@ -149,10 +149,13 @@ class MetricsInterface(BaseInterface):
                 - Automatic page breaks
                 - Consistent formatting
             """
-            col_widths = [w * 5 + 10 for w in [max(len(str(item)) for item in col) for col in zip(headers, *data)]]     # Gets the max width for each column by finding the longest string length in headers and data and changes the scale of each width dynamically and returns the results
-            
             nonlocal y_position                                                                           # Since variable 'y_position' is set outside of this scope, we need to remind the function to use its outter value
             x_pos = x_position                                                                            # TODO: Improve this -- we create a new variable with the same value, but can lead to errors
+            
+            pdf.drawString(x_position, y_position, title)                                               # Writes text to PDF with the displayed table's name
+            y_position -= font_size * 1.5
+            
+            col_widths = [w * 5 + 10 for w in [max(len(str(item)) for item in col) for col in zip(headers, *data)]]     # Gets the max width for each column by finding the longest string length in headers and data and changes the scale of each width dynamically and returns the results
             pdf.setFont("Helvetica-Bold", font_size)                                                      # Set the font and size to be used in the PDF object
             
             for i, header in enumerate(headers):                                                          # Takes the index and inner value of the 'headers' list
@@ -171,20 +174,12 @@ class MetricsInterface(BaseInterface):
                 if y_position < 50:                                                                       # Checks if vertical position is close to the end of the page
                     pdf.showPage()                                                                        # Closes current page and if needed, starts a new one
                     y_position = height - 50                                                              # Resets the vertical pointer at the top of the page's size
+            
+            y_position -= font_size * 2.5
 
-        pdf.drawString(x_position, y_position, "Vehicles:")                                               # Writes text to PDF with the displayed table's name
-        y_position -= font_size * 1.5                                                                     # Moves vertical pointer down according to the text's size
-        draw_table(METRICS.PDF_HEADERS.VEHICLES, all_vehicles)                                            # Uses table information to generate, format, and print the PDF's contents
-        y_position -= font_size * 2.5                                                                     # Moves vertical pointer down according to the text's size
-
-        pdf.drawString(x_position, y_position, "Bookings:")                                               # Writes text to PDF with the displayed table's name
-        y_position -= font_size * 1.5                                                                     # Moves vertical pointer down according to the text's size
-        draw_table(METRICS.PDF_HEADERS.BOOKINGS, all_bookings)                                            # Uses table information to generate, format, and print the PDF's contents
-        y_position -= font_size * 2.5                                                                     # Moves vertical pointer down according to the text's size
-
-        pdf.drawString(x_position, y_position, "Transaction Logs:")                                       # Writes text to PDF with the displayed table's name
-        y_position -= font_size * 1.5                                                                     # Moves vertical pointer down according to the text's size
-        draw_table(METRICS.PDF_HEADERS.LOGS, all_logs)                                                    # Uses table information to generate, format, and print the PDF's contents
+        draw_table("Vehicles:", METRICS.PDF_HEADERS.VEHICLES, all_vehicles)                                            # Uses table information to generate, format, and print the PDF's contents
+        draw_table("Bookings:", METRICS.PDF_HEADERS.BOOKINGS, all_bookings)                                            # Uses table information to generate, format, and print the PDF's contents
+        draw_table("Transaction Logs:", METRICS.PDF_HEADERS.LOGS, all_logs)                                            # Uses table information to generate, format, and print the PDF's contents
 
         pdf.save()                                                                                        # Generate the final PDF file in the previously accorded path
-        print(f"Report saved as {file_path}")                                                             # Show a success message on the developer's console with the new file's path
+        print(f"Report saved as {file_path}\n\n")                                                             # Show a success message on the developer's console with the new file's path
