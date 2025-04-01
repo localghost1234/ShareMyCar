@@ -6,6 +6,9 @@
 # Ignore anything related to executable's build
 build
 
+# Ignore any reports created during testing
+reports
+
 # User-specific files
 *.rsuser
 *.suo
