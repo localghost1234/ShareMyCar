@@ -30,7 +30,8 @@ class BookingInterface(BaseInterface):
         self.rental_duration_entry = input("Rental Duration (days): ")                                                       # Adds a text string and positions it
         self.estimated_km_entry = input("Estimated Kilometers: ")                                               # Adds a text string and positions it
 
-        create_booking()
+        self.create_booking()
+        on_switch_interface(0)
 
     def create_booking(self):
         """Handles booking process by taking input values and calling system logic.
@@ -44,7 +45,7 @@ class BookingInterface(BaseInterface):
             rental_days = int(self.rental_duration_entry)                                     # Turns 'rental_days_entry' input into an integer, or raises an error
             estimated_km = int(self.estimated_km_entry)                                   # Turns 'estimated_km_entry' input into an integer, or raises an error
         except ValueError:
-            self.show_error("Please enter valid values.")
+            print("Please enter valid values\n")
             return
         
         cost = 0.0                                                                                  # Initialize 'cost' variable outside the scope
@@ -55,8 +56,6 @@ class BookingInterface(BaseInterface):
             print("Error in 'query_booking()'\n", err)                                              # Displays message on developer's console
 
         if cost:                                                                                    # Checks if the returned value is truthy (cost should always be above 0) 
-            self.show_info(f"Vehicle booked! Estimated cost: €{cost}")                              # Displays success modal with calculated cost for the client
+            print(f"Vehicle booked! Estimated cost: €{cost}\n")                              # Displays success modal with calculated cost for the client
         else:                                                                                       # Alternate condition, in case the former was falsy
-            self.show_error("Vehicle not found or unavailable.")                                    # Displays error modal
-
-        on_switch_interface(0)
+            print("Vehicle not found or unavailable\n")                                    # Displays error modal

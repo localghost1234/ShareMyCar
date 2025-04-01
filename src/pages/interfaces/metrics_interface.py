@@ -3,6 +3,8 @@ from reportlab.lib.pagesizes import A4                          # Import the A4 
 from reportlab.pdfgen import canvas                             # Import the canvas class from reportlab for creating and drawing on PDF documents
 from datetime import datetime                                   # Import the datetime class for working with dates and times
 from src.misc.strings import METRICS                            # Import the METRICS constant, containing strings or configurations for the metrics interface
+from src.misc.utilities import input_loop
+import os
 
 class MetricsInterface(BaseInterface):
     """Interface for displaying financial metrics and generating reports.
@@ -35,31 +37,29 @@ class MetricsInterface(BaseInterface):
             print("Error obtaining financial metrics\n", err)                                                    # Prints error message
 
         if not metrics:                                                                                          # If no metrics are available, display an empty message
-            tk.Label(self.frame, text=METRICS.EMPTY_MESSAGE, font=("Arial", 18, "bold")).pack(padx=50, pady=50)  # Displays empty text and positions it in the Frame
+            print(METRICS.EMPTY_MESSAGE)                                                                # Displays empty text and positions it in the Frame
             return                                                                                               # Further code execution is stopped
 
         for idx, h in enumerate(METRICS.HEADERS):                                                                # Prepares to iterate over a list with the info subtitles, giving out its index and inner value
-            print(h)                                                                                             # Displays text with the header and positions it in the Frame
-            print(round(metrics[idx], 2))                                                                        # Displays text with the data collected from the database
+            print(h, round(metrics[idx], 2))                                                                     # Displays text with the header and positions it in the Frame
 
-        action_number = -1 
-        
-        while action_number < 1 or action_number > 3:
-            action_number = input(
-                "Please choose a valid operation:\n"
-                "1) Make Query\n"
-                "2) Download Full Report\n"
-                "3) Exit\n"
-                )
+        is_valid = lambda num: num < 1 or num > 3
+        message = """Please choose a valid operation:
+                1) Make Query
+                2) Download Full Report
+                3) Return to main menu
+                """
+                
+        action_number = input_loop(is_valid, message)
 
         if action_number == 1:
-            show_querying_modal()
+            self.submit_query()
         elif action_number == 2:
-            submit_query()
-        elif action_number == 3:
-            on_switch_interface(0)
+            self.generate_full_report()
+        
+        on_switch_interface(0)
 
-    def show_querying_modal(self):
+    def submit_query(self):
         """Open a modal window to query specific data from the database.
         
         The modal allows users to:
@@ -67,67 +67,37 @@ class MetricsInterface(BaseInterface):
         - View query results in a scrollable listbox
         - Handle invalid queries with error messages
         """
-        modal_window = tk.Toplevel(self.frame)                                                                                               # Creates a modal component and links it to the main Frame
-        modal_window.title("Query Data")                                                                                                     # Puts a title on the modal
-        modal_window.geometry("360x400")                                                                                                     # Sets modal's size
 
-        instructions_frame = tk.Frame(modal_window)                                                                                          # Creates a new Frame inside the modal window
-        instructions_frame.pack(fill=tk.BOTH)                                                                                                # Positions the frame and expands it to fill the modal
+        print("Input Query")                                                                        # Sets a text in the new frame and positions it
+        print("Use '<table_name>:<column_name>' format\n(e.g. vehicles:id)")                        # Sets a text in the new frame and positions it
+        query_entry = input()                                                                       # Creates an Entry component to receive user input
+        query_list = query_entry.get().strip().split(':')                                           # Retrieves user input from Entry, deletes trailing spaces and splits it into a list of strings (separated by ':')
 
-        tk.Label(instructions_frame, text="Input Query", font=("Arial", 16, "bold")).pack(pady=7)                                            # Sets a text in the new frame and positions it
-        tk.Label(instructions_frame, text="Use '<table_name>:<column_name>' format\n(e.g. vehicles:id)", font=("Arial", 9, "italic")).pack() # Sets a text in the new frame and positions it
+        if len(query_list) != 2:                                                                    # Condition to check if the input follows the format
+            print("Please, enter a correct 'table' and a 'column'")                                 # Displays modal with error message
+            return                                                                                  # Stops further code execution
 
-        query_entry = tk.Entry(instructions_frame, font=("Arial", 10))                                                                       # Creates an Entry component to receive user input
-        query_entry.pack(pady=10)                                                                                                            # Positions the Entry component
+        table_name, column_name = query_list                                                        # Extract table_name and column_name
 
-        listbox_frame = tk.Frame(modal_window)                                                                                               # Creates a new Frame linked to the modal window, where the query results will be set
-        listbox_frame.pack(fill=tk.BOTH, expand=True, pady=15)                                                                               # Positions the frame and makes it expand around the modal, below the 'instructions_frame'
+        if table_name not in ["vehicles", "bookings", "logs"]:                                      # Validate the table name
+            print("Please, enter a valid 'table'")                                                  # Shows error modal in case not an actual table 
+            return                                                                                  # Stops further code execution
 
-        def submit_query():
-            """Submit the query and display results in the modal window.
-            
-            Validates the query format and:
-            - Checks for valid table names (vehicles, bookings, logs)
-            - Handles invalid column names
-            - Displays results or appropriate error messages
-            """
-            query_list = query_entry.get().strip().split(':')                                           # Retrieves user input from Entry, deletes trailing spaces and splits it into a list of strings (separated by ':')
+        try:                                                                                        # Creates a scope for error handling
+            results_list = self.system.get_table_column(table_name, column_name)                    # Extracts database info with specified params
+        except Exception:                                                                           # Handle invalid queries
+            print(f"Please, enter a valid 'column' for table {table_name}")               # Displays error modal
+            return                                                                                  # Stops further code execution
 
-            if len(query_list) != 2:                                                                    # Condition to check if the input follows the format
-                self.show_error("Please, enter a correct 'table' and a 'column'")                       # Displays modal with error message
-                return                                                                                  # Stops further code execution
+        if not results_list:                                                                        # Handle no results
+            print("No results found.")     # Displays text when no data is found
+            return
 
-            table_name, column_name = query_list                                                        # Extract table_name and column_name
+        print(f"{len(results_list)} results found:")  # Displays and positions the number of results found
 
-            if table_name not in ["vehicles", "bookings", "logs"]:                                      # Validate the table name
-                self.show_error("Please, enter a valid 'table'")                                        # Shows error modal in case not an actual table 
-                return                                                                                  # Stops further code execution
 
-            try:                                                                                        # Creates a scope for error handling
-                results_list = self.system.get_table_column(table_name, column_name)                    # Extracts database info with specified params
-            except Exception:                                                                           # Handle invalid queries
-                self.show_error(f"Please, enter a valid 'column' for table {table_name}")               # Displays error modal
-                return                                                                                  # Stops further code execution
-
-            for widget in listbox_frame.winfo_children():                                               # Iterates over all components in the listbox Frame
-                widget.destroy()                                                                        # Deletes the component
-
-            if not results_list:                                                                        # Handle no results
-                tk.Label(listbox_frame, text="No results found.", font=("Arial", 12)).pack(pady=15)     # Displays text when no data is found
-                return
-
-            tk.Label(listbox_frame, text=f"{len(results_list)} results found:", font=("Arial", 12)).pack(pady=15)   # Displays and positions the number of results found
-
-            v_scrollbar = tk.Scrollbar(listbox_frame, orient=tk.VERTICAL)                               # Create a Scrollbar component to move vertically around the Listbox
-            listbox = tk.Listbox(listbox_frame, yscrollcommand=v_scrollbar.set, font=("Arial", 10))     # Listbox object is created, stylized, and linked to Scrollbar
-            v_scrollbar.config(command=listbox.yview)                                                   # Scrollbar is linked to Listbox
-            v_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)                                                  # Scrollbar is positioned in the Frame
-            listbox.pack(fill=tk.Y)                                                                     # Listbox is positioned in the Frame
-
-            for item in results_list:                                                                   # Iterate over the list with the query results
-                listbox.insert(tk.END, item[0])                                                         # Extract the results from their tuples and add them to the listbox
-
-        tk.Button(instructions_frame, text="Search", command=submit_query).pack()                       # Creates Button component and links it to submission function
+        for item in results_list:                                                                   # Iterate over the list with the query results
+            print(item[0])                                                         # Extract the results from their tuples and add them to the listbox
 
     def generate_full_report(self):
         """Generate a comprehensive PDF report containing:
@@ -147,12 +117,10 @@ class MetricsInterface(BaseInterface):
 
         current_datetime = datetime.now()                                               # Get an object with the current date and time
 
-        file_path = filedialog.asksaveasfilename(                                       # Opens a modal prompt for the user to choose a file path for the report
-            defaultextension=".pdf",                                                    # Appends extension to filename if none is given
-            filetypes=[("PDF Files", "*.pdf")],                                         # Filters all searches and saves to allow only PDF
-            title="Choose Report Folder",                                               # The title that appears at the top of the modal
-            initialfile=f"FullReport_{current_datetime.strftime('%Y-%m-%d_%H%M%S')}",   # Default filename with determined date and time format
-        )
+        directory = f"{os.getcwd()}\\reports"
+        os.makedirs(directory, exist_ok=True)
+        filename = f"FullReport_{current_datetime.strftime('%Y-%m-%d_%H%M%S')}.pdf"
+        file_path = f"{directory}\\{filename}"                                      # Opens a modal prompt for the user to choose a file path for the report
 
         if not file_path:                                                               # Exit if the user cancels the file dialog
             return                                                                      # Stops further code execution

@@ -1,5 +1,6 @@
 from src.pages.interfaces.base_interface import BaseInterface       # Import the BaseInterface class, which serves as a parent class for other interfaces
 from src.misc.strings import INVENTORY                              # Import the INVENTORY namespace, which contains strings or configurations related to the inventory interface
+from src.misc.utilities import input_loop
 
 class InventoryInterface(BaseInterface):
     """

@@ -9,8 +9,8 @@ class HomeInterface():
         # Displays simple strings of messages, with varying types of letter and sizes
         print("Welcome to the car sharing management system!")
 
-        is_valid = lambda num: num < 1 or num > 7
-        message = """Please select a valid operation (1-7):
+        is_valid = lambda num: num < 1 or num > 6
+        message = """Please select a valid operation (1-6):
             1) Check Vehicle Inventory
             2) Book A Vehicle
             3) Return A Vehicle

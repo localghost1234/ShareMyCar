@@ -1,5 +1,6 @@
 from src.pages.interfaces.base_interface import BaseInterface       # Import the BaseInterface class, a parent class providing common functionality for other interfaces
 from src.misc.strings import LOGS                                   # Import the LOGS namespace, containing strings or configurations for the logs interface
+from src.misc.utilities import input_loop
 
 class LogsInterface(BaseInterface):
     """ 
@@ -26,3 +27,6 @@ class LogsInterface(BaseInterface):
             generate_model=LOGS.GENERATE_MODEL,                 # Formatting model for displaying logs
             empty_message=LOGS.EMPTY_MESSAGE,                   # Message shown if no logs are available
         )
+
+        print()
+        on_switch_interface(0)

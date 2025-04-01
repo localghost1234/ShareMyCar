@@ -1,5 +1,6 @@
 from src.pages.interfaces.base_interface import BaseInterface       # Import the BaseInterface class, a parent class providing common functionality for other interfaces
 from src.misc.strings import MAINTENANCE                            # Import the MAINTENANCE namespace, containing strings or configurations for the maintenance interface
+from src.misc.utilities import input_loop
 
 class MaintenanceInterface(BaseInterface):
     """ 
@@ -35,23 +36,26 @@ class MaintenanceInterface(BaseInterface):
 
         self.refresh_listbox()                                                          # Loads content using locally created callback
 
-    def show_maintenance_dialog(self, vehicle_id):
+        is_valid = lambda num: num < 1 or num > 2
+        message = """Choose an action (1-2):
+                        1) Remove vehicle from list
+                        2) Return to main menu
+                        
+                        """
+        
+        action_number = input_loop(is_valid, message)
+
+        if action_number == 1:
+            return_vehicle()
+            
+        on_switch_interface(0)
+
+    def check_maintenance(self):
         """
         Displays confirmation dialog for completing vehicle maintenance.
-        
-        Args:
-            vehicle_id (int): The ID of the vehicle to update
         """
 
-        tk.Label(modal_window, text="Remove from maintenance list and update maintenance mileage?", font=("Arial", 11)).pack(pady=10)      # Label for vehicle ID
+        vehicle_id = input("Vehicle ID:")                       # Label for vehicle ID
         
-        button_frame = tk.Frame(modal_window)
-        button_frame.pack()
-
-        def confirm_maintenance_update(): # Defines in-scope function to then add it to the Button
-            self.system.query_update_maintenance_mileage(vehicle_id)
-            self.refresh_listbox()
-            modal_window.destroy()
-
-        tk.Button(button_frame, text="Yes", command=confirm_maintenance_update).pack(side=tk.LEFT, padx=5)
-        tk.Button(button_frame, text="Cancel", command=lambda: (modal_window.destroy())).pack(side=tk.LEFT)
+        self.system.query_update_maintenance_mileage(vehicle_id)
+        self.refresh_listbox()
