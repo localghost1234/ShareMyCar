@@ -1,5 +1,6 @@
 from src.core.database import Database      # Import the Database class
 from src.misc.constants import SQL          # Import SQL strings
+from src.pages.interfaces.home_interface import HomeInterface               # Import the HomeInterface class, representing the home page (welcoming interface)
 
 class System:
     """Handles direct communication with database and defines its several use cases.
@@ -10,7 +11,7 @@ class System:
     def __init__(self):
         """Initialize the System with a database connection."""
         self.database = Database()
-
+        
     def add_vehicle(self, brand, model, mileage, daily_price, maintenance_cost):
         """Adds a new vehicle to the database.
         

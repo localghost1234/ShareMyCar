@@ -9,11 +9,10 @@ class InventoryInterface(BaseInterface):
     Attributes:
         refresh_listbox (function): Callback function to refresh the listbox content
     """
-    def __init__(self, system):
+    def __init__(self, on_switch_interface, system):
         """Initialize the inventory interface.
         
         Args:
-            root (tk.Tk): The root window
             system: Reference to the application's System instance
         """
         super().__init__(system, *INVENTORY.TITLES)                                                 # Initializes 'BaseInterface' with the pre-defined TITLES strings
@@ -29,14 +28,24 @@ class InventoryInterface(BaseInterface):
 
         self.refresh_listbox()                                                                      # Loads content using locally created callback
 
-        action_number = input("Choose an action (1-2):\n"
-        "1) Add Vehicle\n"
-        "2) Exit\n\n")  # Sets a button with necessary command and positions it
+        action_number = -1
+        
+        while action_number < 1 and action_number > 2:
+            action_number = input(
+                "Choose an action (1-2):\n"
+                    "1) Add Vehicle\n"
+                    "2) Exit\n\n"
+                )  # Sets a button with necessary command and positions it
+
+        if action_number == 1:
+            add_vehicle()
+        elif action_number == 2:
+            on_switch_interface(0)
 
     def add_vehicle(self):
-        """Opens modal window to add a new vehicle to the database.
+        """Shows controlled input to add a new vehicle to the database.
         
-        Creates a Toplevel window with entry fields for:
+        Creates a series of input components requesting the entry fields for:
         - Brand
         - Model 
         - Mileage

@@ -17,32 +17,18 @@ class BookingInterface(BaseInterface):
         rental_days_entry (tk.Entry): Input field for rental duration
         estimated_km_entry (tk.Entry): Input field for estimated kilometers
     """
-    def __init__(self, root, system):
+    def __init__(self, on_switch_interface, system):
         """Initialize the booking interface with input fields and booking button.
         
         Args:
-            root (tk.Tk): The root window
             system: Reference to the application's System instance
         """
-        super().__init__(root, system, BOOKING.TITLE)                                           # Initializes 'BaseInterface' with the pre-defined TITLES strings
+        super().__init__(system, BOOKING.TITLE)                                           # Initializes 'BaseInterface' with the pre-defined TITLES strings
 
-        tk.Label(self.frame, text="Vehicle ID:", font=("Arial", 12)).pack(pady=5)               # Displays, stylizes and positions text on the Frame
-        self.vehicle_id_entry = tk.Entry(self.frame)                                            # Sets Entry component to receive user input
-        self.vehicle_id_entry.pack()                                                            # Positions the Entry component relative to the other components
-
-        tk.Label(self.frame, text="Customer Name:", font=("Arial", 12)).pack(pady=5)            # Displays, stylizes and positions text on the Frame
-        self.customer_name_entry = tk.Entry(self.frame)                                         # Sets Entry component to receive user input
-        self.customer_name_entry.pack()                                                         # Positions the Entry component relative to the other components
-
-        tk.Label(self.frame, text="Rental Duration (days):", font=("Arial", 12)).pack(pady=5)   # Displays, stylizes and positions text on the Frame
-        self.rental_days_entry = tk.Entry(self.frame)                                           # Sets Entry component to receive user input
-        self.rental_days_entry.pack()                                                           # Positions the Entry component relative to the other components
-
-        tk.Label(self.frame, text="Estimated Kilometers:", font=("Arial", 12)).pack(pady=5)     # Displays, stylizes and positions text on the Frame
-        self.estimated_km_entry = tk.Entry(self.frame)                                          # Sets Entry component to receive user input
-        self.estimated_km_entry.pack()                                                          # Positions the Entry component relative to the other components
-
-        tk.Button(self.frame, text="Book Vehicle", command=self.create_booking).pack(pady=25)   # Sets Button component, positions it, and adds actions it will execute
+        self.vehicle_id_entry = input("Vehicle ID:")                                                           # Adds a text string and positions it
+        self.customer_name_entry = input("Customer Name:")                                                           # Adds a text string and positions it
+        self.rental_duration_entry = input("Rental Duration (days):")                                                       # Adds a text string and positions it
+        self.estimated_km_entry = input("Estimated Kilometers:")                                               # Adds a text string and positions it
 
     def create_booking(self):
         """Handles booking process by taking input values and calling system logic.
@@ -51,10 +37,10 @@ class BookingInterface(BaseInterface):
         Displays appropriate success/error messages to the user.
         """
         try:                                                                                    # Creates a scope where errors get handled accordingly
-            vehicle_id = int(self.vehicle_id_entry.get())                                       # Turns 'vehicle_id_entry' input into an integer, or raises an error
-            rental_days = int(self.rental_days_entry.get())                                     # Turns 'rental_days_entry' input into an integer, or raises an error
-            estimated_km = int(self.estimated_km_entry.get())                                   # Turns 'estimated_km_entry' input into an integer, or raises an error
-            customer_name = str(self.customer_name_entry.get())                                 # Turns 'customer_name_entry' input into a float, or raises an error
+            vehicle_id = int(self.vehicle_id_entry)                                       # Turns 'vehicle_id_entry' input into an integer, or raises an error
+            rental_days = int(self.rental_days_entry)                                     # Turns 'rental_days_entry' input into an integer, or raises an error
+            estimated_km = int(self.estimated_km_entry)                                   # Turns 'estimated_km_entry' input into an integer, or raises an error
+            customer_name = str(self.customer_name_entry)                                 # Turns 'customer_name_entry' input into a float, or raises an error
         except ValueError:
             self.show_error("Please enter valid values.")
             return

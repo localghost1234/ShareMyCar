@@ -1,3 +1,4 @@
+from src.pages.interfaces.home_interface import HomeInterface             # Import the interface for home
 from src.pages.interfaces.inventory_interface import InventoryInterface             # Import the interface for managing vehicle inventory
 from src.pages.interfaces.booking_interface import BookingInterface                 # Import the interface for handling vehicle bookings
 from src.pages.interfaces.return_interface import ReturnInterface                   # Import the interface for processing vehicle returns
@@ -65,11 +66,12 @@ DATABASE_TABLE_STATEMENTS = (           # Define SQL statements for creating dat
     """
 )
 
-INTERFACES_LIST = [                        # Define a list of interfaces for the application, mapping names to their corresponding classes
+INTERFACES_CLASS = (                        # Define a list of interfaces for the application, mapping names to their corresponding classes
+    HomeInterface,
     InventoryInterface,                     # Interface for managing vehicle inventory
     BookingInterface,                       # Interface for handling vehicle bookings
     ReturnInterface,                        # Interface for handling vehicle returns
     MaintenanceInterface,                   # Interface for managing vehicle maintenance
     LogsInterface,                          # Interface for viewing transaction logs
     MetricsInterface,                       # Interface for viewing metrics and querying
-]
+)

@@ -20,11 +20,11 @@ class BaseInterface:
             subtitle (str, optional): Secondary title text
         """
         self.system = system
-        self.current_interface = None
 
         print(title)
         print(subtitle)
         print()
+
 
     def load_content(self, headers, get_content, generate_model, empty_message):
         """Loads content into the Listbox based on provided data retrieval functions.

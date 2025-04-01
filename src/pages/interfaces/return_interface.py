@@ -14,18 +14,17 @@ class ReturnInterface(BaseInterface):
         refresh_listbox (function): Callback to refresh the vehicle list
     """
     
-    def __init__(self, root, system):
+    def __init__(self, on_switch_interface, system):
         """Initialize the return interface with vehicle list and event bindings.
         
         Args:
-            root (tk.Tk): The root window
             system: Reference to the application's System instance
         """
-        super().__init__(root, system, *RETURN.TITLES)                                  # Initializes 'BaseInterface' with the pre-defined TITLES strings
+        super().__init__(system, *RETURN.TITLES)                                  # Initializes 'BaseInterface' with the pre-defined TITLES strings
 
-        self.create_scrollable_listbox(RETURN.HEADERS, disable_clicking=False)          # Create a scrollable listbox for unavailable vehicles
         self.refresh_listbox = lambda: (                                                # Creates an executable function to be used around interface
             self.load_content(                                                          # Executes necessary modules to extract database content and display it accordingly
+                headers=MAINTENANCE.HEADERS,
                 get_content=self.system.get_unavailable_vehicles,                       # Fetch unavailable vehicles
                 generate_model=RETURN.GENERATE_MODEL,                                   # Define how vehicle data is displayed
                 empty_message=RETURN.EMPTY_MESSAGE                                      # Message if no vehicles are found
@@ -33,21 +32,6 @@ class ReturnInterface(BaseInterface):
         )
 
         self.refresh_listbox()                                                          # Loads content using locally created callback
-        self.listbox.bind("<Double-Button-1>", self.on_vehicle_double_click)            # Bind double-click event to handle vehicle selection
-
-    def on_vehicle_double_click(self, event):
-        """
-        Handles double-clicking on a vehicle in the list, extracting its ID and opening the return dialog.
-        
-        Args:
-            event (tk.Event): The event object containing mouse click details.
-        """
-        selected_index = self.listbox.curselection()                        # Get the selected item index
-        
-        if selected_index:
-            selected_vehicle = self.listbox.get(selected_index)             # Get selected vehicle details
-            vehicle_id = int(selected_vehicle.split(" | ")[0].strip())      # Extract vehicle ID from the list entry
-            self.show_return_dialog(vehicle_id)                             # Open return dialog with vehicle ID
 
     def show_return_dialog(self, vehicle_id):
         """
@@ -61,10 +45,6 @@ class ReturnInterface(BaseInterface):
             vehicle_id (int): The ID of the vehicle being returned.
         """
         customer_name = self.system.get_customer_name(vehicle_id)                           # Retrieve customer name associated with the vehicle
-
-        modal_window = tk.Toplevel(self.frame)                                                     # Create a new modal window
-        modal_window.title("Return Vehicle")                                                       # Set window title
-        modal_window.geometry("300x200")                                                           # Define window size
 
         tk.Label(modal_window, text="Vehicle ID:").grid(row=0, column=0, padx=10, pady=5)          # Label for vehicle ID
         vehicle_id_entry = tk.Entry(modal_window)                                                  # Input field for vehicle ID

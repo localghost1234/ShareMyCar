@@ -1,5 +1,5 @@
+from src.misc.constants import INTERFACES_CLASS
 from src.core.system import System                                          # Import the System class, which manages the core functionality of the application and its relationship with the database
-from src.pages.interfaces.home_interface import HomeInterface               # Import the HomeInterface class, representing the home page (welcoming interface)
 import signal
 
 class App:
@@ -11,7 +11,6 @@ class App:
     Attributes:
         system (System): The core system managing application functionality.
         current_interface: The currently active interface.
-        root (tk.Tk): The main application window.
     """
 
     def __init__(self):
@@ -22,8 +21,34 @@ class App:
 
         Initializes:
             - system: Core database administration
-            - HomeInterface: Tracks current active interface
         """
         self.system = System()                                                          # Initialize the core system and database
+        self.current_interface = None
+
         signal.signal(signal.SIGTERM, self.on_close)                                    # This adds behaviour to the 'X' button on the window
-        HomeInterface(self.system)
+        self.switch_interface(0)
+
+    def switch_interface(self, interface_number):
+        """Switch to a new application interface.
+
+        Args:
+            interface_class (class): The class object of the visual representation we wish to see.
+                Must be a class that implements a Tkinter interface with a 'frame' attribute.
+        """
+        if interface_number < 0 and interface_number > 7:
+            print('Invalid interface number')
+
+        if self.current_interface:                                                                                  # We ensure that the 'current_interface' we access is not a null object (None)
+            self.current_interface = None                                                                           # This closes/erases the current frame (space in the modal) to make space for a new one
+        self.current_interface = INTERFACES_CLASS[interface_number](self.switch_interface, self.system)             # We call the class we wish to see, and pass on information about the app
+
+
+    def on_close(self):
+        """Handle application shutdown.
+        
+        Closes the system and destroys the Tkinter root window.
+        Executed when the user clicks the window's close button.
+        """
+        print('Shutting down.')             # Shows a closing message on the delevoper's console
+        self.system.close()                 # Direct command with database to shut it down carefully
+        sys.exit()                          # Erases the main Frame/modal with the whole app

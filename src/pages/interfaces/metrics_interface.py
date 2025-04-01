@@ -17,17 +17,15 @@ class MetricsInterface(BaseInterface):
 
     Attributes:
         system: Reference to the application's System instance
-        frame: The main container frame for the interface
     """
 
-    def __init__(self, root, system):
+    def __init__(self, on_switch_interface, system):
         """Initialize the metrics interface with financial data display.
 
         Args:
-            root (tk.Tk): The root window
             system: Reference to the application's System instance
         """
-        super().__init__(root, system, *METRICS.TITLES)                                                          # Initializes 'BaseInterface' with the pre-defined TITLES strings
+        super().__init__(system, *METRICS.TITLES)                                                          # Initializes 'BaseInterface' with the pre-defined TITLES strings
 
         metrics = ()                                                                                             # Initializes tuple with the metrics info
         
@@ -41,11 +39,25 @@ class MetricsInterface(BaseInterface):
             return                                                                                               # Further code execution is stopped
 
         for idx, h in enumerate(METRICS.HEADERS):                                                                # Prepares to iterate over a list with the info subtitles, giving out its index and inner value
-            tk.Label(self.frame, text=h, font=("Arial", 13, "bold")).pack(pady=5)                                # Displays text with the header and positions it in the Frame
-            tk.Label(self.frame, text=round(metrics[idx], 2), font=("Arial", 12, "italic")).pack()               # Displays text with the data collected from the database
+            print(h)                                                                                             # Displays text with the header and positions it in the Frame
+            print(round(metrics[idx], 2))                                                                        # Displays text with the data collected from the database
 
-        tk.Button(self.frame, text="Make Query", command=self.show_querying_modal).pack(pady=20)                 # Sets a button which opens the querying making modal
-        tk.Button(self.frame, text="Download Full Report", command=self.generate_full_report).pack()             # Sets a button which opens allows saving a PDF with a report
+        action_number = -1 
+        
+        while action_number < 1 and action_number > 3:
+            action_number = input(
+                "Please choose a valid operation:\n"
+                "1) Make Query\n"
+                "2) Download Full Report\n"
+                "3) Exit\n"
+                )
+
+        if action_number == 1:
+            show_querying_modal()
+        elif action_number == 2:
+            submit_query()
+        elif action_number == 3:
+            on_switch_interface(0)
 
     def show_querying_modal(self):
         """Open a modal window to query specific data from the database.

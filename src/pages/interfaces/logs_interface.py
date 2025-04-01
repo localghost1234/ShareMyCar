@@ -10,21 +10,20 @@ class LogsInterface(BaseInterface):
 
     Attributes:
         system: Reference to the application's System instance
-        frame: The main container frame for the interface
     """
 
-    def __init__(self, root, system):
+    def __init__(self, on_switch_interface, system):
         """Initialize the logs interface with log entries display.
         
         Args:
-            root (tk.Tk): The root window
             system: Reference to the application's System instance
         """
-        super().__init__(root, system, *LOGS.TITLES)            # Initializes 'BaseInterface' with the pre-defined TITLES strings
+        super().__init__(system, *LOGS.TITLES)            # Initializes 'BaseInterface' with the pre-defined TITLES strings
 
         self.create_scrollable_listbox(LOGS.HEADERS)            # Create a scrollable listbox for log entries
 
         self.load_content(                                      # Load transaction logs into the Listbox components
+            headers=LOGS.HEADERS,
             get_content=self.system.get_all_logs,               # Function to fetch log data from database
             generate_model=LOGS.GENERATE_MODEL,                 # Formatting model for displaying logs
             empty_message=LOGS.EMPTY_MESSAGE,                   # Message shown if no logs are available
