@@ -266,7 +266,7 @@ class System:
         self.database.commit()                          # This command tells the database to 'write' our new information into the DB
         return total_estimated_cost                     # Returns total value to be paid by the customer when returning the vehicle
 
-    def query_return(self, vehicle_id, actual_km, late_days, customer_name):
+    def query_return(self, vehicle_id, customer_name, actual_km, late_days):
         """Updates a vehicles availability and calculates the rental costs.
         
         Args:

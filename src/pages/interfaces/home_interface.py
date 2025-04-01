@@ -1,4 +1,4 @@
-import sys
+from src.misc.utilities import input_loop
 
 class HomeInterface():
     """
@@ -9,17 +9,18 @@ class HomeInterface():
         # Displays simple strings of messages, with varying types of letter and sizes
         print("Welcome to the car sharing management system!")
 
-        interface_number = -1
-        
-        while interface_number < 1 and interface_number > 7:
-            interface_number = input("Please select a valid operation (1-7):\n"
-                "1) Check Vehicle Inventory\n"
-                "2) Book A Vehicle\n"
-                "3) Return A Vehicle\n"
-                "4) Check Vehicle Maintenance\n"
-                "5) Check Logs\n"
-                "6) Check Financial Metrics\n"
-            )
+        is_valid = lambda num: num < 1 or num > 7
+        message = """Please select a valid operation (1-7):
+            1) Check Vehicle Inventory
+            2) Book A Vehicle
+            3) Return A Vehicle
+            4) Check Vehicle Maintenance
+            5) Check Logs
+            6) Check Financial Metrics
 
-        on_switch_interface(interface_number)
+            """
+        
+        action_number = input_loop(is_valid, message)
+
+        on_switch_interface(action_number)
 

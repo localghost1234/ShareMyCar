@@ -33,7 +33,21 @@ class ReturnInterface(BaseInterface):
 
         self.refresh_listbox()                                                          # Loads content using locally created callback
 
-    def show_return_dialog(self, vehicle_id):
+        is_valid = lambda num: num < 1 or num > 2
+        message = """Choose an action (1-2):
+                        1) Return Vehicle
+                        2) Back to main menu
+                        
+                        """
+        
+        action_number = input_loop(is_valid, message)
+
+        if action_number == 1:
+            return_vehicle()
+        elif action_number == 2:
+            on_switch_interface(0)
+
+    def return_vehicle(self):
         """
         Opens a dialog window for returning a vehicle.
         
@@ -44,60 +58,26 @@ class ReturnInterface(BaseInterface):
         Args:
             vehicle_id (int): The ID of the vehicle being returned.
         """
-        customer_name = self.system.get_customer_name(vehicle_id)                           # Retrieve customer name associated with the vehicle
+        vehicle_id_entry = input("Vehicle ID: ")
+        customer_name_entry = self.system.get_customer_name(vehicle_id)                           # Retrieve customer name associated with the vehicle
 
-        tk.Label(modal_window, text="Vehicle ID:").grid(row=0, column=0, padx=10, pady=5)          # Label for vehicle ID
-        vehicle_id_entry = tk.Entry(modal_window)                                                  # Input field for vehicle ID
-        vehicle_id_entry.insert(0, str(vehicle_id))                                                # Populate with the vehicle ID
-        vehicle_id_entry.config(state=tk.DISABLED)                                                 # Make it read-only
-        vehicle_id_entry.grid(row=0, column=1, padx=10, pady=5)                                    # Positions Entry object around the grid
+        print("Customer Name:", customer_name_entry)
+        actual_km_entry = input("Kilometers Driven:")
+        late_days_entry = input("Late Days:")
 
-        tk.Label(modal_window, text="Customer Name:").grid(row=1, column=0, padx=10, pady=5)       # Label for customer name
-        customer_name_entry = tk.Entry(modal_window)                                               # Input field for customer name
-        customer_name_entry.insert(0, customer_name)                                               # Populate with the customer's name
-        customer_name_entry.config(state=tk.DISABLED)                                              # Make it read-only
-        customer_name_entry.grid(row=1, column=1, padx=10, pady=5)                                 # Positions Entry object around the grid
-
-        tk.Label(modal_window, text="Kilometers Driven:").grid(row=2, column=0, padx=10, pady=5)   # Label for kilometers driven
-        actual_km_entry = tk.Entry(modal_window)                                                   # Input field for kilometers driven
-        actual_km_entry.grid(row=2, column=1, padx=10, pady=5)                                     # Positions Entry object around the grid
-
-        tk.Label(modal_window, text="Late Days:").grid(row=3, column=0, padx=10, pady=5)           # Label for late days
-        late_days_entry = tk.Entry(modal_window)                                                   # Input field for late days
-        late_days_entry.grid(row=3, column=1, padx=10, pady=5)                                     # Positions Entry object around the grid
-
-        def extract_data_and_submit():                                                                                  # Defines in-scope function to then add it to the Button
-            self.submit_return(vehicle_id, actual_km_entry.get(), late_days_entry.get(), customer_name, modal_window)   # Gets all data from Entries and runs submission logic
-    
-        tk.Button(modal_window, text="Submit", command=extract_data_and_submit).grid(row=4, column=0, columnspan=2, pady=10) # Creates and positions Button component with submission logic
-
-    def submit_return(self, vehicle_id, actual_km, late_days, customer_name, modal):
-        """
-        Processes vehicle return by validating inputs and updating system records.
-        
-        Args:
-            vehicle_id (int): The ID of the vehicle being returned
-            actual_km (str): The kilometers driven (to be converted to int)
-            late_days (str): The number of late days (to be converted to int)
-            customer_name (str): The name of the customer
-            modal (tk.Toplevel): The modal window to close after processing
-            
-        Returns:
-            None: Shows success/error messages via popups rather than returning values
-        """
         try:
-            actual_km = int(actual_km)                                                          # Convert kilometers driven to integer
-            late_days = int(late_days)                                                          # Convert late days to integer
+            actual_km = int(self.actual_km)                                                          # Convert kilometers driven to integer
+            late_days = int(self.late_days)                                                          # Convert late days to integer
         except ValueError:
-            self.show_error("Please enter valid numbers for kilometers and late days.")         # Display error for invalid input
+            print("Please enter valid numbers for kilometers and late days.")         # Display error for invalid input
             return
 
-        total_cost = self.system.query_return(vehicle_id, actual_km, late_days, customer_name)  # Calculate total cost
+        total_cost = self.system.query_return(vehicle_id_entry, customer_name_entry, actual_km, late_days)  # Calculate total cost
 
         if not total_cost:
-            self.show_error("Vehicle not found or already returned.")                           # Show error if vehicle return fails
+            print("Vehicle not found or already returned.")                           # Show error if vehicle return fails
             return
         
-        self.show_info(f"Vehicle returned! Total cost: €{total_cost}")                          # Show confirmation message
-        modal.destroy()                                                                         # Close return dialog
+        print(f"Vehicle returned! Total cost: €{total_cost}")                          # Show confirmation message
         self.refresh_listbox()                                                                  # Uses local callback to reload all the new info
+        

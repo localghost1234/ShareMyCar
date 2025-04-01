@@ -20,8 +20,6 @@ class LogsInterface(BaseInterface):
         """
         super().__init__(system, *LOGS.TITLES)            # Initializes 'BaseInterface' with the pre-defined TITLES strings
 
-        self.create_scrollable_listbox(LOGS.HEADERS)            # Create a scrollable listbox for log entries
-
         self.load_content(                                      # Load transaction logs into the Listbox components
             headers=LOGS.HEADERS,
             get_content=self.system.get_all_logs,               # Function to fetch log data from database

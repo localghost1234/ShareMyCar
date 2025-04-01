@@ -28,14 +28,14 @@ class InventoryInterface(BaseInterface):
 
         self.refresh_listbox()                                                                      # Loads content using locally created callback
 
-        action_number = -1
+        is_valid = lambda num: num < 1 or num > 2
+        message = """Choose an action (1-2):
+                        1) Add Vehicle
+                        2) Back to main menu
+                        
+                        """
         
-        while action_number < 1 and action_number > 2:
-            action_number = input(
-                "Choose an action (1-2):\n"
-                    "1) Add Vehicle\n"
-                    "2) Exit\n\n"
-                )  # Sets a button with necessary command and positions it
+        action_number = input_loop(is_valid, message)
 
         if action_number == 1:
             add_vehicle()
@@ -54,21 +54,28 @@ class InventoryInterface(BaseInterface):
         
         Includes validation and submission functionality.
         """
-        brand_entry = input("Brand:")                                                           # Adds a text string and positions it
-        model_entry = input("Model:")                                                           # Adds a text string and positions it
-        mileage_entry = input("Mileage:")                                                       # Adds a text string and positions it
-        daily_price_entry = input("Daily Price:")                                               # Adds a text string and positions it
-        maintenance_cost_entry = input("Maintenance Cost:")                                     # Adds a text string and positions it
+        brand = input("Brand: ")                                                           # Adds a text string and positions it
+        model = input("Model: ")                                                           # Adds a text string and positions it
+        mileage = input("Mileage: ")                                                       # Adds a text string and positions it
+        daily_price = input("Daily Price: ")                                               # Adds a text string and positions it
+        maintenance_cost = input("Maintenance Cost: ")                                     # Adds a text string and positions it
 
-        self.submit_vehicle(                                                                    # Uses local callback function
-            brand_entry,                                                                        # Delivers content in Entry component
-            model_entry,                                                                        # Delivers content in Entry component
-            mileage_entry,                                                                      # Delivers content in Entry component
-            daily_price_entry,                                                                  # Delivers content in Entry component
-            maintenance_cost_entry,                                                             # Delivers content in Entry component
-        )
+        try:                                                                                    # Creates scope to handle any errors
+            brand = str(brand)
+            model = str(model)
+            mileage = int(mileage)                                                              # Turns 'mileage' param to an integer if possible, or raises an error
+            daily_price = float(daily_price)                                                    # Turns 'daily_price' param to a float if possible, or raises an error
+            maintenance_cost = float(maintenance_cost)                                          # Turns 'maintenance_cost' param to a float if possible, or raises an error
+        except ValueError:                                                                      # If any of the values is something that it should not, the code skips to here
+            print("Please enter valid values.")                                       # An error modal is displayed
+            return                                                                              # Stops further code execution
+
+        self.system.add_vehicle(brand, model, mileage, daily_price, maintenance_cost)           # Calls system's module to add a vehicle to the database with all the information
+        print("Vehicle added successfully!")                                           # Displays success message
+
+        self.refresh_listbox()                                                                  # Uses local callback to reload all the new info
         
-    def submit_vehicle(self, brand, model, mileage, daily_price, maintenance_cost):
+    def submit_vehicle(self):
         """
         Submits the new vehicle data to the system and updates the interface.
 
@@ -83,19 +90,4 @@ class InventoryInterface(BaseInterface):
         Performs validation on all inputs before submitting to the system.
         Shows appropriate error messages if validation fails.
         """
-        if not brand or not model or not mileage or not daily_price or not maintenance_cost:    # Checks whether any of the Entry components is empty
-            self.show_error("All fields are required.")                                         # Display modal with error message
-            return                                                                              # Stops further code execution
-
-        try:                                                                                    # Creates scope to handle any errors
-            mileage = int(mileage)                                                              # Turns 'mileage' param to an integer if possible, or raises an error
-            daily_price = float(daily_price)                                                    # Turns 'daily_price' param to a float if possible, or raises an error
-            maintenance_cost = float(maintenance_cost)                                          # Turns 'maintenance_cost' param to a float if possible, or raises an error
-        except ValueError:                                                                      # If any of the values is something that it should not, the code skips to here
-            self.show_error("Please enter valid values.")                                       # An error modal is displayed
-            return                                                                              # Stops further code execution
-
-        self.system.add_vehicle(brand, model, mileage, daily_price, maintenance_cost)           # Calls system's module to add a vehicle to the database with all the information
-        self.show_info("Vehicle added successfully!")                                           # Displays success message
-
-        self.refresh_listbox()                                                                  # Uses local callback to reload all the new info
+    

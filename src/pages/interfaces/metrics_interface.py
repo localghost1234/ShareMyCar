@@ -44,7 +44,7 @@ class MetricsInterface(BaseInterface):
 
         action_number = -1 
         
-        while action_number < 1 and action_number > 3:
+        while action_number < 1 or action_number > 3:
             action_number = input(
                 "Please choose a valid operation:\n"
                 "1) Make Query\n"

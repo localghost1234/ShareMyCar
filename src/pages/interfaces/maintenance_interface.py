@@ -42,9 +42,6 @@ class MaintenanceInterface(BaseInterface):
         Args:
             vehicle_id (int): The ID of the vehicle to update
         """
-        modal_window = tk.Toplevel(self.frame)                                                                                                     # Create a new modal window
-        modal_window.title("Maintenance Checkup")                                                                                                  # Set window title
-        modal_window.geometry("500x100")                                                                                                          # Define window size
 
         tk.Label(modal_window, text="Remove from maintenance list and update maintenance mileage?", font=("Arial", 11)).pack(pady=10)      # Label for vehicle ID
         
