@@ -1,5 +1,4 @@
 from src.pages.interfaces.base_interface import BaseInterface   # Import the BaseInterface class, a parent class providing common functionality for other interfaces
-#from fpdf import pdf
 from reportlab.lib.pagesizes import A4                          # Import the A4 constant from reportlab, defining the standard A4 page size for PDF generation
 from reportlab.pdfgen import canvas                             # Import the canvas class from reportlab for creating and drawing on PDF documents
 from datetime import datetime                                   # Import the datetime class for working with dates and times
@@ -40,7 +39,6 @@ class MetricsInterface(BaseInterface):
         if not metrics:                                                                                          # If no metrics are available, display an empty message
             print(METRICS.EMPTY_MESSAGE)                                                                # Displays empty text and positions it in the Frame
             on_switch_interface(0)
-            
             return                                                                                               # Further code execution is stopped
 
         for idx, h in enumerate(METRICS.HEADERS):                                                                # Prepares to iterate over a list with the info subtitles, giving out its index and inner value
