@@ -39,7 +39,7 @@ class InventoryInterface(BaseInterface):
         action_number = input_loop(is_valid, message)
 
         if action_number == 1:
-            add_vehicle()
+            self.add_vehicle()
 
         on_switch_interface(0)
 
