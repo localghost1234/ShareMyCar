@@ -24,10 +24,9 @@ class System:
         self.database.execute_query(
             operation=SQL.OPERATION.INSERT,                                                                             # Indicates an SQL INSERT operation
             table=SQL.TABLE.VEHICLES,                                                                                   # Target table
-            columns=["brand", "model", "current_mileage", "daily_price", "maintenance_cost", "maintenance_mileage"],    # Columns to insert
-            values=[brand, model, mileage, daily_price, maintenance_cost, mileage + 10000],                             # Values to insert
+            columns=["brand", "model", "current_mileage", "daily_price", "maintenance_cost", "maintenance_mileage", "available"],    # Columns to insert
+            values=[brand, model, mileage, daily_price, maintenance_cost, mileage + 10000, True],                             # Values to insert
         )
-        self.database.commit()                                                                                          # This command tells the database to 'write' our new information into the DB
 
     def get_all_vehicles(self):
         """Returns a list of all the vehicles from the database.
@@ -88,7 +87,7 @@ class System:
         return self.database.execute_query(
             operation=SQL.OPERATION.SELECT,                     # Indicates an SQL SELECT operation
             table=SQL.TABLE.VEHICLES,                           # Target table
-            where="available = 0",                              # Adds a condition in which the vehicle is unavailable
+            where="available = False",                              # Adds a condition in which the vehicle is unavailable
             fetch=SQL.FETCH.ALL,                                # Fetch all records
         )
     
@@ -182,10 +181,9 @@ class System:
             operation=SQL.OPERATION.UPDATE,                 # Indicates an SQL UPDATE operation
             table=SQL.TABLE.VEHICLES,                       # Target table
             columns=["available"],                          # Column to update
-            values=[1 if available else 0],                 # Set availability status
+            values=[available],                 # Set availability status
             where=f"id = {vehicle_id}",                     # Matches the vehicle with the same ID
         )
-        self.database.commit()                              # This command tells the database to 'write' our new information into the DB
 
     def query_update_maintenance_mileage(self, vehicle_id):
         """Updates the maintenance mileage for a vehicle.
@@ -208,8 +206,6 @@ class System:
             values=[current_mileage + 10000],                       # New value of the column
             where=f"id = {vehicle_id}",                             # Checks the vehicle IDs match
         )
-
-        self.database.commit()                                      # Update database
 
     def query_booking(self, vehicle_id, rental_days, estimated_km, customer_name):
         """Books a vehicle, estimates cost, and updates the database.
@@ -258,11 +254,10 @@ class System:
             operation=SQL.OPERATION.UPDATE,             # Indicates an SQL UPDATE operation
             table=SQL.TABLE.VEHICLES,                   # Target table
             columns=["available"],                      # The column we wish to change
-            values=[0],                                 # New value of the column
+            values=[False],                                 # New value of the column
             where=f"id = {vehicle_id}",                 # Matches the vehicle with the same ID
         )
 
-        self.database.commit()                          # This command tells the database to 'write' our new information into the DB
         return total_estimated_cost                     # Returns total value to be paid by the customer when returning the vehicle
 
     def query_return(self, vehicle_id, customer_name, actual_km, late_days):
@@ -321,7 +316,7 @@ class System:
             operation=SQL.OPERATION.UPDATE,                     # Indicates an SQL UPDATE operation
             table=SQL.TABLE.VEHICLES,                           # Target table
             columns=["current_mileage", "available"],           # Variables which will receive the update
-            values=[new_mileage, 1],                            # New values for specified 'columns'
+            values=[new_mileage, True],                            # New values for specified 'columns'
             where=f"id = {vehicle_id}",                         # Looks for matching ID
         )
 
@@ -332,7 +327,6 @@ class System:
             values=[vehicle_id, rental_days, total_revenue, additional_costs, customer_name, "return"],                     # Introduces values for the new row
         )
 
-        self.database.commit()                                          # This command tells the database to 'write' our new information into the DB
         return total_revenue                                            # Returns the total earnings made on this vehicle's booking to be later displayed
 
     def close(self):
