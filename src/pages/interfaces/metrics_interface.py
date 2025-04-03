@@ -38,6 +38,7 @@ class MetricsInterface(BaseInterface):
 
         if not metrics:                                                                                          # If no metrics are available, display an empty message
             print(METRICS.EMPTY_MESSAGE)                                                                # Displays empty text and positions it in the Frame
+            on_switch_interface(0)
             return                                                                                               # Further code execution is stopped
 
         for idx, h in enumerate(METRICS.HEADERS):                                                                # Prepares to iterate over a list with the info subtitles, giving out its index and inner value
@@ -48,6 +49,7 @@ class MetricsInterface(BaseInterface):
                 1) Make Query
                 2) Download Full Report
                 3) Return to main menu
+
                 """
                 
         action_number = input_loop(is_valid, message)
