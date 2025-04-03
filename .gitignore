@@ -9,6 +9,9 @@ build
 # Ignore any reports created during testing
 reports
 
+# Ignore venv
+venv
+
 # User-specific files
 *.rsuser
 *.suo
