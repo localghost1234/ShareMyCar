@@ -1,4 +1,4 @@
-from src.misc.utilities import input_loop
+from src.misc.utilities import input_loop, clear_console
 
 class HomeInterface():
     """
@@ -21,6 +21,7 @@ class HomeInterface():
             """
         
         action_number = input_loop(is_valid, message)
+        clear_console()
 
         on_switch_interface(action_number)
 

@@ -4,10 +4,10 @@ from src.misc.constants import DB_NAME
 
 class System:
     def __init__(self):
-        self.db = TinyDB(DB_NAME)
-        self.vehicles = self.db.table('vehicles')
-        self.bookings = self.db.table('bookings')
-        self.logs = self.db.table('logs')
+        self.database = TinyDB(DB_NAME)
+        self.vehicles = self.database.table('vehicles')
+        self.bookings = self.database.table('bookings')
+        self.logs = self.database.table('logs')
     
     def add_vehicle(self, brand, model, mileage, daily_price, maintenance_cost):
         self.vehicles.insert({
@@ -38,7 +38,7 @@ class System:
         return self.vehicles.search(Vehicle.available == False)
     
     def get_table_column(self, table_name, column_name):
-        table = self.db.table(table_name)
+        table = self.database.table(table_name)
         return [record[column_name] for record in table.all() if column_name in record]
     
     def get_customer_name(self, vehicle_id):
@@ -63,27 +63,26 @@ class System:
         return total_revenue, total_operational_costs, total_profit, avg_mileage
     
     def query_update_availability(self, vehicle_id, available):
-        Vehicle = Query()
-        self.vehicles.update({"available": available}, Vehicle.doc_id == vehicle_id)
+        self.vehicles.update({"available": available}, doc_ids=[vehicle_id])
     
     def query_update_maintenance_mileage(self, vehicle_id):
-        Vehicle = Query()
         vehicle = self.vehicles.get(doc_id=vehicle_id)
         if vehicle:
-            self.vehicles.update({"maintenance_mileage": vehicle["current_mileage"] + 10000}, doc_ids=[vehicle_id])
+            new_maintenance_mileage = vehicle["current_mileage"] + 10000
+            self.vehicles.update({"maintenance_mileage": new_maintenance_mileage}, doc_ids=[vehicle_id])
     
-    def query_booking(self, vehicle_id, rental_days, estimated_km, customer_name):
+    def query_booking(self, vehicle_id, rental_duration, estimated_km, customer_name):
         vehicle = self.vehicles.get(doc_id=vehicle_id)
         if not vehicle or not vehicle["available"]:
             return None
         
         mileage_cost = vehicle["maintenance_cost"] * estimated_km
-        duration_cost = vehicle["daily_price"] * rental_days
+        duration_cost = vehicle["daily_price"] * rental_duration
         total_estimated_cost = duration_cost + mileage_cost
         
         self.bookings.insert({
             "vehicle_id": vehicle_id,
-            "rental_days": rental_days,
+            "rental_duration": rental_duration,
             "estimated_km": estimated_km,
             "estimated_cost": total_estimated_cost,
             "customer_name": customer_name
@@ -91,7 +90,7 @@ class System:
         
         self.logs.insert({
             "vehicle_id": vehicle_id,
-            "rental_duration": rental_days,
+            "rental_duration": rental_duration,
             "revenue": total_estimated_cost,
             "additional_costs": 0,
             "customer_name": customer_name,
@@ -121,3 +120,8 @@ class System:
         
         self.query_update_availability(vehicle_id, True)
         return total_revenue
+
+    def __del__(self):
+        """Ensures the database is closed when the object is deleted"""
+        self.database.close()
+        print("Database closed.")

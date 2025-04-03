@@ -1,6 +1,5 @@
 from src.pages.interfaces.base_interface import BaseInterface       # Import the BaseInterface class, a parent class providing common functionality for other interfaces
-from src.misc.strings import LOGS                                   # Import the LOGS namespace, containing strings or configurations for the logs interface
-from src.misc.utilities import input_loop
+from src.misc.interface_strings import LOGS                                   # Import the LOGS namespace, containing strings or configurations for the logs interface
 
 class LogsInterface(BaseInterface):
     """ 

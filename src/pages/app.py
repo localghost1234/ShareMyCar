@@ -1,6 +1,6 @@
 from src.misc.constants import INTERFACES_CLASS
 from src.core.system import System                                          # Import the System class, which manages the core functionality of the application and its relationship with the database
-import signal
+import signal, sys
 
 class App:
     """Main application class for Share My Car.
@@ -24,7 +24,8 @@ class App:
         """
         self.system = System()                                                          # Initialize the core system and database
         self.current_interface = None
-
+        
+        signal.signal(signal.SIGINT, self.on_close)                                    # This adds behaviour to the 'X' button on the window
         signal.signal(signal.SIGTERM, self.on_close)                                    # This adds behaviour to the 'X' button on the window
         self.switch_interface(0)
 
@@ -43,12 +44,12 @@ class App:
         self.current_interface = INTERFACES_CLASS[interface_number](self.switch_interface, self.system)             # We call the class we wish to see, and pass on information about the app
 
 
-    def on_close(self):
+    def on_close(self, x, y):
         """Handle application shutdown.
         
         Closes the system and destroys the Tkinter root window.
         Executed when the user clicks the window's close button.
         """
+        del self.system                # Direct command with database to shut it down carefully
         print('Shutting down.')             # Shows a closing message on the delevoper's console
-        self.system.close()                 # Direct command with database to shut it down carefully
-        sys.exit()                          # Erases the main Frame/modal with the whole app
+        sys.exit()                          # Closes the window

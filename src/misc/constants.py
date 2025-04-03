@@ -6,6 +6,16 @@ from src.pages.interfaces.maintenance_interface import MaintenanceInterface     
 from src.pages.interfaces.logs_interface import LogsInterface                       # Import the interface for viewing transaction logs
 from src.pages.interfaces.metrics_interface import MetricsInterface                 # Import the interface for viewing metrics and analytics
 
+INTERFACES_CLASS = (                        # Define a list of interfaces for the application, mapping names to their corresponding classes
+    HomeInterface,
+    InventoryInterface,                     # Interface for managing vehicle inventory
+    BookingInterface,                       # Interface for handling vehicle bookings
+    ReturnInterface,                        # Interface for handling vehicle returns
+    MaintenanceInterface,                   # Interface for managing vehicle maintenance
+    LogsInterface,                          # Interface for viewing transaction logs
+    MetricsInterface,                       # Interface for viewing metrics and querying
+)
+
 DB_NAME = "carsharing_database.json"               # Define the name of the SQLite database file
 
 """
@@ -23,7 +33,7 @@ DATABASE_TABLE_STATEMENTS = (           # Define SQL statements for creating dat
         CREATE TABLE IF NOT EXISTS bookings (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             vehicle_id INTEGER NOT NULL,
-            rental_days INTEGER NOT NULL,
+            rental_duration INTEGER NOT NULL,
             estimated_km INTEGER NOT NULL,
             estimated_cost REAL NOT NULL,
             customer_name TEXT NOT NULL,
@@ -41,13 +51,3 @@ DATABASE_TABLE_STATEMENTS = (           # Define SQL statements for creating dat
         )
 )
 """
-
-INTERFACES_CLASS = (                        # Define a list of interfaces for the application, mapping names to their corresponding classes
-    HomeInterface,
-    InventoryInterface,                     # Interface for managing vehicle inventory
-    BookingInterface,                       # Interface for handling vehicle bookings
-    ReturnInterface,                        # Interface for handling vehicle returns
-    MaintenanceInterface,                   # Interface for managing vehicle maintenance
-    LogsInterface,                          # Interface for viewing transaction logs
-    MetricsInterface,                       # Interface for viewing metrics and querying
-)

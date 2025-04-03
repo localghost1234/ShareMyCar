@@ -1,9 +1,9 @@
 from src.pages.interfaces.base_interface import BaseInterface   # Import the BaseInterface class, a parent class providing common functionality for other interfaces
+from src.misc.interface_strings import METRICS                            # Import the METRICS constant, containing strings or configurations for the metrics interface
+from src.misc.utilities import input_loop                       # 
 from reportlab.lib.pagesizes import A4                          # Import the A4 constant from reportlab, defining the standard A4 page size for PDF generation
 from reportlab.pdfgen import canvas                             # Import the canvas class from reportlab for creating and drawing on PDF documents
 from datetime import datetime                                   # Import the datetime class for working with dates and times
-from src.misc.strings import METRICS                            # Import the METRICS constant, containing strings or configurations for the metrics interface
-from src.misc.utilities import input_loop
 import os
 
 class MetricsInterface(BaseInterface):
@@ -184,6 +184,6 @@ class MetricsInterface(BaseInterface):
         draw_table("Vehicles:", METRICS.PDF_HEADERS.VEHICLES, all_vehicles)                                            # Uses table information to generate, format, and print the PDF's contents
         draw_table("Bookings:", METRICS.PDF_HEADERS.BOOKINGS, all_bookings)                                            # Uses table information to generate, format, and print the PDF's contents
         draw_table("Transaction Logs:", METRICS.PDF_HEADERS.LOGS, all_logs)                                            # Uses table information to generate, format, and print the PDF's contents
-
+        
         pdf.save()                                                                                        # Generate the final PDF file in the previously accorded path
-        print(f"Report saved as {file_path}\n\n")                                                             # Show a success message on the developer's console with the new file's path
+        print(f"Report saved as {file_path}\n")                                                             # Show a success message on the developer's console with the new file's path

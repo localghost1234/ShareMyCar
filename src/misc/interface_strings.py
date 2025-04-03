@@ -48,9 +48,9 @@ MAINTENANCE=SimpleNamespace(                                                    
 
 LOGS=SimpleNamespace(                                                                                                                                   # Variable with strings to be used in LogsInterface
     TITLES = ("Logs Management", "Transaction Logs"),                                                                                                   # Title and subtitle of interface
-    HEADERS = ("Transaction ID", "Vehicle ID", "Customer Name", "Rental Duration (days)", "Revenue (€)", "Additional Costs (€)", "Transaction Type"),   # Column names shown on top of displayed data
+    HEADERS = ("Transaction ID", "Vehicle ID", "Customer Name", "Rental Duration (Days)", "Revenue (€)", "Additional Costs (€)", "Transaction Type"),   # Column names shown on top of displayed data
     EMPTY_MESSAGE = "No transaction logs found.",                                                                                                       # Message displayed when no data is found
-    GENERATE_MODEL = lambda content: (                                                                                                                  # Function used to generate strings of rows with the provided data
+    GENERATE_MODEL = lambda id, content: (                                                                                                                  # Function used to generate strings of rows with the provided data
         f"{id:<15} | "                                                                                                                          # Formatted strings to take in content and add at least 15 blank spaces, regardless of string size
         f"{content.get('vehicle_id'):<15} | "
         f"{content.get('customer_name'):<15} | "
@@ -67,7 +67,7 @@ METRICS=SimpleNamespace(                                                        
     EMPTY_MESSAGE = "No financial data available.",                                                                             # Message displayed when no data is found
     PDF_HEADERS=SimpleNamespace(                                                                                                # Column names used when displaying data in the PDFs
         VEHICLES = ("ID", "Brand", "Model", "Mileage", "Daily Price", "Maintenance Cost", "Available", "Maintenance Mileage"),  # Column names for the 'vehicles' table
-        BOOKINGS = ("ID", "Vehicle ID", "Rental Days", "Estimated KM", "Estimated Cost", "Customer Name"),                      # Column names for the 'bookings' table
-        LOGS = ("ID", "Vehicle ID", "Rental Duration", "Revenue", "Additional Costs", "Customer Name", "Transaction Type"),     # Column names for the 'logs' table
+        BOOKINGS = ("ID", "Vehicle ID", "Rental Duration (Days)", "Estimated KM", "Estimated Cost", "Customer Name"),                      # Column names for the 'bookings' table
+        LOGS = ("ID", "Vehicle ID", "Rental Duration (Days)", "Revenue", "Additional Costs", "Customer Name", "Transaction Type"),     # Column names for the 'logs' table
     )
 )

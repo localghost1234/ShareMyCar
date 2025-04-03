@@ -43,4 +43,4 @@ class BaseInterface:
         print(generate_header_row(headers))
         
         for idx, c in enumerate(content):                                   # Iterates over the extracted DB content (given that the previous condition was false)
-            print(generate_model(idx, c))                        # Converts data into the necessary format string and inserts it into the listbox
+            print(generate_model(idx + 1, c))                        # Converts data into the necessary format string and inserts it into the listbox
