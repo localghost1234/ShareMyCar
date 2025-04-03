@@ -44,7 +44,7 @@ class ReturnInterface(BaseInterface):
         action_number = input_loop(is_valid, message)
 
         if action_number == 1:
-            return_vehicle()
+            self.return_vehicle()
 
         on_switch_interface(0)
 
@@ -59,17 +59,13 @@ class ReturnInterface(BaseInterface):
         Args:
             vehicle_id (int): The ID of the vehicle being returned.
         """
-        vehicle_id_entry = input("Vehicle ID: ")
-        customer_name = self.system.get_customer_name(vehicle_id)                           # Retrieve customer name associated with the vehicle
-        print("Customer Name:", customer_name)
-
-        actual_km_entry = input("Kilometers Driven:")
-        late_days_entry = input("Late Days:")
-
         try:
-            vehicle_id = int(self.actual_km)                                                          # Convert kilometers driven to integer
-            actual_km = int(self.actual_km)                                                          # Convert kilometers driven to integer
-            late_days = int(self.late_days)                                                          # Convert late days to integer
+            vehicle_id = int(input("Vehicle ID: "))
+            customer_name = self.system.get_customer_name(vehicle_id)                           # Retrieve customer name associated with the vehicle
+            print("Customer Name:", customer_name)
+
+            actual_km = int(input("Kilometers Driven:"))                                        # Convert kilometers driven to integer
+            late_days = int(input("Late Days:"))                                                # Convert late days to integer
         except ValueError:
             print("Please enter valid numbers for kilometers and late days.")         # Display error for invalid input
             return

@@ -46,7 +46,7 @@ class MaintenanceInterface(BaseInterface):
         action_number = input_loop(is_valid, message)
 
         if action_number == 1:
-            return_vehicle()
+            self.check_maintenance()
             
         on_switch_interface(0)
 
