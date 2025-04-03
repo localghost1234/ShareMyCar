@@ -46,7 +46,7 @@ class MaintenanceInterface(BaseInterface):
         action_number = input_loop(is_valid, message)
 
         if action_number == 1:
-            return_vehicle()
+            self.check_maintenance()
             
         on_switch_interface(0)
 
@@ -55,7 +55,7 @@ class MaintenanceInterface(BaseInterface):
         Displays confirmation dialog for completing vehicle maintenance.
         """
 
-        vehicle_id = input("Vehicle ID:")                       # Label for vehicle ID
+        vehicle_id = input("Vehicle ID: ")                       # Label for vehicle ID
         
         self.system.query_update_maintenance_mileage(vehicle_id)
         self.refresh_listbox()
