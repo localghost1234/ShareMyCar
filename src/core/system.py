@@ -1,6 +1,5 @@
 from src.core.database import Database      # Import the Database class
 from src.misc.constants import SQL          # Import SQL strings
-from src.pages.interfaces.home_interface import HomeInterface               # Import the HomeInterface class, representing the home page (welcoming interface)
 
 class System:
     """Handles direct communication with database and defines its several use cases.
