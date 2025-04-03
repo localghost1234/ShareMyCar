@@ -55,7 +55,7 @@ class MaintenanceInterface(BaseInterface):
         Displays confirmation dialog for completing vehicle maintenance.
         """
 
-        vehicle_id = input("Vehicle ID:")                       # Label for vehicle ID
+        vehicle_id = input("Vehicle ID: ")                       # Label for vehicle ID
         
         self.system.query_update_maintenance_mileage(vehicle_id)
         self.refresh_listbox()

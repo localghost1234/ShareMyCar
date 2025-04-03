@@ -13,3 +13,7 @@ def input_loop(on_validate_constraints, input_message):
         except ValueError:
             action_number = -1
     return action_number
+
+
+def clear_console():
+    os.system("cls" if os.name == "nt" else "clear")  # "cls" for Windows, "clear" for Linux/macOS

@@ -1,5 +1,4 @@
 from tinydb import TinyDB, Query
-
 from src.misc.constants import DB_NAME
 
 class System:

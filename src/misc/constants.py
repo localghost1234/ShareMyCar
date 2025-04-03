@@ -18,6 +18,8 @@ INTERFACES_CLASS = (                        # Define a list of interfaces for th
 
 DB_NAME = "sharemycar_database.json"               # Define the name of the SQLite database file
 
+
+# This large code was part of a previous iteration using 'sqlite3', but it's now used as a reference to check DB values
 """
 DATABASE_TABLE_STATEMENTS = (           # Define SQL statements for creating database tables (and their columns) if they don't already exist
         CREATE TABLE IF NOT EXISTS vehicles (
