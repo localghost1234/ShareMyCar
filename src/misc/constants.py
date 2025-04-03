@@ -16,7 +16,7 @@ INTERFACES_CLASS = (                        # Define a list of interfaces for th
     MetricsInterface,                       # Interface for viewing metrics and querying
 )
 
-DB_NAME = "carsharing_database.json"               # Define the name of the SQLite database file
+DB_NAME = "sharemycar_database.json"               # Define the name of the SQLite database file
 
 """
 DATABASE_TABLE_STATEMENTS = (           # Define SQL statements for creating database tables (and their columns) if they don't already exist
