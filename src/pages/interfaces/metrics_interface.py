@@ -39,6 +39,7 @@ class MetricsInterface(BaseInterface):
         for idx, h in enumerate(METRICS.HEADERS):                                                                # Prepares to iterate over a list with the info subtitles, giving out its index and inner value
             print(f"{h}: ", round(metrics[idx], 2))                                                                     # Displays text with the header and positions it in the Frame
 
+        print()
         is_valid = lambda num: num < 1 or num > 3
         message = """Please choose a valid operation:
                 1) Make Query
