@@ -39,6 +39,7 @@ class BaseInterface:
         
         if not content:                                     # Checks if there is available content in DB
             print(empty_message)                            # Displays 'empty_message' if no data
+            print()
             return False                                     # Returns a falsy value and stops further code execution
 
         print(generate_header_row(headers))

@@ -1,7 +1,6 @@
 from src.pages.interfaces.base_interface import BaseInterface   # Import the BaseInterface class, a parent class providing common functionality for other interfaces
 from src.misc.interface_strings import RETURN                             # Import the RETURN namespace, containing strings or configurations for the return interface
 from src.misc.utilities import input_loop
-import time
 
 class ReturnInterface(BaseInterface):
     """
@@ -24,16 +23,12 @@ class ReturnInterface(BaseInterface):
         """
         super().__init__(system, *RETURN.TITLES)                                  # Initializes 'BaseInterface' with the pre-defined TITLES strings
 
-        self.refresh_list = lambda: (                                                # Creates an executable function to be used around interface
-            self.load_content(                                                          # Executes necessary modules to extract database content and display it accordingly
+        has_content = self.load_content(                                                          # Executes necessary modules to extract database content and display it accordingly
                 headers=RETURN.HEADERS,
                 get_content=self.system.get_unavailable_vehicles,                       # Fetch unavailable vehicles
                 generate_model=RETURN.GENERATE_MODEL,                                   # Define how vehicle data is displayed
                 empty_message=RETURN.EMPTY_MESSAGE                                      # Message if no vehicles are found
             )
-        )
-
-        has_content = self.refresh_list()                                                          # Loads content using locally created callback
 
         if has_content:
             is_valid = lambda num: num < 1 or num > 2
@@ -48,7 +43,6 @@ class ReturnInterface(BaseInterface):
             if action_number == 1:
                 self.return_vehicle()
 
-        print()
         on_return_home()
 
     def return_vehicle(self):
@@ -71,13 +65,11 @@ class ReturnInterface(BaseInterface):
             late_days = int(input("Late Days: "))                                                # Convert late days to integer
         except ValueError:
             print("Invalid values, please try again.\n")
-            time.sleep(2)
             return
 
         total_cost = self.system.query_return(vehicle_id, customer_name, actual_km, late_days)  # Calculate total cost
 
-        if not total_cost:
+        if total_cost:
+            print(f"Vehicle returned! Total cost: €{total_cost}")                          # Show confirmation message    
+        else:
             print("Vehicle not found or already returned.")                           # Show error if vehicle return fails
-            return
-        
-        print(f"Vehicle returned! Total cost: €{total_cost}")                          # Show confirmation message        

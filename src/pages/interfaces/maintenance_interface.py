@@ -25,16 +25,12 @@ class MaintenanceInterface(BaseInterface):
         """
         super().__init__(system, *MAINTENANCE.TITLES)                             # Initializes 'BaseInterface' with the pre-defined TITLES strings
 
-        self.refresh_list = lambda: (                                                # Creates an executable function to be used around interface
-            self.load_content(                                                          # Loads the list with vehicles that need maintenance
+        has_content = self.load_content(                                                          # Loads the list with vehicles that need maintenance
                 headers=MAINTENANCE.HEADERS,
                 get_content=self.system.get_vehicles_requiring_maintenance,             # Function to fetch vehicles requiring maintenance
                 generate_model=MAINTENANCE.GENERATE_MODEL,                              # Formatting function for vehicle data
                 empty_message=MAINTENANCE.EMPTY_MESSAGE,                                # Message to display if no vehicles require maintenance
             )
-        )
-
-        has_content = self.refresh_list()                                                          # Loads content using locally created callback
 
         if has_content:
             is_valid = lambda num: num < 1 or num > 2
@@ -59,4 +55,3 @@ class MaintenanceInterface(BaseInterface):
         vehicle_id = input("Vehicle ID: ")                       # Label for vehicle ID
         
         self.system.query_update_maintenance_mileage(vehicle_id)
-        self.refresh_list()

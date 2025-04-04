@@ -31,29 +31,30 @@ class MetricsInterface(BaseInterface):
 
         metrics = ()                                                                                             # Initializes tuple with the metrics info
         
-        try:                                                                                                     # Creates a scope to handle errors
-            metrics = self.system.get_financial_metrics()                                                        # Retrieve financial metrics
-        except Exception as err:                                                                                 # If any error is found, this block is executed
-            print("Error obtaining financial metrics\n", err)                                                    # Prints error message
+        metrics = self.system.get_financial_metrics()                                                        # Retrieve financial metrics
 
-        if metrics:                                                                                          # If no metrics are available, display an empty message
-            for idx, h in enumerate(METRICS.HEADERS):                                                                # Prepares to iterate over a list with the info subtitles, giving out its index and inner value
-                print(h, round(metrics[idx], 2))                                                                     # Displays text with the header and positions it in the Frame
+        if not metrics:                                                                                          # If no metrics are available, display an empty message
+            print(METRICS.EMPTY_MESSAGE, '\n')
+            on_return_home()
+            return
+        
+        for idx, h in enumerate(METRICS.HEADERS):                                                                # Prepares to iterate over a list with the info subtitles, giving out its index and inner value
+            print(f"{h}: ", round(metrics[idx], 2))                                                                     # Displays text with the header and positions it in the Frame
 
-            is_valid = lambda num: num < 1 or num > 3
-            message = """Please choose a valid operation:
-                    1) Make Query
-                    2) Download Full Report
-                    3) Return to main menu
+        is_valid = lambda num: num < 1 or num > 3
+        message = """Please choose a valid operation:
+                1) Make Query
+                2) Download Full Report
+                3) Return to main menu
 
-                    """
-                    
-            action_number = input_loop(is_valid, message)
+                """
+                
+        action_number = input_loop(is_valid, message)
 
-            if action_number == 1:
-                self.submit_query()
-            elif action_number == 2:
-                self.generate_full_report()
+        if action_number == 1:
+            self.submit_query()
+        elif action_number == 2:
+            self.generate_full_report()
         
         on_return_home()
 

@@ -19,16 +19,12 @@ class InventoryInterface(BaseInterface):
         """
         super().__init__(system, *INVENTORY.TITLES)                                                 # Initializes 'BaseInterface' with the pre-defined TITLES strings
 
-        self.refresh_list = lambda: (                                                            # Creates an executable function to be used around interface
-            self.load_content(                                                                      # Executes necessary modules to extract database content and display it accordingly
-                headers=INVENTORY.HEADERS,
-                get_content=self.system.get_all_vehicles,                                           # Enters function to extract database content
-                generate_model=INVENTORY.GENERATE_MODEL,                                            # Enters string generator for each listbox row
-                empty_message=INVENTORY.EMPTY_MESSAGE,                                              # Message to be displayed in case no content is found
-            )
+        self.load_content(                                                                      # Executes necessary modules to extract database content and display it accordingly
+            headers=INVENTORY.HEADERS,
+            get_content=self.system.get_all_vehicles,                                           # Enters function to extract database content
+            generate_model=INVENTORY.GENERATE_MODEL,                                            # Enters string generator for each listbox row
+            empty_message=INVENTORY.EMPTY_MESSAGE,                                              # Message to be displayed in case no content is found
         )
-
-        self.refresh_list()                                                                      # Loads content using locally created callback
 
         is_valid = lambda num: num < 1 or num > 2
         message = """Choose an action:
@@ -74,5 +70,5 @@ class InventoryInterface(BaseInterface):
             return                                                                              # Stops further code execution
 
         self.system.add_vehicle(brand, model, current_mileage, daily_price, maintenance_cost)           # Calls system's module to add a vehicle to the database with all the information
-        print("Vehicle added successfully!")                                           # Displays success message
+        print("Vehicle added successfully!\n")                                           # Displays success message
     

@@ -1,6 +1,5 @@
 from src.pages.interfaces.base_interface import BaseInterface       # Import the BaseInterface class, which serves as a parent class for other interfaces
 from src.misc.interface_strings import BOOKING                                # Import the BOOKING namespace, which contains strings or configurations related to the booking interface
-import time
 
 class BookingInterface(BaseInterface):
     """
@@ -41,17 +40,13 @@ class BookingInterface(BaseInterface):
             estimated_km = int(self.estimated_km_entry)                                   # Turns 'estimated_km_entry' input into an integer, or raises an error
         except ValueError:
             print("Invalid values, please try again.\n")
-            time.sleep(2)
             return
-        
-        cost = 0.0                                                                                  # Initialize 'cost' variable outside the scope
 
         try:                                                                                        # Creates error handling scope
             cost = self.system.query_booking(vehicle_id, rental_duration, estimated_km, customer_name)  # Calls the system variable's function to add a booking to the database; returns the cost of said booking
+            if cost:                                                                                    # Checks if the returned value is truthy (cost should always be above 0) 
+                print(f"Vehicle booked! Estimated cost: €{cost}\n")                              # Displays success modal with calculated cost for the client
+            else:                                                                                       # Alternate condition, in case the former was falsy
+                print("Vehicle not found or unavailable\n")                                    # Displays error modal
         except Exception as err:                                                                    # If error is found, this block is executed
             print("Error in 'query_booking()'\n", err)                                              # Displays message on developer's console
-
-        if cost:                                                                                    # Checks if the returned value is truthy (cost should always be above 0) 
-            print(f"Vehicle booked! Estimated cost: €{cost}\n")                              # Displays success modal with calculated cost for the client
-        else:                                                                                       # Alternate condition, in case the former was falsy
-            print("Vehicle not found or unavailable\n")                                    # Displays error modal

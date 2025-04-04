@@ -1,15 +1,25 @@
-from tinydb import TinyDB, Query
-from src.misc.constants import DB_NAME
+import pickle
+import os
+
+DB_FILE = "database.pkl"
+
+def load_data():
+    if os.path.exists(DB_FILE):
+        with open(DB_FILE, "rb") as f:
+            return pickle.load(f)
+    return {"vehicles": [], "bookings": [], "logs": []}
+
+def save_data(data):
+    with open(DB_FILE, "wb") as f:
+        pickle.dump(data, f)
 
 class System:
     def __init__(self):
-        self.database = TinyDB(DB_NAME)
-        self.vehicles = self.database.table('vehicles')
-        self.bookings = self.database.table('bookings')
-        self.logs = self.database.table('logs')
+        self.data = load_data()
     
     def add_vehicle(self, brand, model, mileage, daily_price, maintenance_cost):
-        self.vehicles.insert({
+        vehicle = {
+            "id": len(self.data["vehicles"]) + 1,
             "brand": brand,
             "model": model,
             "current_mileage": mileage,
@@ -17,43 +27,41 @@ class System:
             "maintenance_cost": maintenance_cost,
             "maintenance_mileage": mileage + 10000,
             "available": True
-        })
+        }
+        self.data["vehicles"].append(vehicle)
+        save_data(self.data)
     
     def get_all_vehicles(self):
-        return self.vehicles.all()
+        return self.data["vehicles"]
     
     def get_all_bookings(self):
-        return self.bookings.all()
+        return self.data["bookings"]
     
     def get_all_logs(self):
-        return self.logs.all()
+        return self.data["logs"]
     
     def get_vehicles_requiring_maintenance(self):
-        Vehicle = Query()
-        return self.vehicles.search(Vehicle.current_mileage >= Vehicle.maintenance_mileage)
+        return [v for v in self.data["vehicles"] if v["current_mileage"] >= v["maintenance_mileage"]]
     
     def get_unavailable_vehicles(self):
-        Vehicle = Query()
-        return self.vehicles.search(Vehicle.available == False)
+        return [v for v in self.data["vehicles"] if not v["available"]]
     
     def get_table_column(self, table_name, column_name):
-        table = self.database.table(table_name)
-        return [record[column_name] for record in table.all() if column_name in record]
+        return [record[column_name] for record in self.data.get(table_name, []) if column_name in record]
     
     def get_customer_name(self, vehicle_id):
-        Booking = Query()
-        return self.bookings.get(Booking.vehicle_id == vehicle_id)
+        result = next((b for b in self.data["bookings"] if b["vehicle_id"] == vehicle_id), None)
+        return result["customer_name"] if result else "Unknown Customer"
     
     def get_financial_metrics(self):
-        logs = self.logs.search(Query().transaction_type == "return")
+        logs = [log for log in self.data["logs"] if log["transaction_type"] == "return"]
         if not logs:
             return ()
         
         total_revenue = sum(log["revenue"] for log in logs)
         total_additional_costs = sum(log["additional_costs"] for log in logs)
-        
-        total_maintenance_cost = sum(v["maintenance_cost"] for v in self.vehicles.all())
-        avg_mileage = sum(v["current_mileage"] for v in self.vehicles.all()) / len(self.vehicles.all()) if self.vehicles.all() else 0
+        total_maintenance_cost = sum(v["maintenance_cost"] for v in self.data["vehicles"])
+        avg_mileage = sum(v["current_mileage"] for v in self.data["vehicles"]) / len(self.data["vehicles"]) if self.data["vehicles"] else 0
         
         total_operational_costs = total_maintenance_cost + total_additional_costs
         total_profit = total_revenue - total_operational_costs
@@ -61,24 +69,29 @@ class System:
         return total_revenue, total_operational_costs, total_profit, avg_mileage
     
     def query_update_availability(self, vehicle_id, available):
-        self.vehicles.update({"available": available}, doc_ids=[vehicle_id])
+        for v in self.data["vehicles"]:
+            if v["id"] == vehicle_id:
+                v["available"] = available
+                save_data(self.data)
+                break
     
     def query_update_maintenance_mileage(self, vehicle_id):
-        vehicle = self.vehicles.get(doc_id=vehicle_id)
-        if vehicle:
-            new_maintenance_mileage = vehicle["current_mileage"] + 10000
-            self.vehicles.update({"maintenance_mileage": new_maintenance_mileage}, doc_ids=[vehicle_id])
+        for v in self.data["vehicles"]:
+            if v["id"] == vehicle_id:
+                v["maintenance_mileage"] = v["current_mileage"] + 10000
+                save_data(self.data)
+                break
     
     def query_booking(self, vehicle_id, rental_duration, estimated_km, customer_name):
-        vehicle = self.vehicles.get(doc_id=vehicle_id)
-        if not vehicle or not vehicle["available"]:
+        vehicle = next((v for v in self.data["vehicles"] if v["id"] == vehicle_id and v["available"]), None)
+        if not vehicle:
             return None
         
         mileage_cost = vehicle["maintenance_cost"] * estimated_km
         duration_cost = vehicle["daily_price"] * rental_duration
         total_estimated_cost = duration_cost + mileage_cost
         
-        self.bookings.insert({
+        self.data["bookings"].append({
             "vehicle_id": vehicle_id,
             "rental_duration": rental_duration,
             "estimated_km": estimated_km,
@@ -86,7 +99,7 @@ class System:
             "customer_name": customer_name
         })
         
-        self.logs.insert({
+        self.data["logs"].append({
             "vehicle_id": vehicle_id,
             "rental_duration": rental_duration,
             "revenue": total_estimated_cost,
@@ -99,7 +112,7 @@ class System:
         return total_estimated_cost
     
     def query_return(self, vehicle_id, customer_name, actual_km, late_days):
-        vehicle = self.vehicles.get(doc_id=vehicle_id)
+        vehicle = next((v for v in self.data["vehicles"] if v["id"] == vehicle_id), None)
         if not vehicle:
             return None
         
@@ -107,7 +120,7 @@ class System:
         late_fee = vehicle["daily_price"] * late_days
         total_revenue = maintenance_cost + late_fee
         
-        self.logs.insert({
+        self.data["logs"].append({
             "vehicle_id": vehicle_id,
             "rental_duration": None,
             "revenue": total_revenue,
@@ -118,8 +131,3 @@ class System:
         
         self.query_update_availability(vehicle_id, True)
         return total_revenue
-
-    def __del__(self):
-        """Ensures the database is closed when the object is deleted"""
-        self.database.close()
-        print("Database closed.")
