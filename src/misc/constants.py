@@ -16,8 +16,7 @@ INTERFACES_CLASS = (                        # Define a list of interfaces for th
     MetricsInterface,                       # Interface for viewing metrics and querying
 )
 
-DB_NAME = "database.pkl"               # Define the name of the SQLite database file
-
+DB_NAME = "database.pkl"               # Define the name of the database file name
 
 # This large code was part of a previous iteration using 'sqlite3', but it's now used as a reference to check DB values
 """

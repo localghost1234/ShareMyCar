@@ -1,4 +1,4 @@
-generate_header_row = lambda headers: "  |  ".join(f"{h:<15}" for h in headers)     # Creates a string of separated values from a list
+generate_header_row = lambda headers: "| ".join(f"{h:<16}" for h in headers)     # Creates a string of separated values from a list
 
 def input_loop(on_validate_constraints, input_message):
     action_number = -1

@@ -5,7 +5,7 @@ INVENTORY=SimpleNamespace(                                                      
     HEADERS = ("ID", "Brand", "Model", "Mileage (kms)", "Daily Price", "Maintenance Cost", "Available"),    # Column names shown on top of displayed data
     EMPTY_MESSAGE = "No vehicles in existence.",                                                            # Message displayed when no data is found
     GENERATE_MODEL = lambda content: (                                                                      # Function used to generate strings of rows with the provided data
-        f"{content.get('id'):<13} | "                                                                              # Formatted strings to take in content and add at least 13 blank spaces, regardless of string size
+        f"{content.get('id'):<15} | "                                                                              # Formatted strings to take in content and add at least 13 blank spaces, regardless of string size
         f"{content.get('brand'):<15} | "
         f"{content.get('model'):<15} | "
         f"{content.get('current_mileage'):<15} | "
@@ -38,7 +38,7 @@ MAINTENANCE=SimpleNamespace(                                                    
     HEADERS = ("ID", "Brand", "Model", "Current Mileage", "Maintenance Cost"),      # Column names shown on top of displayed data
     EMPTY_MESSAGE = "All vehicles are in good condition.",                          # Message displayed when no data is found
     GENERATE_MODEL = lambda content: (                                              # Function used to generate strings of rows with the provided data
-        f"{content.get('id'):<10} | "                                                      # Formatted strings to take in content and add at least 10 blank spaces, regardless of string size
+        f"{content.get('id'):<15} | "                                                      # Formatted strings to take in content and add at least 10 blank spaces, regardless of string size
         f"{content.get('brand'):<15} | "
         f"{content.get('model'):<15} | "
         f"{content.get('current_mileage'):<15} | "
