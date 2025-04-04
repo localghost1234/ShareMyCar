@@ -85,7 +85,6 @@ class System:
     
     def query_booking(self, vehicle_id, rental_duration, estimated_km, customer_name):
         vehicle = next((v for v in self.data["vehicles"] if v["id"] == vehicle_id and v["available"]), None)
-        
         if not vehicle:
             return None
         

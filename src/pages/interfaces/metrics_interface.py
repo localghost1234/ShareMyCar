@@ -66,35 +66,34 @@ class MetricsInterface(BaseInterface):
         """
 
         print("Input Query")                                                                        # Sets a text in the new frame and positions it
-        print("Use '<table_name>:<column_name>' format\n(e.g. vehicles:id)")                        # Sets a text in the new frame and positions it
+        print("Use '<table_name>:<column_name>:<column_value>' format\n(e.g. vehicles:id:1)")                        # Sets a text in the new frame and positions it
         query_entry = input()                                                                       # Creates an Entry component to receive user input
         query_list = query_entry.strip().split(':')                                           # Retrieves user input from Entry, deletes trailing spaces and splits it into a list of strings (separated by ':')
 
-        if len(query_list) != 2:                                                                    # Condition to check if the input follows the format
-            print("Please, enter a correct 'table' and a 'column'")                                 # Displays modal with error message
+        if len(query_list) != 3:                                                                    # Condition to check if the input follows the format
+            print("Please, enter a correct 'table' and a 'column'\n")                                 # Displays modal with error message
             return                                                                                  # Stops further code execution
 
         table_name, column_name = query_list                                                        # Extract table_name and column_name
 
         if table_name not in ["vehicles", "bookings", "logs"]:                                      # Validate the table name
-            print("Please, enter a valid 'table'")                                                  # Shows error modal in case not an actual table 
+            print("Please, enter a valid 'table'\n")                                                  # Shows error modal in case not an actual table 
             return                                                                                  # Stops further code execution
 
         try:                                                                                        # Creates a scope for error handling
             results_list = self.system.get_table_column(table_name, column_name)                    # Extracts database info with specified params
         except Exception:                                                                           # Handle invalid queries
-            print(f"Please, enter a valid 'column' for table {table_name}")               # Displays error modal
+            print(f"Please, enter a valid 'column' for table {table_name}\n")               # Displays error modal
             return                                                                                  # Stops further code execution
 
         if not results_list:                                                                        # Handle no results
-            print("No results found.")     # Displays text when no data is found
+            print("No results found.\n")     # Displays text when no data is found
             return
 
         print(f"{len(results_list)} results found:")  # Displays and positions the number of results found
 
-
         for item in results_list:                                                                   # Iterate over the list with the query results
-            print(item[0])                                                         # Extract the results from their tuples and add them to the listbox
+            print(item)                                                         # Extract the results from their tuples and add them to the listbox
 
         print()
 
@@ -120,9 +119,6 @@ class MetricsInterface(BaseInterface):
         os.makedirs(directory, exist_ok=True)
         filename = f"FullReport_{current_datetime.strftime('%Y-%m-%d_%H%M%S')}.pdf"
         file_path = f"{directory}\\{filename}"                                      # Opens a modal prompt for the user to choose a file path for the report
-
-        if not file_path:                                                               # Exit if the user cancels the file dialog
-            return                                                                      # Stops further code execution
 
         pdf = canvas.Canvas(file_path, pagesize=A4)                                     # Create a PDF file object to manipulate
         _, height = A4                                                                  # Obtain a variable with the PDF format's height
@@ -166,7 +162,7 @@ class MetricsInterface(BaseInterface):
 
             for row in data:                                                                              # Iterate over the list of database content
                 x_pos = x_position                                                                        # TODO: Improve this -- we create a new variable with the same value, but can lead to errors
-                for i, cell in enumerate(row):                                                            # Extract each piece of information from the row's list and their index
+                for i, cell in enumerate(row.values()):                                                            # Extract each piece of information from the row's list and their index
                     pdf.drawString(x_pos, y_position, str(cell))                                          # Writes the information to the PDF, aligned with its corresponding column
                     x_pos += col_widths[i]                                                                # Moves the PDF object's pointer to the next column's horizontal position
                 y_position -= font_size * 1.25                                                            # Move the vertical pointer to the next row's position, in accordance to the row's text size
