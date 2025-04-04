@@ -3,4 +3,4 @@ Hello! To create an executable with 'PyInstaller', follow the next steps:
 1. Run this command (assuming you acquired the necessary dependencies):
 	pyinstaller --onefile --console --clean --icon=static/red_car_icon.ico --name ShareMyCar main.py
 
-2. Do a copy-paste of the file called 'carsharing.db' on the same folder as the new .exe (to use the database info)
+2. Do a copy-paste of the file called 'database.pkl' on the same folder as the new .exe (to use the database info)
