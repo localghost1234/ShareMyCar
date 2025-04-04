@@ -70,6 +70,6 @@ class ReturnInterface(BaseInterface):
         total_cost = self.system.query_return(vehicle_id, customer_name, actual_km, late_days)  # Calculate total cost
 
         if total_cost:
-            print(f"Vehicle returned! Total cost: €{total_cost}")                          # Show confirmation message    
+            print(f"Vehicle returned! Total cost: €{total_cost}\n")                          # Show confirmation message    
         else:
-            print("Vehicle not found or already returned.")                           # Show error if vehicle return fails
+            print("Vehicle not found or already returned.\n")                           # Show error if vehicle return fails

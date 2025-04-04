@@ -54,4 +54,9 @@ class MaintenanceInterface(BaseInterface):
 
         vehicle_id = input("Vehicle ID: ")                       # Label for vehicle ID
         
-        self.system.query_update_maintenance_mileage(vehicle_id)
+        is_updated = self.system.query_update_maintenance_mileage(vehicle_id)
+
+        if is_updated:
+            print("Maintenance was done successfully!\n")
+        else:
+            print("Vehicle not found, please try again.\n")

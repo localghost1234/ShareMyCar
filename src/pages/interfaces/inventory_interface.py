@@ -1,7 +1,6 @@
 from src.pages.interfaces.base_interface import BaseInterface       # Import the BaseInterface class, which serves as a parent class for other interfaces
 from src.misc.interface_strings import INVENTORY                              # Import the INVENTORY namespace, which contains strings or configurations related to the inventory interface
 from src.misc.utilities import input_loop
-import time
 
 class InventoryInterface(BaseInterface):
     """
@@ -66,9 +65,8 @@ class InventoryInterface(BaseInterface):
             maintenance_cost = float(maintenance_cost)                                          # Turns 'maintenance_cost' param to a float if possible, or raises an error
         except ValueError:                                                                      # If any of the values is something that it should not, the code skips to here
             print("Invalid values, please try again.\n")
-            time.sleep(2)
             return                                                                              # Stops further code execution
 
         self.system.add_vehicle(brand, model, current_mileage, daily_price, maintenance_cost)           # Calls system's module to add a vehicle to the database with all the information
-        print("Vehicle added successfully!\n")                                           # Displays success message
+        print("Vehicle added successfully!\n")                                                          # Displays success message
     

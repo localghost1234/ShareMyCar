@@ -1,16 +1,15 @@
+from src.misc.constants import DB_NAME
 import pickle
 import os
 
-DB_FILE = "database.pkl"
-
 def load_data():
-    if os.path.exists(DB_FILE):
-        with open(DB_FILE, "rb") as f:
+    if os.path.exists(DB_NAME):
+        with open(DB_NAME, "rb") as f:
             return pickle.load(f)
     return {"vehicles": [], "bookings": [], "logs": []}
 
 def save_data(data):
-    with open(DB_FILE, "wb") as f:
+    with open(DB_NAME, "wb") as f:
         pickle.dump(data, f)
 
 class System:
@@ -73,17 +72,20 @@ class System:
             if v["id"] == vehicle_id:
                 v["available"] = available
                 save_data(self.data)
-                break
+                return True
+        return False
     
     def query_update_maintenance_mileage(self, vehicle_id):
         for v in self.data["vehicles"]:
             if v["id"] == vehicle_id:
                 v["maintenance_mileage"] = v["current_mileage"] + 10000
                 save_data(self.data)
-                break
+                return True
+        return False
     
     def query_booking(self, vehicle_id, rental_duration, estimated_km, customer_name):
         vehicle = next((v for v in self.data["vehicles"] if v["id"] == vehicle_id and v["available"]), None)
+        
         if not vehicle:
             return None
         
@@ -92,6 +94,7 @@ class System:
         total_estimated_cost = duration_cost + mileage_cost
         
         self.data["bookings"].append({
+            "id": len(self.data["bookings"]) + 1,
             "vehicle_id": vehicle_id,
             "rental_duration": rental_duration,
             "estimated_km": estimated_km,
@@ -100,6 +103,7 @@ class System:
         })
         
         self.data["logs"].append({
+            "id": len(self.data["logs"]) + 1,
             "vehicle_id": vehicle_id,
             "rental_duration": rental_duration,
             "revenue": total_estimated_cost,
@@ -116,13 +120,20 @@ class System:
         if not vehicle:
             return None
         
+        booking = next((b for b in self.data["bookings"] if b["vehicle_id"] == vehicle_id), None)
+        if not booking:
+            return None
+        
+        self.data["bookings"] = [b for b in self.data["bookings"] if b["vehicle_id"] != vehicle_id]
+        vehicle["current_mileage"] += actual_km
         maintenance_cost = vehicle["maintenance_cost"] * actual_km
         late_fee = vehicle["daily_price"] * late_days
         total_revenue = maintenance_cost + late_fee
         
         self.data["logs"].append({
+            "id": len(self.data["logs"]) + 1,
             "vehicle_id": vehicle_id,
-            "rental_duration": None,
+            "rental_duration": late_days,
             "revenue": total_revenue,
             "additional_costs": late_fee,
             "customer_name": customer_name,

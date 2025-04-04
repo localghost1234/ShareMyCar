@@ -27,9 +27,7 @@ class MetricsInterface(BaseInterface):
         Args:
             system: Reference to the application's System instance
         """
-        super().__init__(system, *METRICS.TITLES)                                                          # Initializes 'BaseInterface' with the pre-defined TITLES strings
-
-        metrics = ()                                                                                             # Initializes tuple with the metrics info
+        super().__init__(system, *METRICS.TITLES)
         
         metrics = self.system.get_financial_metrics()                                                        # Retrieve financial metrics
 
@@ -98,7 +96,7 @@ class MetricsInterface(BaseInterface):
         for item in results_list:                                                                   # Iterate over the list with the query results
             print(item[0])                                                         # Extract the results from their tuples and add them to the listbox
 
-        print('\n')
+        print()
 
     def generate_full_report(self):
         """Generate a comprehensive PDF report containing:

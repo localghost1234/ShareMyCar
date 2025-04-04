@@ -4,8 +4,8 @@ INVENTORY=SimpleNamespace(                                                      
     TITLES = ("Inventory Management", "All existing vehicles:"),                                            # Title and subtitle of interface
     HEADERS = ("ID", "Brand", "Model", "Mileage (kms)", "Daily Price", "Maintenance Cost", "Available"),    # Column names shown on top of displayed data
     EMPTY_MESSAGE = "No vehicles in existence.",                                                            # Message displayed when no data is found
-    GENERATE_MODEL = lambda id, content: (                                                                      # Function used to generate strings of rows with the provided data
-        f"{id:<13} | "                                                                              # Formatted strings to take in content and add at least 13 blank spaces, regardless of string size
+    GENERATE_MODEL = lambda content: (                                                                      # Function used to generate strings of rows with the provided data
+        f"{content.get('id'):<13} | "                                                                              # Formatted strings to take in content and add at least 13 blank spaces, regardless of string size
         f"{content.get('brand'):<15} | "
         f"{content.get('model'):<15} | "
         f"{content.get('current_mileage'):<15} | "
@@ -23,8 +23,8 @@ RETURN=SimpleNamespace(                                                         
     TITLES = ("Return Management", "Select a booked vehicle:"),                         # Title and subtitle of interface
     HEADERS = ("ID", "Brand", "Model", "Mileage", "Daily Price", "Maintenance Cost"),   # Column names shown on top of displayed data
     EMPTY_MESSAGE = "No booked vehicles found.",                                        # Message displayed when no data is found
-    GENERATE_MODEL = lambda id, content: (                                                  # Function used to generate strings of rows with the provided data; data is segmented 
-        f"{id:<15} | "                                                          # Formatted strings to take in content and add at least 15 blank spaces, regardless of string size
+    GENERATE_MODEL = lambda content: (                                                  # Function used to generate strings of rows with the provided data; data is segmented 
+        f"{content.get('id'):<15} | "                                                          # Formatted strings to take in content and add at least 15 blank spaces, regardless of string size
         f"{content.get('brand'):<15} | "
         f"{content.get('model'):<15} | "
         f"{content.get('current_mileage'):<15} | "
@@ -37,8 +37,8 @@ MAINTENANCE=SimpleNamespace(                                                    
     TITLES = ("Maintenance Management", "Select a vehicle needing maintenance:"),   # Title and subtitle of interface
     HEADERS = ("ID", "Brand", "Model", "Current Mileage", "Maintenance Cost"),      # Column names shown on top of displayed data
     EMPTY_MESSAGE = "All vehicles are in good condition.",                          # Message displayed when no data is found
-    GENERATE_MODEL = lambda id, content: (                                              # Function used to generate strings of rows with the provided data
-        f"{id:<10} | "                                                      # Formatted strings to take in content and add at least 10 blank spaces, regardless of string size
+    GENERATE_MODEL = lambda content: (                                              # Function used to generate strings of rows with the provided data
+        f"{content.get('id'):<10} | "                                                      # Formatted strings to take in content and add at least 10 blank spaces, regardless of string size
         f"{content.get('brand'):<15} | "
         f"{content.get('model'):<15} | "
         f"{content.get('current_mileage'):<15} | "
@@ -50,8 +50,8 @@ LOGS=SimpleNamespace(                                                           
     TITLES = ("Logs Management", "Transaction Logs"),                                                                                                   # Title and subtitle of interface
     HEADERS = ("Transaction ID", "Vehicle ID", "Customer Name", "Rental Duration (Days)", "Revenue (€)", "Additional Costs (€)", "Transaction Type"),   # Column names shown on top of displayed data
     EMPTY_MESSAGE = "No transaction logs found.",                                                                                                       # Message displayed when no data is found
-    GENERATE_MODEL = lambda id, content: (                                                                                                                  # Function used to generate strings of rows with the provided data
-        f"{id:<15} | "                                                                                                                          # Formatted strings to take in content and add at least 15 blank spaces, regardless of string size
+    GENERATE_MODEL = lambda content: (                                                                                                                  # Function used to generate strings of rows with the provided data
+        f"{content.get('id'):<15} | "                                                                                                                          # Formatted strings to take in content and add at least 15 blank spaces, regardless of string size
         f"{content.get('vehicle_id'):<15} | "
         f"{content.get('customer_name'):<15} | "
         f"{content.get('rental_duration'):<15} | "
