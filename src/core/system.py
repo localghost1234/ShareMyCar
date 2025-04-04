@@ -90,7 +90,7 @@ class System:
         
         mileage_cost = vehicle["maintenance_cost"] * estimated_km
         duration_cost = vehicle["daily_price"] * rental_duration
-        total_estimated_cost = duration_cost + mileage_cost
+        total_estimated_cost = float(duration_cost + mileage_cost)
         
         self.data["bookings"].append({
             "id": len(self.data["bookings"]) + 1,
@@ -106,7 +106,7 @@ class System:
             "vehicle_id": vehicle_id,
             "rental_duration": rental_duration,
             "revenue": total_estimated_cost,
-            "additional_costs": 0,
+            "additional_costs": 0.0,
             "customer_name": customer_name,
             "transaction_type": "booking"
         })
