@@ -21,5 +21,6 @@ class HomeInterface():
             """
         
         action_number = input_loop(is_valid, message)
+
         on_switch_interface(action_number)
 

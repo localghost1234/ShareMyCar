@@ -1,4 +1,3 @@
-from src.misc.utilities import clear_console
 from src.misc.constants import INTERFACES_CLASS
 from src.core.system import System                                          # Import the System class, which manages the core functionality of the application and its relationship with the database
 import signal, sys
@@ -44,7 +43,6 @@ class App:
         if self.current_interface:                                                                                  # We ensure that the 'current_interface' we access is not a null object (None)
             self.current_interface = None                                                                           # This closes/erases the current frame (space in the modal) to make space for a new one
         
-        clear_console()
         if interface_number == 0:
             self.current_interface = INTERFACES_CLASS[0](self.switch_interface)
         else:

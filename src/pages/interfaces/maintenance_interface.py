@@ -14,7 +14,7 @@ class MaintenanceInterface(BaseInterface):
     Inherits from BaseInterface for common functionality.
     
     Attributes:
-        refresh_listbox (function): Callback to refresh the vehicle list
+        refresh_list (function): Callback to refresh the vehicle list
     """
 
     def __init__(self, on_return_home, system):
@@ -25,7 +25,7 @@ class MaintenanceInterface(BaseInterface):
         """
         super().__init__(system, *MAINTENANCE.TITLES)                             # Initializes 'BaseInterface' with the pre-defined TITLES strings
 
-        self.refresh_listbox = lambda: (                                                # Creates an executable function to be used around interface
+        self.refresh_list = lambda: (                                                # Creates an executable function to be used around interface
             self.load_content(                                                          # Loads the list with vehicles that need maintenance
                 headers=MAINTENANCE.HEADERS,
                 get_content=self.system.get_vehicles_requiring_maintenance,             # Function to fetch vehicles requiring maintenance
@@ -34,19 +34,20 @@ class MaintenanceInterface(BaseInterface):
             )
         )
 
-        self.refresh_listbox()                                                          # Loads content using locally created callback
+        has_content = self.refresh_list()                                                          # Loads content using locally created callback
 
-        is_valid = lambda num: num < 1 or num > 2
-        message = """Choose an action:
-                        1) Remove vehicle from list
-                        2) Return to main menu
-                        
-                        """
-        
-        action_number = input_loop(is_valid, message)
+        if has_content:
+            is_valid = lambda num: num < 1 or num > 2
+            message = """Choose an action:
+                            1) Remove vehicle from list
+                            2) Return to main menu
+                            
+                            """
+            
+            action_number = input_loop(is_valid, message)
 
-        if action_number == 1:
-            self.check_maintenance()
+            if action_number == 1:
+                self.check_maintenance()
             
         on_return_home()
 
@@ -58,4 +59,4 @@ class MaintenanceInterface(BaseInterface):
         vehicle_id = input("Vehicle ID: ")                       # Label for vehicle ID
         
         self.system.query_update_maintenance_mileage(vehicle_id)
-        self.refresh_listbox()
+        self.refresh_list()

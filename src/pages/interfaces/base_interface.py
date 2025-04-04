@@ -30,6 +30,7 @@ class BaseInterface:
         """Loads content into the Listbox based on provided data retrieval functions.
         
         Args:
+            headers (tuple): Group of strings which will visually represent the names of each column
             get_content (callable): Function that retrieves content to display
             generate_model (callable): Function that formats content for display
             empty_message (str): Message to show when no content is available
@@ -38,7 +39,7 @@ class BaseInterface:
         
         if not content:                                     # Checks if there is available content in DB
             print(empty_message)                            # Displays 'empty_message' if no data
-            return                                     # Returns a falsy value and stops further code execution
+            return False                                     # Returns a falsy value and stops further code execution
 
         print(generate_header_row(headers))
         
@@ -46,3 +47,4 @@ class BaseInterface:
             print(generate_model(idx + 1, c))                        # Converts data into the necessary format string and inserts it into the listbox
 
         print()
+        return True

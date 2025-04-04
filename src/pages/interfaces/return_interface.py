@@ -1,6 +1,7 @@
 from src.pages.interfaces.base_interface import BaseInterface   # Import the BaseInterface class, a parent class providing common functionality for other interfaces
 from src.misc.interface_strings import RETURN                             # Import the RETURN namespace, containing strings or configurations for the return interface
 from src.misc.utilities import input_loop
+import time
 
 class ReturnInterface(BaseInterface):
     """
@@ -12,7 +13,7 @@ class ReturnInterface(BaseInterface):
     - Calculate and process the total return cost
     
     Attributes:
-        refresh_listbox (function): Callback to refresh the vehicle list
+        refresh_list (function): Callback to refresh the vehicle list
     """
     
     def __init__(self, on_return_home, system):
@@ -23,7 +24,7 @@ class ReturnInterface(BaseInterface):
         """
         super().__init__(system, *RETURN.TITLES)                                  # Initializes 'BaseInterface' with the pre-defined TITLES strings
 
-        self.refresh_listbox = lambda: (                                                # Creates an executable function to be used around interface
+        self.refresh_list = lambda: (                                                # Creates an executable function to be used around interface
             self.load_content(                                                          # Executes necessary modules to extract database content and display it accordingly
                 headers=RETURN.HEADERS,
                 get_content=self.system.get_unavailable_vehicles,                       # Fetch unavailable vehicles
@@ -32,20 +33,22 @@ class ReturnInterface(BaseInterface):
             )
         )
 
-        self.refresh_listbox()                                                          # Loads content using locally created callback
+        has_content = self.refresh_list()                                                          # Loads content using locally created callback
 
-        is_valid = lambda num: num < 1 or num > 2
-        message = """Choose an action:
-                        1) Return Vehicle
-                        2) Back to main menu
-                        
-                        """
-        
-        action_number = input_loop(is_valid, message)
+        if has_content:
+            is_valid = lambda num: num < 1 or num > 2
+            message = """Choose an action:
+                            1) Return Vehicle
+                            2) Back to main menu
+                            
+                            """
+            
+            action_number = input_loop(is_valid, message)
 
-        if action_number == 1:
-            self.return_vehicle()
+            if action_number == 1:
+                self.return_vehicle()
 
+        print()
         on_return_home()
 
     def return_vehicle(self):
@@ -61,13 +64,14 @@ class ReturnInterface(BaseInterface):
         """
         try:
             vehicle_id = int(input("Vehicle ID: "))
-            customer_name = self.system.get_customer_name(vehicle_id)                           # Retrieve customer name associated with the vehicle
+            customer_name = str(self.system.get_customer_name(vehicle_id))                           # Retrieve customer name associated with the vehicle
             print("Customer Name: ", customer_name)
 
             actual_km = int(input("Kilometers Driven: "))                                        # Convert kilometers driven to integer
             late_days = int(input("Late Days: "))                                                # Convert late days to integer
         except ValueError:
-            print("Please enter valid numbers for kilometers and late days.")         # Display error for invalid input
+            print("Invalid values, please try again.\n")
+            time.sleep(2)
             return
 
         total_cost = self.system.query_return(vehicle_id, customer_name, actual_km, late_days)  # Calculate total cost
@@ -76,6 +80,4 @@ class ReturnInterface(BaseInterface):
             print("Vehicle not found or already returned.")                           # Show error if vehicle return fails
             return
         
-        print(f"Vehicle returned! Total cost: €{total_cost}")                          # Show confirmation message
-        self.refresh_listbox()                                                                  # Uses local callback to reload all the new info
-        
+        print(f"Vehicle returned! Total cost: €{total_cost}")                          # Show confirmation message        

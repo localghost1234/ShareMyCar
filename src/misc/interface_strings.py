@@ -6,12 +6,12 @@ INVENTORY=SimpleNamespace(                                                      
     EMPTY_MESSAGE = "No vehicles in existence.",                                                            # Message displayed when no data is found
     GENERATE_MODEL = lambda id, content: (                                                                      # Function used to generate strings of rows with the provided data
         f"{id:<13} | "                                                                              # Formatted strings to take in content and add at least 13 blank spaces, regardless of string size
-        f"{content.get('brand'):<13} | "
-        f"{content.get('model'):<13} | "
-        f"{content.get('current_mileage'):<13} | "
-        f"€{content.get('daily_price'):<13} | "
-        f"€{content.get('maintenance_cost'):<13} | "
-        f"{'Yes' if content.get('available') else 'No':<13}"
+        f"{content.get('brand'):<15} | "
+        f"{content.get('model'):<15} | "
+        f"{content.get('current_mileage'):<15} | "
+        f"€{content.get('daily_price'):<15} | "
+        f"€{content.get('maintenance_cost'):<15} | "
+        f"{'Yes' if content.get('available') else 'No':<15}"
     )
 )
 
@@ -39,10 +39,10 @@ MAINTENANCE=SimpleNamespace(                                                    
     EMPTY_MESSAGE = "All vehicles are in good condition.",                          # Message displayed when no data is found
     GENERATE_MODEL = lambda id, content: (                                              # Function used to generate strings of rows with the provided data
         f"{id:<10} | "                                                      # Formatted strings to take in content and add at least 10 blank spaces, regardless of string size
-        f"{content.get('brand'):<10} | "
-        f"{content.get('model'):<10} | "
-        f"{content.get('current_mileage'):<10} | "
-        f"€{content.get('maintenance_cost'):<10}"
+        f"{content.get('brand'):<15} | "
+        f"{content.get('model'):<15} | "
+        f"{content.get('current_mileage'):<15} | "
+        f"€{content.get('maintenance_cost'):<15}"
     )
 )
 

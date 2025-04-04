@@ -1,6 +1,7 @@
 from src.pages.interfaces.base_interface import BaseInterface       # Import the BaseInterface class, which serves as a parent class for other interfaces
 from src.misc.interface_strings import INVENTORY                              # Import the INVENTORY namespace, which contains strings or configurations related to the inventory interface
 from src.misc.utilities import input_loop
+import time
 
 class InventoryInterface(BaseInterface):
     """
@@ -8,7 +9,7 @@ class InventoryInterface(BaseInterface):
     Inherits components from BaseInterface.
 
     Attributes:
-        refresh_listbox (function): Callback function to refresh the listbox content
+        refresh_list (function): Callback function to refresh the listbox content
     """
     def __init__(self, on_return_home, system):
         """Initialize the inventory interface.
@@ -18,7 +19,7 @@ class InventoryInterface(BaseInterface):
         """
         super().__init__(system, *INVENTORY.TITLES)                                                 # Initializes 'BaseInterface' with the pre-defined TITLES strings
 
-        self.refresh_listbox = lambda: (                                                            # Creates an executable function to be used around interface
+        self.refresh_list = lambda: (                                                            # Creates an executable function to be used around interface
             self.load_content(                                                                      # Executes necessary modules to extract database content and display it accordingly
                 headers=INVENTORY.HEADERS,
                 get_content=self.system.get_all_vehicles,                                           # Enters function to extract database content
@@ -27,7 +28,7 @@ class InventoryInterface(BaseInterface):
             )
         )
 
-        self.refresh_listbox()                                                                      # Loads content using locally created callback
+        self.refresh_list()                                                                      # Loads content using locally created callback
 
         is_valid = lambda num: num < 1 or num > 2
         message = """Choose an action:
@@ -68,7 +69,8 @@ class InventoryInterface(BaseInterface):
             daily_price = float(daily_price)                                                    # Turns 'daily_price' param to a float if possible, or raises an error
             maintenance_cost = float(maintenance_cost)                                          # Turns 'maintenance_cost' param to a float if possible, or raises an error
         except ValueError:                                                                      # If any of the values is something that it should not, the code skips to here
-            print("Please enter valid values.")                                       # An error modal is displayed
+            print("Invalid values, please try again.\n")
+            time.sleep(2)
             return                                                                              # Stops further code execution
 
         self.system.add_vehicle(brand, model, current_mileage, daily_price, maintenance_cost)           # Calls system's module to add a vehicle to the database with all the information

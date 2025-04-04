@@ -42,8 +42,7 @@ class System:
     
     def get_customer_name(self, vehicle_id):
         Booking = Query()
-        result = self.bookings.get(Booking.vehicle_id == vehicle_id)
-        return result["customer_name"] if result else "Unknown Customer"
+        return self.bookings.get(Booking.vehicle_id == vehicle_id)
     
     def get_financial_metrics(self):
         logs = self.logs.search(Query().transaction_type == "return")

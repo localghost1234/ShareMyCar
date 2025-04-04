@@ -1,8 +1,3 @@
-import os
-
-def clear_console():
-    os.system('cls' if os.name == 'nt' else 'clear')
-
 generate_header_row = lambda headers: "  |  ".join(f"{h:<15}" for h in headers)     # Creates a string of separated values from a list
 
 def input_loop(on_validate_constraints, input_message):
