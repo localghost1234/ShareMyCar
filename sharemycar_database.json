@@ -1,0 +1,1 @@
+{"vehicles": {"1": {"brand": "DeLorean", "model": "DMC", "current_mileage": 100, "daily_price": 10.0, "maintenance_cost": 100.0, "maintenance_mileage": 10100, "available": true}, "2": {"brand": "Dodge", "model": "Charger", "current_mileage": 20000, "daily_price": 25.0, "maintenance_cost": 150.0, "maintenance_mileage": 30000, "available": true}}}

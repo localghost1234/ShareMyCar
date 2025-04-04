@@ -11,7 +11,7 @@ class BookingInterface(BaseInterface):
     - Estimated rent duration (in days)
     - Estimated kilometers to be driven
     """
-    def __init__(self, on_switch_interface, system):
+    def __init__(self, on_return_home, system):
         """Initialize the booking interface with input fields and booking button.
         
         Args:
@@ -25,7 +25,7 @@ class BookingInterface(BaseInterface):
         self.estimated_km_entry = input("Estimated Kilometers: ")                                               # Adds a text string and positions it
 
         self.create_booking()
-        on_switch_interface(0)
+        on_return_home()
 
     def create_booking(self):
         """Handles booking process by taking input values and calling system logic.

@@ -21,7 +21,7 @@ class MetricsInterface(BaseInterface):
         system: Reference to the application's System instance
     """
 
-    def __init__(self, on_switch_interface, system):
+    def __init__(self, on_return_home, system):
         """Initialize the metrics interface with financial data display.
 
         Args:
@@ -38,7 +38,7 @@ class MetricsInterface(BaseInterface):
 
         if not metrics:                                                                                          # If no metrics are available, display an empty message
             print(METRICS.EMPTY_MESSAGE)                                                                # Displays empty text and positions it in the Frame
-            on_switch_interface(0)
+            on_return_home()
             return                                                                                               # Further code execution is stopped
 
         for idx, h in enumerate(METRICS.HEADERS):                                                                # Prepares to iterate over a list with the info subtitles, giving out its index and inner value
@@ -59,7 +59,7 @@ class MetricsInterface(BaseInterface):
         elif action_number == 2:
             self.generate_full_report()
         
-        on_switch_interface(0)
+        on_return_home()
 
     def submit_query(self):
         """Open a modal window to query specific data from the database.

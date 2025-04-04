@@ -12,7 +12,7 @@ class LogsInterface(BaseInterface):
         system: Reference to the application's System instance
     """
 
-    def __init__(self, on_switch_interface, system):
+    def __init__(self, on_return_home, system):
         """Initialize the logs interface with log entries display.
         
         Args:
@@ -28,4 +28,4 @@ class LogsInterface(BaseInterface):
         )
 
         print('\n')
-        on_switch_interface(0)
+        on_return_home()

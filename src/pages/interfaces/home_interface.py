@@ -1,11 +1,11 @@
-from src.misc.utilities import input_loop, clear_console
+from src.misc.utilities import input_loop
 
 class HomeInterface():
     """
         A class with a simple visual representation for welcoming the user.
         Only used on application's startup.
     """
-    def __init__(self, on_switch_interface, system):
+    def __init__(self, on_switch_interface):
         # Displays simple strings of messages, with varying types of letter and sizes
         print("Welcome to the car sharing management system!")
 
@@ -21,7 +21,5 @@ class HomeInterface():
             """
         
         action_number = input_loop(is_valid, message)
-        clear_console()
-
         on_switch_interface(action_number)
 

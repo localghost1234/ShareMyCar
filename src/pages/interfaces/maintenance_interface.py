@@ -17,7 +17,7 @@ class MaintenanceInterface(BaseInterface):
         refresh_listbox (function): Callback to refresh the vehicle list
     """
 
-    def __init__(self, on_switch_interface, system):
+    def __init__(self, on_return_home, system):
         """Initialize the maintenance interface with vehicle list and event bindings.
         
         Args:
@@ -48,7 +48,7 @@ class MaintenanceInterface(BaseInterface):
         if action_number == 1:
             self.check_maintenance()
             
-        on_switch_interface(0)
+        on_return_home()
 
     def check_maintenance(self):
         """

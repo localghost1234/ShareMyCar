@@ -15,7 +15,7 @@ class ReturnInterface(BaseInterface):
         refresh_listbox (function): Callback to refresh the vehicle list
     """
     
-    def __init__(self, on_switch_interface, system):
+    def __init__(self, on_return_home, system):
         """Initialize the return interface with vehicle list and event bindings.
         
         Args:
@@ -46,7 +46,7 @@ class ReturnInterface(BaseInterface):
         if action_number == 1:
             self.return_vehicle()
 
-        on_switch_interface(0)
+        on_return_home()
 
     def return_vehicle(self):
         """
@@ -62,10 +62,10 @@ class ReturnInterface(BaseInterface):
         try:
             vehicle_id = int(input("Vehicle ID: "))
             customer_name = self.system.get_customer_name(vehicle_id)                           # Retrieve customer name associated with the vehicle
-            print("Customer Name:", customer_name)
+            print("Customer Name: ", customer_name)
 
-            actual_km = int(input("Kilometers Driven:"))                                        # Convert kilometers driven to integer
-            late_days = int(input("Late Days:"))                                                # Convert late days to integer
+            actual_km = int(input("Kilometers Driven: "))                                        # Convert kilometers driven to integer
+            late_days = int(input("Late Days: "))                                                # Convert late days to integer
         except ValueError:
             print("Please enter valid numbers for kilometers and late days.")         # Display error for invalid input
             return

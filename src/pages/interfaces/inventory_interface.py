@@ -10,7 +10,7 @@ class InventoryInterface(BaseInterface):
     Attributes:
         refresh_listbox (function): Callback function to refresh the listbox content
     """
-    def __init__(self, on_switch_interface, system):
+    def __init__(self, on_return_home, system):
         """Initialize the inventory interface.
         
         Args:
@@ -40,8 +40,8 @@ class InventoryInterface(BaseInterface):
 
         if action_number == 1:
             self.add_vehicle()
-
-        on_switch_interface(0)
+        
+        on_return_home()
 
     def add_vehicle(self):
         """Shows controlled input to add a new vehicle to the database.
@@ -57,38 +57,20 @@ class InventoryInterface(BaseInterface):
         """
         brand = input("Brand: ")                                                           # Adds a text string and positions it
         model = input("Model: ")                                                           # Adds a text string and positions it
-        mileage = input("Mileage: ")                                                       # Adds a text string and positions it
+        current_mileage = input("Mileage: ")                                                       # Adds a text string and positions it
         daily_price = input("Daily Price: ")                                               # Adds a text string and positions it
         maintenance_cost = input("Maintenance Cost: ")                                     # Adds a text string and positions it
 
         try:                                                                                    # Creates scope to handle any errors
             brand = str(brand)
             model = str(model)
-            mileage = int(mileage)                                                              # Turns 'mileage' param to an integer if possible, or raises an error
+            current_mileage = int(current_mileage)                                                              # Turns 'current_mileage' param to an integer if possible, or raises an error
             daily_price = float(daily_price)                                                    # Turns 'daily_price' param to a float if possible, or raises an error
             maintenance_cost = float(maintenance_cost)                                          # Turns 'maintenance_cost' param to a float if possible, or raises an error
         except ValueError:                                                                      # If any of the values is something that it should not, the code skips to here
             print("Please enter valid values.")                                       # An error modal is displayed
             return                                                                              # Stops further code execution
 
-        self.system.add_vehicle(brand, model, mileage, daily_price, maintenance_cost)           # Calls system's module to add a vehicle to the database with all the information
+        self.system.add_vehicle(brand, model, current_mileage, daily_price, maintenance_cost)           # Calls system's module to add a vehicle to the database with all the information
         print("Vehicle added successfully!")                                           # Displays success message
-
-        self.refresh_listbox()                                                                  # Uses local callback to reload all the new info
-        
-    def submit_vehicle(self):
-        """
-        Submits the new vehicle data to the system and updates the interface.
-
-        Args:
-            brand (str): The brand of the vehicle.
-            model (str): The model of the vehicle.
-            mileage (str): The mileage of the vehicle.
-            daily_price (str): The daily rental price of the vehicle.
-            maintenance_cost (str): The maintenance cost per kilometer of the vehicle.
-            modal (tk.Toplevel): The modal window to be closed after submission.
-            
-        Performs validation on all inputs before submitting to the system.
-        Shows appropriate error messages if validation fails.
-        """
     
