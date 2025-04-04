@@ -119,11 +119,12 @@ class System:
         if not vehicle:
             return None
         
-        booking = next((b for b in self.data["bookings"] if b["vehicle_id"] == vehicle_id), None)
-        if not booking:
+        original_booking = next((b for b in self.data["bookings"] if b["vehicle_id"] == vehicle_id), None)
+        if not original_booking:
             return None
         
         self.data["bookings"] = [b for b in self.data["bookings"] if b["vehicle_id"] != vehicle_id]
+        rental_duration = original_booking["rental_duration"] + late_days
         vehicle["current_mileage"] += actual_km
         maintenance_cost = vehicle["maintenance_cost"] * actual_km
         late_fee = vehicle["daily_price"] * late_days
@@ -132,7 +133,7 @@ class System:
         self.data["logs"].append({
             "id": len(self.data["logs"]) + 1,
             "vehicle_id": vehicle_id,
-            "rental_duration": late_days,
+            "rental_duration": rental_duration,
             "revenue": total_revenue,
             "additional_costs": late_fee,
             "customer_name": customer_name,

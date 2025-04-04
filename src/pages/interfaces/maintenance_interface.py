@@ -53,7 +53,6 @@ class MaintenanceInterface(BaseInterface):
         """
 
         vehicle_id = input("Vehicle ID: ")                       # Label for vehicle ID
-        
         is_updated = self.system.query_update_maintenance_mileage(vehicle_id)
 
         if is_updated:
