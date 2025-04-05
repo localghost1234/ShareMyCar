@@ -67,9 +67,9 @@ class MetricsInterface(BaseInterface):
         """
 
         print("Input Query")                                                                        # Sets a text in the new frame and positions it
-        print("Use '<table>:<column>:<value>' format\n(e.g. vehicles:id:1)")                        # Sets a text in the new frame and positions it
+        print("Use '<table>:<column>:<value>' format\n(e.g. vehicles:id:1)\n")                        # Sets a text in the new frame and positions it
         try:                                                                                        # Creates a scope for error handling
-            query_entry = input()                                                                       # Opens channels to receive user input
+            query_entry = input('---> ')                                                                       # Opens channels to receive user input
             query_list = query_entry.strip().split(':')                                           # Retrieves user input from Entry, deletes trailing spaces and splits it into a list of strings (separated by ':')
             table, column, value = query_list                                                        # Extract table_name and column_name
             results_list = self.system.get_table_row(table, column, value)                    # Extracts database info with specified params
@@ -94,16 +94,9 @@ class MetricsInterface(BaseInterface):
         - Vehicle inventory
         - Booking records
         - Transaction logs
-        
-        The report includes:
-        - Timestamp in filename
-        - Automatic pagination
-        - Dynamic column sizing
-        - Clear section headers
         """
 
         current_datetime = datetime.now()                                               # Get an object with the current date and time
-
         directory = f"{os.getcwd()}\\reports"
         os.makedirs(directory, exist_ok=True)
         filename = f"FullReport_{current_datetime.strftime('%Y-%m-%d_%H%M%S')}.pdf"
@@ -127,11 +120,6 @@ class MetricsInterface(BaseInterface):
             Args:
                 headers (list): Column headers for the table
                 data (list): List of rows to display in the table
-                
-            Handles:
-                - Dynamic column widths based on content
-                - Automatic page breaks
-                - Consistent formatting
             """
             nonlocal y_position                                                                           # Since variable 'y_position' is set outside of this scope, we need to remind the function to use its outter value
             x_pos = x_position                                                                            # TODO: Improve this -- we create a new variable with the same value, but can lead to errors
