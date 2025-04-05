@@ -40,7 +40,7 @@ class MetricsInterface(BaseInterface):
             print(f"{h}: ", round(metrics[idx], 2))                                                                     # Displays text with the header and positions it in the Frame
 
         print()
-        is_valid = lambda num: num < 1 or num > 3
+        validator = lambda num: num < 1 or num > 3
         message = """Please choose a valid operation:
         1) Make Query
         2) Download Full Report
@@ -48,7 +48,7 @@ class MetricsInterface(BaseInterface):
 
         """
                 
-        action_number = input_loop(is_valid, message)
+        action_number = input_loop(validator, message)
 
         if action_number == 1:
             self.submit_query()

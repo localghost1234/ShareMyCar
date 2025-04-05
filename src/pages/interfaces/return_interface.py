@@ -31,14 +31,14 @@ class ReturnInterface(BaseInterface):
             )
 
         if has_content:
-            is_valid = lambda num: num < 1 or num > 2
+            validator = lambda num: num < 1 or num > 2
             message = """Choose an action:
                             1) Return Vehicle
                             2) Back to main menu
                             
                             """
             
-            action_number = input_loop(is_valid, message)
+            action_number = input_loop(validator, message)
 
             if action_number == 1:
                 self.return_vehicle()
