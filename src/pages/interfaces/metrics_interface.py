@@ -1,6 +1,6 @@
 from src.pages.interfaces.base_interface import BaseInterface   # Import the BaseInterface class, a parent class providing common functionality for other interfaces
 from src.misc.interface_strings import METRICS                            # Import the METRICS constant, containing strings or configurations for the metrics interface
-from src.misc.utilities import input_loop                       # 
+from src.misc.utilities import generate_row, input_loop                       # 
 from reportlab.lib.pagesizes import A4                          # Import the A4 constant from reportlab, defining the standard A4 page size for PDF generation
 from reportlab.pdfgen import canvas                             # Import the canvas class from reportlab for creating and drawing on PDF documents
 from datetime import datetime                                   # Import the datetime class for working with dates and times
@@ -67,34 +67,26 @@ class MetricsInterface(BaseInterface):
         """
 
         print("Input Query")                                                                        # Sets a text in the new frame and positions it
-        print("Use '<table_name>:<column_name>:<column_value>' format\n(e.g. vehicles:id:1)")                        # Sets a text in the new frame and positions it
+        print("Use '<table>:<column>:<value>' format\n(e.g. vehicles:id:1)")                        # Sets a text in the new frame and positions it
         query_entry = input()                                                                       # Creates an Entry component to receive user input
-        query_list = query_entry.strip().split(':')                                           # Retrieves user input from Entry, deletes trailing spaces and splits it into a list of strings (separated by ':')
-
-        if len(query_list) != 3:                                                                    # Condition to check if the input follows the format
-            print("Please, enter a correct 'table' and a 'column'\n")                                 # Displays modal with error message
-            return                                                                                  # Stops further code execution
-
-        table_name, column_name = query_list                                                        # Extract table_name and column_name
-
-        if table_name not in ["vehicles", "bookings", "logs"]:                                      # Validate the table name
-            print("Please, enter a valid 'table'\n")                                                  # Shows error modal in case not an actual table 
-            return                                                                                  # Stops further code execution
-
+        
         try:                                                                                        # Creates a scope for error handling
-            results_list = self.system.get_table_column(table_name, column_name)                    # Extracts database info with specified params
-        except Exception:                                                                           # Handle invalid queries
-            print(f"Please, enter a valid 'column' for table {table_name}\n")               # Displays error modal
+            query_list = query_entry.strip().split(':')                                           # Retrieves user input from Entry, deletes trailing spaces and splits it into a list of strings (separated by ':')
+            table, column, value = query_list                                                        # Extract table_name and column_name
+            results_list = self.system.get_table_row(table, column, value)                    # Extracts database info with specified params
+        except:                                                                           # Handle invalid queries
+            print(f"Invalid values, please try again.\n")               # Displays error modal
             return                                                                                  # Stops further code execution
 
         if not results_list:                                                                        # Handle no results
             print("No results found.\n")     # Displays text when no data is found
             return
 
-        print(f"{len(results_list)} results found:")  # Displays and positions the number of results found
+        print(f"{len(results_list)} results found:\n")  # Displays and positions the number of results found
+        print(generate_row(results_list[0].keys()))
 
         for item in results_list:                                                                   # Iterate over the list with the query results
-            print(item)                                                         # Extract the results from their tuples and add them to the listbox
+            print(generate_row(str(v) for v in item.values()))                                                    # Extract the results from their tuples and add them to the listbox
 
         print()
 

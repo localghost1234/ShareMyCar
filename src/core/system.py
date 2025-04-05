@@ -45,8 +45,8 @@ class System:
     def get_unavailable_vehicles(self):
         return [v for v in self.data["vehicles"] if not v["available"]]
     
-    def get_table_column(self, table_name, column_name):
-        return [record[column_name] for record in self.data.get(table_name, []) if column_name in record]
+    def get_table_row(self, table_name, column_name, column_value):
+        return [record for record in self.data.get(table_name, []) if column_name in record and str(record[column_name]) == str(column_value)]
     
     def get_customer_name(self, vehicle_id):
         result = next((b for b in self.data["bookings"] if b["vehicle_id"] == vehicle_id), None)

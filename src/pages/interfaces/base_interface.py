@@ -1,4 +1,4 @@
-from src.misc.utilities import generate_header_row      # Import the generate_header_row function, which returns a formatted string to use as column names
+from src.misc.utilities import generate_row      # Import the generate_row function, which returns a formatted string to use as column names
 
 class BaseInterface:
     """
@@ -42,7 +42,7 @@ class BaseInterface:
             print()
             return False                                     # Returns a falsy value and stops further code execution
 
-        print(generate_header_row(headers))
+        print(generate_row(headers))
         
         for c in content:                                   # Iterates over the extracted DB content (given that the previous condition was false)
             print(generate_model(c))                        # Converts data into the necessary format string and inserts it into the listbox
