@@ -51,21 +51,15 @@ class InventoryInterface(BaseInterface):
         
         Includes validation and submission functionality.
         """
-        brand = input("Brand: ")                                                           # Adds a text string and positions it
-        model = input("Model: ")                                                           # Adds a text string and positions it
-        current_mileage = input("Mileage: ")                                                       # Adds a text string and positions it
-        daily_price = input("Daily Price: ")                                               # Adds a text string and positions it
-        maintenance_cost = input("Maintenance Cost: ")                                     # Adds a text string and positions it
-
-        try:                                                                                    # Creates scope to handle any errors
-            brand = str(brand)
-            model = str(model)
-            current_mileage = int(current_mileage)                                                              # Turns 'current_mileage' param to an integer if possible, or raises an error
-            daily_price = float(daily_price)                                                    # Turns 'daily_price' param to a float if possible, or raises an error
-            maintenance_cost = float(maintenance_cost)                                          # Turns 'maintenance_cost' param to a float if possible, or raises an error
-        except ValueError:                                                                      # If any of the values is something that it should not, the code skips to here
+        try:                                                                            # Creates scope to handle any errors
+            brand = str(input("Brand: "))                                               # Turns 'brand' param to an integer if possible, or raises an error
+            model = str(input("Model: "))                                               # Turns 'model' param to an integer if possible, or raises an error
+            current_mileage = int(input("Mileage: "))                                   # Turns 'current_mileage' param to an integer if possible, or raises an error
+            daily_price = float(input("Daily Price: "))                                 # Turns 'daily_price' param to a float if possible, or raises an error
+            maintenance_cost = float(input("Maintenance Cost: "))                       # Turns 'maintenance_cost' param to a float if possible, or raises an error
+        except ValueError:                                                              # If any of the values is something that it should not, the code skips to here
             print("Invalid values, please try again.\n")
-            return                                                                              # Stops further code execution
+            return                                                                      # Stops further code execution
 
         self.system.add_vehicle(brand, model, current_mileage, daily_price, maintenance_cost)           # Calls system's module to add a vehicle to the database with all the information
         print("Vehicle added successfully!\n")                                                          # Displays success message

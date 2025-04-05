@@ -1,66 +1,48 @@
-from src.misc.constants import DB_NAME
-import pickle
-import os
-
-def load_data():
-    if os.path.exists(DB_NAME):
-        with open(DB_NAME, "rb") as f:
-            return pickle.load(f)
-    return {"vehicles": [], "bookings": [], "logs": []}
-
-def save_data(data):
-    with open(DB_NAME, "wb") as f:
-        pickle.dump(data, f)
+from src.misc.utilities import load_data, save_data
+from src.misc.constants import ATTRIBUTES
 
 class System:
     def __init__(self):
         self.data = load_data()
+        self.vehicles = self.data["vehicles"]
+        self.bookings = self.data["bookings"]
+        self.logs = self.data["logs"]
     
     def add_vehicle(self, brand, model, mileage, daily_price, maintenance_cost):
         vehicle = {
-            "id": len(self.data["vehicles"]) + 1,
-            "brand": brand,
-            "model": model,
-            "current_mileage": mileage,
-            "daily_price": daily_price,
-            "maintenance_cost": maintenance_cost,
-            "maintenance_mileage": mileage + 10000,
-            "available": True
+            ATTRIBUTES.ID: len(self.vehicles) + 1,
+            ATTRIBUTES.BRAND: brand,
+            ATTRIBUTES.MODEL: model,
+            ATTRIBUTES.CURRENT_MILEAGE: mileage,
+            ATTRIBUTES.DAILY_PRICE: daily_price,
+            ATTRIBUTES.MAINTENANCE_COST: maintenance_cost,
+            ATTRIBUTES.MAINTENANCE_MILEAGE: mileage + 10000,
+            ATTRIBUTES.AVAILABLE: True
         }
-        self.data["vehicles"].append(vehicle)
+        self.vehicles.append(vehicle)
         save_data(self.data)
     
-    def get_all_vehicles(self):
-        return self.data["vehicles"]
-    
-    def get_all_bookings(self):
-        return self.data["bookings"]
-    
-    def get_all_logs(self):
-        return self.data["logs"]
-    
     def get_vehicles_requiring_maintenance(self):
-        return [v for v in self.data["vehicles"] if v["current_mileage"] >= v["maintenance_mileage"]]
+        return [v for v in self.vehicles if v[ATTRIBUTES.CURRENT_MILEAGE] >= v[ATTRIBUTES.MAINTENANCE_MILEAGE]]
     
     def get_unavailable_vehicles(self):
-        return [v for v in self.data["vehicles"] if not v["available"]]
+        return [v for v in self.vehicles if not v[ATTRIBUTES.AVAILABLE]]
     
     def get_table_row(self, table_name, column_name, column_value):
         return [record for record in self.data.get(table_name, []) if column_name in record and str(record[column_name]) == str(column_value)]
     
     def get_customer_name(self, vehicle_id):
-        result = next((b for b in self.data["bookings"] if b["vehicle_id"] == vehicle_id), None)
-        return result["customer_name"] if result else "Unknown Customer"
+        return next((b for b in self.bookings if b[ATTRIBUTES.VEHICLE_ID] == vehicle_id), None)
     
     def get_financial_metrics(self):
-        logs = [log for log in self.data["logs"] if log["transaction_type"] == "return"]
+        logs = [log for log in self.logs if log[ATTRIBUTES.TRANSACTION_TYPE] == "return"]
         if not logs:
             return ()
         
-        total_revenue = sum(log["revenue"] for log in logs)
-        total_additional_costs = sum(log["additional_costs"] for log in logs)
-        total_maintenance_cost = sum(v["maintenance_cost"] for v in self.data["vehicles"])
-        avg_mileage = sum(v["current_mileage"] for v in self.data["vehicles"]) / len(self.data["vehicles"]) if self.data["vehicles"] else 0
+        total_revenue = sum(log[ATTRIBUTES.REVENUE] for log in logs)
+        total_additional_costs = sum(log[ATTRIBUTES.ADDITIONAL_COSTS] for log in logs)
+        total_maintenance_cost = sum(v[ATTRIBUTES.MAINTENANCE_COST] for v in self.vehicles)
+        avg_mileage = sum(v[ATTRIBUTES.CURRENT_MILEAGE] for v in self.vehicles) / len(self.vehicles) if self.vehicles else 0
         
         total_operational_costs = total_maintenance_cost + total_additional_costs
         total_profit = total_revenue - total_operational_costs
@@ -68,87 +50,87 @@ class System:
         return total_revenue, total_operational_costs, total_profit, avg_mileage
     
     def query_update_availability(self, vehicle_id, available):
-        for v in self.data["vehicles"]:
-            if v["id"] == vehicle_id:
-                v["available"] = available
+        for v in self.vehicles:
+            if v[ATTRIBUTES.ID] == vehicle_id:
+                v[ATTRIBUTES.AVAILABLE] = available
                 save_data(self.data)
                 return True
         return False
     
     def query_update_current_mileage(self, vehicle_id, new_mileage):
-        for v in self.data["vehicles"]:
-            if v["id"] == vehicle_id:
-                v["current_mileage"] = new_mileage
+        for v in self.vehicles:
+            if v[ATTRIBUTES.ID] == vehicle_id:
+                v[ATTRIBUTES.CURRENT_MILEAGE] = new_mileage
                 save_data(self.data)
                 return True
         return False
     
     def query_update_maintenance_mileage(self, vehicle_id):
-        for v in self.data["vehicles"]:
-            if v["id"] == vehicle_id:
-                v["maintenance_mileage"] = v["current_mileage"] + 10000
+        for v in self.vehicles:
+            if v[ATTRIBUTES.ID] == vehicle_id:
+                v[ATTRIBUTES.MAINTENANCE.MILEAGE] = v[ATTRIBUTES.CURRENT_MILEAGE] + 10000
                 save_data(self.data)
                 return True
         return False
     
     def query_booking(self, vehicle_id, rental_duration, estimated_km, customer_name):
-        vehicle = next((v for v in self.data["vehicles"] if v["id"] == vehicle_id and v["available"]), None)
+        vehicle = next((v for v in self.vehicles if v[ATTRIBUTES.ID] == vehicle_id and v[ATTRIBUTES.AVAILABLE]), None)
         if not vehicle:
             return None
         
-        mileage_cost = vehicle["maintenance_cost"] * estimated_km
-        duration_cost = vehicle["daily_price"] * rental_duration
+        mileage_cost = vehicle[ATTRIBUTES.MAINTENANCE_COST] * estimated_km
+        duration_cost = vehicle[ATTRIBUTES.DAILY_PRICE] * rental_duration
         total_estimated_cost = float(duration_cost + mileage_cost)
         
-        self.data["bookings"].append({
-            "id": len(self.data["bookings"]) + 1,
-            "vehicle_id": vehicle_id,
-            "rental_duration": rental_duration,
-            "estimated_km": estimated_km,
-            "estimated_cost": total_estimated_cost,
-            "customer_name": customer_name
+        self.bookings.append({
+            ATTRIBUTES.ID: len(self.bookings) + 1,
+            ATTRIBUTES.VEHICLE_ID: vehicle_id,
+            ATTRIBUTES.RENTAL_DURATION: rental_duration,
+            ATTRIBUTES.ESTIMATED_KM: estimated_km,
+            ATTRIBUTES.ESTIMATED_COST: total_estimated_cost,
+            ATTRIBUTES.CUSTOMER_NAME: customer_name
         })
         
-        self.data["logs"].append({
-            "id": len(self.data["logs"]) + 1,
-            "vehicle_id": vehicle_id,
-            "rental_duration": rental_duration,
-            "revenue": total_estimated_cost,
-            "additional_costs": 0.0,
-            "customer_name": customer_name,
-            "transaction_type": "booking"
+        self.logs.append({
+            ATTRIBUTES.ID: len(self.logs) + 1,
+            ATTRIBUTES.VEHICLE_ID: vehicle_id,
+            ATTRIBUTES.RENTAL_DURATION: rental_duration,
+            ATTRIBUTES.REVENUE: total_estimated_cost,
+            ATTRIBUTES.ADDITIONAL_COSTS: 0.0,
+            ATTRIBUTES.CUSTOMER_NAME: customer_name,
+            ATTRIBUTES.TRANSACTION_TYPE: "booking"
         })
         
         self.query_update_availability(vehicle_id, False)
         return total_estimated_cost
     
     def query_return(self, vehicle_id, customer_name, actual_km, late_days):
-        vehicle = next((v for v in self.data["vehicles"] if v["id"] == vehicle_id), None)
+        vehicle = next((v for v in self.vehicles if v[ATTRIBUTES.ID] == vehicle_id), None)
         if not vehicle:
             return None
         
-        original_booking = next((b for b in self.data["bookings"] if b["vehicle_id"] == vehicle_id), None)
+        original_booking = next((b for b in self.bookings if b[ATTRIBUTES.VEHICLE_ID] == vehicle_id), None)
         if not original_booking:
             return None
 
         cleaning_fees = 20.0                                                      # Static value, used for every vehicle
         lateness_fee = late_days * 10.0                                           # Charge 10€ per late day
-        driven_kms = max(0, actual_km - original_booking["estimated_km"])                         # Checks if driven kms exceed expected kms, otherwise, returns 0
+        driven_kms = max(0, actual_km - original_booking[ATTRIBUTES.ESTIMATED_KM])                         # Checks if driven kms exceed expected kms, otherwise, returns 0
         driven_kms_fee = driven_kms * 1.0                               # Adds 1€ per 
         additional_costs = driven_kms_fee + lateness_fee + cleaning_fees  # Sums all extra costs
-        total_revenue = original_booking["estimated_cost"] + additional_costs                       # All the costs are put together (revenue for the company)
-        current_mileage = next((v["current_mileage"] for v in self.data["vehicles"] if v["id"] == original_booking["vehicle_id"]), 0)
+        total_revenue = original_booking[ATTRIBUTES.ESTIMATED_COST] + additional_costs                       # All the costs are put together (revenue for the company)
+        current_mileage = next((v[ATTRIBUTES.CURRENT_MILEAGE] for v in self.vehicles if v[ATTRIBUTES.ID] == original_booking[ATTRIBUTES.VEHICLE_ID]), 0)
         new_mileage = current_mileage + actual_km
-        final_rental_duration = original_booking["rental_duration"] + late_days
+        final_rental_duration = original_booking[ATTRIBUTES.RENTAL_DURATION] + late_days
 
-        self.data["logs"].append({
-            "id": len(self.data["logs"]) + 1,
-            "vehicle_id": vehicle_id,
-            "rental_duration": final_rental_duration,
-            "revenue": total_revenue,
-            "additional_costs": lateness_fee,
-            "customer_name": customer_name,
-            "transaction_type": "return"
+        self.logs.append({
+            ATTRIBUTES.ID: len(self.logs) + 1,
+            ATTRIBUTES.VEHICLE_ID: vehicle_id,
+            ATTRIBUTES.RENTAL_DURATION: final_rental_duration,
+            ATTRIBUTES.REVENUE: total_revenue,
+            ATTRIBUTES.ADDITIONAL_COSTS: lateness_fee,
+            ATTRIBUTES.CUSTOMER_NAME: customer_name,
+            ATTRIBUTES.TRANSACTION_TYPE: "return"
         })
         
         self.query_update_current_mileage(vehicle_id, new_mileage)

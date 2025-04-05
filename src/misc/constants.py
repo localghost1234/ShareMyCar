@@ -5,6 +5,7 @@ from src.pages.interfaces.return_interface import ReturnInterface               
 from src.pages.interfaces.maintenance_interface import MaintenanceInterface         # Import the interface for managing vehicle maintenance
 from src.pages.interfaces.logs_interface import LogsInterface                       # Import the interface for viewing transaction logs
 from src.pages.interfaces.metrics_interface import MetricsInterface                 # Import the interface for viewing metrics and analytics
+from types import SimpleNamespace                                                   # Brings the namespace module to be used here, which helps us identify variables
 
 INTERFACES_CLASS = (                        # Define a list of interfaces for the application, mapping names to their corresponding classes
     HomeInterface,
@@ -17,6 +18,25 @@ INTERFACES_CLASS = (                        # Define a list of interfaces for th
 )
 
 DB_NAME = "database.pkl"               # Define the name of the database file name
+
+ATTRIBUTES = SimpleNamespace(
+    ID="id",
+    BRAND="brand",
+    MODEL="model",
+    CURRENT_MILEAGE="current_mileage",
+    DAILY_PRICE="daily_price",
+    MAINTENANCE_COST="maintenance_cost",
+    MAINTENANCE_MILEAGE="maintenance_mileage",
+    AVAILABLE="available",
+    VEHICLE_ID="vehicle_id",
+    CUSTOMER_NAME="customer_name",
+    RENTAL_DURATION="rental_duration",
+    ESTIMATED_COST="daily_price",
+    REVENUE="revenue",
+    ADDITIONAL_COSTS="model",
+    TRANSACTION_TYPE="transaction_type",
+)
+
 
 # This large code was part of a previous iteration using 'sqlite3', but it's now used as a reference to check DB values
 """
