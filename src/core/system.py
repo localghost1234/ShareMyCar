@@ -137,7 +137,8 @@ class System:
         driven_kms_fee = driven_kms * 1.0                               # Adds 1€ per 
         additional_costs = driven_kms_fee + lateness_fee + cleaning_fees  # Sums all extra costs
         total_revenue = original_booking["estimated_cost"] + additional_costs                       # All the costs are put together (revenue for the company)
-        new_mileage = original_booking["current_mileage"] + actual_km
+        current_mileage = next((v["current_mileage"] for v in self.data["vehicles"] if v["id"] == original_booking["vehicle_id"]), 0)
+        new_mileage = current_mileage + actual_km
         final_rental_duration = original_booking["rental_duration"] + late_days
 
         self.data["logs"].append({
