@@ -22,7 +22,7 @@ class LogsInterface(BaseInterface):
 
         self.load_content(                                      # Load transaction logs into the Listbox components
             headers=LOGS.HEADERS,
-            get_content=self.system.get_all_logs,               # Function to fetch log data from database
+            get_content=self.system.logs,               # Function to fetch log data from database
             generate_model=LOGS.GENERATE_MODEL,                 # Formatting model for displaying logs
             empty_message=LOGS.EMPTY_MESSAGE,                   # Message shown if no logs are available
         )

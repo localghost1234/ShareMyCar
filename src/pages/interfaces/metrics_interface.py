@@ -68,9 +68,8 @@ class MetricsInterface(BaseInterface):
 
         print("Input Query")                                                                        # Sets a text in the new frame and positions it
         print("Use '<table>:<column>:<value>' format\n(e.g. vehicles:id:1)")                        # Sets a text in the new frame and positions it
-        query_entry = input()                                                                       # Creates an Entry component to receive user input
-        
         try:                                                                                        # Creates a scope for error handling
+            query_entry = input()                                                                       # Opens channels to receive user input
             query_list = query_entry.strip().split(':')                                           # Retrieves user input from Entry, deletes trailing spaces and splits it into a list of strings (separated by ':')
             table, column, value = query_list                                                        # Extract table_name and column_name
             results_list = self.system.get_table_row(table, column, value)                    # Extracts database info with specified params
@@ -102,9 +101,6 @@ class MetricsInterface(BaseInterface):
         - Dynamic column sizing
         - Clear section headers
         """
-        all_vehicles = self.system.get_all_vehicles()                                   # Retrieve a list with all vehicles from database
-        all_bookings = self.system.get_all_bookings()                                   # Retrieve all bookings from database
-        all_logs = self.system.get_all_logs()                                           # Retrieve all logs from database
 
         current_datetime = datetime.now()                                               # Get an object with the current date and time
 
@@ -165,9 +161,9 @@ class MetricsInterface(BaseInterface):
             
             y_position -= font_size * 2.5
 
-        draw_table("Vehicles:", METRICS.PDF_HEADERS.VEHICLES, all_vehicles)                                            # Uses table information to generate, format, and print the PDF's contents
-        draw_table("Bookings:", METRICS.PDF_HEADERS.BOOKINGS, all_bookings)                                            # Uses table information to generate, format, and print the PDF's contents
-        draw_table("Transaction Logs:", METRICS.PDF_HEADERS.LOGS, all_logs)                                            # Uses table information to generate, format, and print the PDF's contents
+        draw_table("Vehicles:", METRICS.PDF_HEADERS.VEHICLES, self.system.vehicles)                                            # Uses table information to generate, format, and print the PDF's contents
+        draw_table("Bookings:", METRICS.PDF_HEADERS.BOOKINGS, self.system.bookings)                                            # Uses table information to generate, format, and print the PDF's contents
+        draw_table("Logs:", METRICS.PDF_HEADERS.LOGS, self.system.logs)                                            # Uses table information to generate, format, and print the PDF's contents
         
         pdf.save()                                                                                        # Generate the final PDF file in the previously accorded path
         print(f"Report saved as {file_path}\n")                                                             # Show a success message on the developer's console with the new file's path

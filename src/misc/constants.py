@@ -17,8 +17,6 @@ INTERFACES_CLASS = (                        # Define a list of interfaces for th
     MetricsInterface,                       # Interface for viewing metrics and querying
 )
 
-DB_NAME = "database.pkl"               # Define the name of the database file name
-
 ATTRIBUTES = SimpleNamespace(
     ID="id",
     BRAND="brand",

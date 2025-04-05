@@ -35,7 +35,7 @@ class BaseInterface:
             generate_model (callable): Function that formats content for display
             empty_message (str): Message to show when no content is available
         """
-        content = get_content()                             # Fetch data from system's function
+        content = get_content if isinstance(get_content, (list, tuple)) else get_content()
         
         if not content:                                     # Checks if there is available content in DB
             print(empty_message)                            # Displays 'empty_message' if no data
