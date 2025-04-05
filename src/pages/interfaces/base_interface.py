@@ -23,7 +23,7 @@ class BaseInterface:
 
         print(title)
         print(subtitle)
-        print()
+        print() if subtitle else None
 
 
     def load_content(self, headers, get_content, generate_model, empty_message):
