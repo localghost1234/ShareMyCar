@@ -10,7 +10,7 @@ a = Analysis(
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
-    excludes=[],
+    excludes=['bz2', 'lzma', 'multiprocessing', 'pwd', 'grp', 'fcntl', 'posix', '_hashlib', '_ssl', '_ctypes', 'defusedxml', 'uharfbuzz', 'reportlab_settings', 'dis', 'opcode', 'inspect'],
     noarchive=False,
     optimize=0,
 )

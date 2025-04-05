@@ -4,3 +4,6 @@ Hello! To create an executable with 'PyInstaller', follow the next steps:
 	pyinstaller --onefile --console --clean --icon=static/red_car_icon.ico --name ShareMyCar main.py
 
 2. Do a copy-paste of the file called 'database.pkl' on the same folder as the new .exe (to use the database info)
+
+NOTE -- If .exe is too bloated, you can add these flags to delete useless libs:
+--exclude-module bz2 --exclude-module lzma --exclude-module multiprocessing --exclude-module pwd --exclude-module grp --exclude-module fcntl --exclude-module posix --exclude-module _hashlib --exclude-module _ssl --exclude-module _ctypes --exclude-module defusedxml --exclude-module uharfbuzz --exclude-module reportlab_settings --exclude-module dis --exclude-module opcode --exclude-module inspect

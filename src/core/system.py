@@ -75,6 +75,14 @@ class System:
                 return True
         return False
     
+    def query_update_current_mileage(self, vehicle_id, new_mileage):
+        for v in self.data["vehicles"]:
+            if v["id"] == vehicle_id:
+                v["current_mileage"] = new_mileage
+                save_data(self.data)
+                return True
+        return False
+    
     def query_update_maintenance_mileage(self, vehicle_id):
         for v in self.data["vehicles"]:
             if v["id"] == vehicle_id:
@@ -122,23 +130,26 @@ class System:
         original_booking = next((b for b in self.data["bookings"] if b["vehicle_id"] == vehicle_id), None)
         if not original_booking:
             return None
-        
-        self.data["bookings"] = [b for b in self.data["bookings"] if b["vehicle_id"] != vehicle_id]
-        rental_duration = original_booking["rental_duration"] + late_days
-        vehicle["current_mileage"] += actual_km
-        maintenance_cost = vehicle["maintenance_cost"] * actual_km
-        late_fee = vehicle["daily_price"] * late_days
-        total_revenue = maintenance_cost + late_fee
-        
+
+        cleaning_fees = 20.0                                                      # Static value, used for every vehicle
+        lateness_fee = late_days * 10.0                                           # Charge 10€ per late day
+        driven_kms = max(0, actual_km - original_booking["estimated_km"])                         # Checks if driven kms exceed expected kms, otherwise, returns 0
+        driven_kms_fee = driven_kms * 1.0                               # Adds 1€ per 
+        additional_costs = driven_kms_fee + lateness_fee + cleaning_fees  # Sums all extra costs
+        total_revenue = original_booking["estimated_cost"] + additional_costs                       # All the costs are put together (revenue for the company)
+        new_mileage = original_booking["current_mileage"] + actual_km
+        final_rental_duration = original_booking["rental_duration"] + late_days
+
         self.data["logs"].append({
             "id": len(self.data["logs"]) + 1,
             "vehicle_id": vehicle_id,
-            "rental_duration": rental_duration,
+            "rental_duration": final_rental_duration,
             "revenue": total_revenue,
-            "additional_costs": late_fee,
+            "additional_costs": lateness_fee,
             "customer_name": customer_name,
             "transaction_type": "return"
         })
         
+        self.query_update_current_mileage(vehicle_id, new_mileage)
         self.query_update_availability(vehicle_id, True)
         return total_revenue

@@ -42,11 +42,11 @@ class MetricsInterface(BaseInterface):
         print()
         is_valid = lambda num: num < 1 or num > 3
         message = """Please choose a valid operation:
-                1) Make Query
-                2) Download Full Report
-                3) Return to main menu
+        1) Make Query
+        2) Download Full Report
+        3) Return to main menu
 
-                """
+        """
                 
         action_number = input_loop(is_valid, message)
 
