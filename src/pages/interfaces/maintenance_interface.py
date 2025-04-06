@@ -9,17 +9,13 @@ class MaintenanceInterface(BaseInterface):
     - Viewing maintenance-required vehicles
     - Updating maintenance status
     - Resetting maintenance mileage
-    
-    Inherits from BaseInterface for common functionality.
-    
-    Attributes:
-        refresh_list (function): Callback to refresh the vehicle list
     """
 
     def __init__(self, on_return_home, system):
         """Initialize the maintenance interface with vehicle list and event bindings.
         
         Args:
+            on_return_home: Callable used to go back to main menu interface
             system: Reference to the application's System instance
         """
         super().__init__(*MAINTENANCE.TITLES, system=system)                             # Initializes 'BaseInterface' with the pre-defined TITLES strings

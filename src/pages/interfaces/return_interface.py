@@ -9,15 +9,13 @@ class ReturnInterface(BaseInterface):
     - Select vehicles by double-clicking
     - Enter return details (kilometers driven and late days)
     - Calculate and process the total return cost
-    
-    Attributes:
-        refresh_list (function): Callback to refresh the vehicle list
     """
     
     def __init__(self, on_return_home, system):
         """Initialize the return interface with vehicle list and event bindings.
         
         Args:
+            on_return_home: Callable used to go back to main menu interface
             system: Reference to the application's System instance
         """
         super().__init__(*RETURN.TITLES, system=system)                                  # Initializes 'BaseInterface' with the pre-defined TITLES strings

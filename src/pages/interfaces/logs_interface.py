@@ -4,18 +4,13 @@ from src.misc.interface_strings import LOGS                                   # 
 class LogsInterface(BaseInterface):
     """ 
     Interface for displaying transaction logs within the system.
-    
-    This class extends `BaseInterface` and presents a structured list of recorded transactions.
-    It initializes a scrollable listbox and loads log entries retrieved from the system.
-
-    Attributes:
-        system: Reference to the application's System instance
     """
 
     def __init__(self, on_return_home, system):
         """Initialize the logs interface with log entries display.
         
         Args:
+            on_return_home: Callable used to go back to main menu interface
             system: Reference to the application's System instance
         """
         super().__init__(*LOGS.TITLES, system=system)            # Initializes 'BaseInterface' with the pre-defined TITLES strings

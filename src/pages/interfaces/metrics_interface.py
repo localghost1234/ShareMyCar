@@ -18,6 +18,7 @@ class MetricsInterface(BaseInterface):
         - Transaction logs
 
     Attributes:
+        on_return_home: Callable used to go back to main menu interface
         system: Reference to the application's System instance
     """
 

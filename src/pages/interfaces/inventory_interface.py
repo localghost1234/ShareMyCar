@@ -13,6 +13,7 @@ class InventoryInterface(BaseInterface):
         """Initialize the inventory interface.
         
         Args:
+            on_return_home: Callable used to go back to main menu interface
             system: Reference to the application's System instance
         """
         super().__init__(*INVENTORY.TITLES, system=system)                                                 # Initializes 'BaseInterface' with the pre-defined TITLES strings
