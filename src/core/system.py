@@ -14,7 +14,6 @@ class System:
         self.vehicles = self.data["vehicles"]
         self.bookings = self.data["bookings"]
         self.logs = self.data["logs"]
-        print(self.bookings)
     
     def add_vehicle(self, brand, model, mileage, daily_price, maintenance_cost):
         self.vehicles.append({
