@@ -46,8 +46,7 @@ class BaseInterface:
         """
         content = get_content if isinstance(get_content, (list, tuple)) else get_content()
         if not content:                                     # Checks if there is available content in DB
-            print(empty_message)                            # Displays 'empty_message' if no data
-            print()
+            print(empty_message, '\n')                            # Displays 'empty_message' if no data
             return False                                     # Returns a falsy value and stops further code execution
         
         print(generate_row(headers))
