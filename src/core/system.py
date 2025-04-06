@@ -32,7 +32,7 @@ class System:
         return [record for record in self.data.get(table_name, []) if column_name in record and str(record[column_name]) == str(column_value)]
     
     def get_customer_name(self, vehicle_id):
-        return next((b for b in self.bookings if b[ATTRIBUTES.VEHICLE_ID] == vehicle_id), None)
+        return next((b[ATTRIBUTES.CUSTOMER_NAME] for b in self.bookings if b[ATTRIBUTES.VEHICLE_ID] == vehicle_id), None)
     
     def get_financial_metrics(self):
         return_logs = (log for log in self.logs if log[ATTRIBUTES.TRANSACTION_TYPE] == "return")
