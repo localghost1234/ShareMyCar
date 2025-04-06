@@ -41,8 +41,6 @@ class MetricsInterface(BaseInterface):
 
         print()        
         action_number = self.input_loop(METRICS.VALIDATOR, METRICS.LOOP_MESSAGE)
-        print()
-
         if action_number == 1:
             self.submit_query()
         elif action_number == 2:

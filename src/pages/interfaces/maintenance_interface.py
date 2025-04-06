@@ -29,7 +29,6 @@ class MaintenanceInterface(BaseInterface):
 
         if has_content:
             action_number = self.input_loop(MAINTENANCE.VALIDATOR, MAINTENANCE.LOOP_MESSAGE)
-            print()
             if action_number == 1:
                 self.check_maintenance()
             

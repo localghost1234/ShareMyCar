@@ -8,7 +8,6 @@ class HomeInterface(BaseInterface):
     """
     def __init__(self, on_switch_interface):
         super().__init__(HOME.TITLE)
-        
         action_number = self.input_loop(HOME.VALIDATOR, HOME.LOOP_MESSAGE)
         print()
         on_switch_interface(action_number)

@@ -26,7 +26,6 @@ class InventoryInterface(BaseInterface):
         )
         
         action_number = self.input_loop(INVENTORY.VALIDATOR, INVENTORY.LOOP_MESSAGE)
-        print()
         if action_number == 1:
             self.add_vehicle()
         

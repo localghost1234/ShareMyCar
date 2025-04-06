@@ -29,7 +29,6 @@ class ReturnInterface(BaseInterface):
 
         if has_content:
             action_number = self.input_loop(RETURN.VALIDATOR, RETURN.LOOP_MESSAGE)
-            print()
             if action_number == 1:
                 self.return_vehicle()
 

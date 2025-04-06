@@ -32,6 +32,7 @@ class BaseInterface:
                 action_number = int(input(input_message))
             except ValueError:
                 action_number = -1
+        print()
         return action_number
 
     def load_content(self, headers, get_content, generate_model, empty_message):
@@ -44,16 +45,14 @@ class BaseInterface:
             empty_message (str): Message to show when no content is available
         """
         content = get_content if isinstance(get_content, (list, tuple)) else get_content()
-        
         if not content:                                     # Checks if there is available content in DB
             print(empty_message)                            # Displays 'empty_message' if no data
             print()
             return False                                     # Returns a falsy value and stops further code execution
-
-        print(generate_row(headers))
         
+        print(generate_row(headers))
         for c in content:                                   # Iterates over the extracted DB content (given that the previous condition was false)
             print(generate_model(c))                        # Converts data into the necessary format string and inserts it into the listbox
-
+        
         print()
         return True
