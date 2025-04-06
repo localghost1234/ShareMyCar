@@ -1,5 +1,11 @@
 from src.misc.utilities import load_data, save_data
-from src.misc.constants import ATTRIBUTES
+from src.misc.constants import TABLES, ATTRIBUTES
+
+VEHICLES, BOOKINGS, LOGS = (
+    TABLES.VEHICLES,
+    TABLES.BOOKINGS,
+    TABLES.LOGS,
+)
 
 ID, BRAND, MODEL, CURRENT_MILEAGE, DAILY_PRICE, MAINTENANCE_COST, MAINTENANCE_MILEAGE, AVAILABLE, VEHICLE_ID, CUSTOMER_NAME, RENTAL_DURATION, ESTIMATED_KM, ESTIMATED_COST, REVENUE, ADDITIONAL_COSTS, TRANSACTION_TYPE = (
     ATTRIBUTES.ID, ATTRIBUTES.BRAND, ATTRIBUTES.MODEL, ATTRIBUTES.CURRENT_MILEAGE, ATTRIBUTES.DAILY_PRICE,
@@ -11,13 +17,20 @@ ID, BRAND, MODEL, CURRENT_MILEAGE, DAILY_PRICE, MAINTENANCE_COST, MAINTENANCE_MI
 class System:
     def __init__(self):
         self.data = load_data()
-        self.vehicles = self.data["vehicles"]
-        self.bookings = self.data["bookings"]
-        self.logs = self.data["logs"]
+        tables, counters = self.data["tables"], self.data["counters"]
+        
+        self.vehicles_count = counters[VEHICLES]
+        self.bookings_count = counters[BOOKINGS]
+        self.logs_count = counters[LOGS]
+
+        self.vehicles = tables[VEHICLES]
+        self.bookings = tables[BOOKINGS]
+        self.logs = tables[LOGS]
     
     def add_vehicle(self, brand, model, mileage, daily_price, maintenance_cost):
+        self.vehicles_count += 1
         self.vehicles.append({
-            ID: int(self.vehicles[len(self.vehicles) - 1][ID]) + 1,
+            ID: self.vehicles_count,
             BRAND: brand,
             MODEL: model,
             DAILY_PRICE: daily_price,
@@ -29,8 +42,9 @@ class System:
         save_data(self.data)
 
     def add_booking(self, vehicle_id, customer_name, rental_duration, estimated_km, estimated_cost):
+        self.bookings_count += 1
         self.bookings.append({
-            ID: int(self.bookings[len(self.bookings) - 1][ID]) + 1,
+            ID: self.bookings_count,
             VEHICLE_ID: vehicle_id,
             CUSTOMER_NAME: customer_name,
             RENTAL_DURATION: rental_duration,
@@ -40,8 +54,9 @@ class System:
         save_data(self.data)
 
     def add_log(self, vehicle_id, customer_name, rental_duration, revenue, additional_costs, transaction_type):
+        self.logs_count += 1
         self.logs.append({
-            ID: int(self.logs[len(self.logs) - 1][ID]) + 1,
+            ID: self.logs_count,
             VEHICLE_ID: vehicle_id,
             CUSTOMER_NAME: customer_name,
             RENTAL_DURATION: rental_duration,

@@ -17,6 +17,12 @@ INTERFACES_CLASS = (                        # Define a list of interfaces for th
     MetricsInterface,                       # Interface for viewing metrics and querying
 )
 
+TABLES = SimpleNamespace(
+    VEHICLES="vehicles",
+    BOOKINGS="bookings",
+    LOGS="logs"
+)
+
 ATTRIBUTES = SimpleNamespace(
     ID="id",
     BRAND="brand",
