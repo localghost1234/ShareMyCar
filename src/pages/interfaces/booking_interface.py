@@ -20,6 +20,7 @@ class BookingInterface(BaseInterface):
         """
         super().__init__(title=BOOKING.TITLE, system=system)                                           # Initializes 'BaseInterface' with the pre-defined TITLES strings
 
+        print("Provide data or press 'Enter' to cancel:")
         try:
             vehicle_id = int(input("Vehicle ID: "))                                                           # Adds a text string and positions it
             customer_name = str(input("Customer Name: "))                                                           # Adds a text string and positions it
