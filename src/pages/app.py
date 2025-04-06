@@ -25,8 +25,9 @@ class App:
         self.system = System()                                                          # Initialize the core system and database
         self.current_interface = None
         
-        signal.signal(signal.SIGINT, self.on_close)                                    # This adds behaviour to the 'X' button on the window
-        signal.signal(signal.SIGTERM, self.on_close)                                    # This adds behaviour to the 'X' button on the window
+        on_close_app = lambda x, y: self.close_app()                                  # signal.signal() asks for two params with event info, which aren't really necessary to close the app
+        signal.signal(signal.SIGINT, on_close_app)                                    # This accounts for closing the app with the 'Ctrl + C' command
+        signal.signal(signal.SIGTERM, on_close_app)                                   # This accounts for closing the app with the 'X' button on the window
         self.switch_interface(0)
 
     def switch_interface(self, interface_number):
@@ -36,10 +37,10 @@ class App:
             interface_class (class): The class object of the visual representation we wish to see.
                 Must be a class that implements a Tkinter interface with a 'frame' attribute.
         """
-        if interface_number < 0 and interface_number > 7:
-            print('Invalid interface number')
+        if interface_number == 7:
+            self.close_app()
             return
-
+    
         if self.current_interface:                                                                                  # We ensure that the 'current_interface' we access is not a null object (None)
             self.current_interface = None                                                                           # This closes/erases the current frame (space in the modal) to make space for a new one
         
@@ -48,7 +49,7 @@ class App:
         else:
             self.current_interface = INTERFACES_CLASS[interface_number](lambda: self.switch_interface(0), self.system)             # We call the class we wish to see, and pass on information about the app
 
-    def on_close(self, x, y):
+    def close_app(self):
         """Handle application shutdown.
         
         Closes the system and destroys the Tkinter root window.

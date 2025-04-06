@@ -2,7 +2,7 @@ from types import SimpleNamespace                       # Brings the namespace m
 
 HOME=SimpleNamespace(
     TITLE="Welcome to the car sharing management system!",
-    VALIDATOR=lambda num: num < 1 or num > 6,
+    VALIDATOR=lambda num: num < 1 or num > 8,
     LOOP_MESSAGE = """Please select a valid operation (1-6):
             1) Check Vehicle Inventory
             2) Book A Vehicle
@@ -10,6 +10,7 @@ HOME=SimpleNamespace(
             4) Check Vehicle Maintenance
             5) Check Logs
             6) Check Financial Metrics
+            7) Close the program
 
             """
 )
