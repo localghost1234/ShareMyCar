@@ -29,9 +29,10 @@ ATTRIBUTES = SimpleNamespace(
     VEHICLE_ID="vehicle_id",
     CUSTOMER_NAME="customer_name",
     RENTAL_DURATION="rental_duration",
-    ESTIMATED_COST="daily_price",
+    ESTIMATED_KM="estimated_km",
+    ESTIMATED_COST="estimated_cost",
     REVENUE="revenue",
-    ADDITIONAL_COSTS="model",
+    ADDITIONAL_COSTS="additional_costs",
     TRANSACTION_TYPE="transaction_type",
 )
 

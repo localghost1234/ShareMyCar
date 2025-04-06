@@ -47,7 +47,11 @@ class ReturnInterface(BaseInterface):
         """
         try:
             vehicle_id = int(input("Vehicle ID: "))
-            customer_name = str(self.system.get_customer_name(vehicle_id))                           # Retrieve customer name associated with the vehicle
+            customer_name = self.system.get_customer_name(vehicle_id)                           # Retrieve customer name associated with the vehicle
+
+            if not customer_name:
+                raise ValueError
+            
             print("Customer Name: ", customer_name)
 
             actual_km = int(input("Kilometers Driven: "))                                        # Convert kilometers driven to integer
