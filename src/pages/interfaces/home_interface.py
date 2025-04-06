@@ -1,26 +1,15 @@
-from src.misc.utilities import input_loop
+from src.pages.interfaces.base_interface import BaseInterface       # Import the BaseInterface class, which serves as a parent class for other interfaces
+from src.misc.interface_strings import HOME
 
-class HomeInterface():
+class HomeInterface(BaseInterface):
     """
         A class with a simple visual representation for welcoming the user.
         Only used on application's startup.
     """
     def __init__(self, on_switch_interface):
-        # Displays simple strings of messages, with varying types of letter and sizes
-        print("Welcome to the car sharing management system!")
-
-        validator = lambda num: num < 1 or num > 6
-        message = """Please select a valid operation (1-6):
-            1) Check Vehicle Inventory
-            2) Book A Vehicle
-            3) Return A Vehicle
-            4) Check Vehicle Maintenance
-            5) Check Logs
-            6) Check Financial Metrics
-
-            """
+        super().__init__(HOME.TITLE)
         
-        action_number = input_loop(validator, message)
-
+        action_number = self.input_loop(HOME.VALIDATOR, HOME.LOOP_MESSAGE)
+        print()
         on_switch_interface(action_number)
 

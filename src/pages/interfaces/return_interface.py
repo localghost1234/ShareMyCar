@@ -1,6 +1,5 @@
 from src.pages.interfaces.base_interface import BaseInterface   # Import the BaseInterface class, a parent class providing common functionality for other interfaces
 from src.misc.interface_strings import RETURN                             # Import the RETURN namespace, containing strings or configurations for the return interface
-from src.misc.utilities import input_loop
 
 class ReturnInterface(BaseInterface):
     """
@@ -21,7 +20,7 @@ class ReturnInterface(BaseInterface):
         Args:
             system: Reference to the application's System instance
         """
-        super().__init__(system, *RETURN.TITLES)                                  # Initializes 'BaseInterface' with the pre-defined TITLES strings
+        super().__init__(*RETURN.TITLES, system=system)                                  # Initializes 'BaseInterface' with the pre-defined TITLES strings
 
         has_content = self.load_content(                                                          # Executes necessary modules to extract database content and display it accordingly
                 headers=RETURN.HEADERS,
@@ -31,15 +30,8 @@ class ReturnInterface(BaseInterface):
             )
 
         if has_content:
-            validator = lambda num: num < 1 or num > 2
-            message = """Choose an action:
-                            1) Return Vehicle
-                            2) Back to main menu
-                            
-                            """
-            
-            action_number = input_loop(validator, message)
-
+            action_number = self.input_loop(RETURN.VALIDATOR, RETURN.LOOP_MESSAGE)
+            print()
             if action_number == 1:
                 self.return_vehicle()
 

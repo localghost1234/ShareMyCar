@@ -18,7 +18,7 @@ class LogsInterface(BaseInterface):
         Args:
             system: Reference to the application's System instance
         """
-        super().__init__(system, *LOGS.TITLES)            # Initializes 'BaseInterface' with the pre-defined TITLES strings
+        super().__init__(*LOGS.TITLES, system=system)            # Initializes 'BaseInterface' with the pre-defined TITLES strings
 
         self.load_content(                                      # Load transaction logs into the Listbox components
             headers=LOGS.HEADERS,

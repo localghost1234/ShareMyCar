@@ -13,9 +13,9 @@ class System:
             ATTRIBUTES.ID: len(self.vehicles) + 1,
             ATTRIBUTES.BRAND: brand,
             ATTRIBUTES.MODEL: model,
-            ATTRIBUTES.CURRENT_MILEAGE: mileage,
             ATTRIBUTES.DAILY_PRICE: daily_price,
             ATTRIBUTES.MAINTENANCE_COST: maintenance_cost,
+            ATTRIBUTES.CURRENT_MILEAGE: mileage,
             ATTRIBUTES.MAINTENANCE_MILEAGE: mileage + 10000,
             ATTRIBUTES.AVAILABLE: True
         }

@@ -1,6 +1,5 @@
 from src.pages.interfaces.base_interface import BaseInterface       # Import the BaseInterface class, a parent class providing common functionality for other interfaces
 from src.misc.interface_strings import MAINTENANCE                            # Import the MAINTENANCE namespace, containing strings or configurations for the maintenance interface
-from src.misc.utilities import input_loop
 
 class MaintenanceInterface(BaseInterface):
     """ 
@@ -23,7 +22,7 @@ class MaintenanceInterface(BaseInterface):
         Args:
             system: Reference to the application's System instance
         """
-        super().__init__(system, *MAINTENANCE.TITLES)                             # Initializes 'BaseInterface' with the pre-defined TITLES strings
+        super().__init__(*MAINTENANCE.TITLES, system=system)                             # Initializes 'BaseInterface' with the pre-defined TITLES strings
 
         has_content = self.load_content(                                                          # Loads the list with vehicles that need maintenance
                 headers=MAINTENANCE.HEADERS,
@@ -33,15 +32,8 @@ class MaintenanceInterface(BaseInterface):
             )
 
         if has_content:
-            validator = lambda num: num < 1 or num > 2
-            message = """Choose an action:
-                            1) Remove vehicle from list
-                            2) Return to main menu
-                            
-                            """
-            
-            action_number = input_loop(validator, message)
-
+            action_number = self.input_loop(MAINTENANCE.VALIDATOR, MAINTENANCE.LOOP_MESSAGE)
+            print()
             if action_number == 1:
                 self.check_maintenance()
             
@@ -52,10 +44,13 @@ class MaintenanceInterface(BaseInterface):
         Displays confirmation dialog for completing vehicle maintenance.
         """
 
-        vehicle_id = input("Vehicle ID: ")                       # Label for vehicle ID
-        is_updated = self.system.query_update_maintenance_mileage(vehicle_id)
+        try:
+            vehicle_id = int(input("Vehicle ID: "))                       # Label for vehicle ID
+            is_updated = self.system.query_update_maintenance_mileage(vehicle_id)
 
-        if is_updated:
-            print("Maintenance was done successfully!\n")
-        else:
-            print("Vehicle not found, please try again.\n")
+            if is_updated:
+                print("Maintenance was done successfully!\n")
+            else:
+                print("Vehicle not found, please try again.\n")
+        except ValueError:
+            print('Invalid value, please try again.\n')

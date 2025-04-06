@@ -1,5 +1,19 @@
 from types import SimpleNamespace                       # Brings the namespace module to be used here, which helps us identify variables
 
+HOME=SimpleNamespace(
+    TITLE="Welcome to the car sharing management system!",
+    VALIDATOR=lambda num: num < 1 or num > 6,
+    LOOP_MESSAGE = """Please select a valid operation (1-6):
+            1) Check Vehicle Inventory
+            2) Book A Vehicle
+            3) Return A Vehicle
+            4) Check Vehicle Maintenance
+            5) Check Logs
+            6) Check Financial Metrics
+
+            """
+)
+
 INVENTORY=SimpleNamespace(                                                                                  # Variable with strings to be used in InventoryInterface
     TITLES = ("Inventory Management", "All existing vehicles:"),                                            # Title and subtitle of interface
     HEADERS = ("ID", "Brand", "Model", "Mileage (kms)", "Daily Price", "Maintenance Cost", "Available"),    # Column names shown on top of displayed data
@@ -12,7 +26,13 @@ INVENTORY=SimpleNamespace(                                                      
         f"€{content.get('daily_price'):<15} | "
         f"€{content.get('maintenance_cost'):<15} | "
         f"{'Yes' if content.get('available') else 'No':<15}"
-    )
+    ),
+    VALIDATOR = lambda num: num < 1 or num > 2,
+    LOOP_MESSAGE = """Choose an action:
+                    1) Add Vehicle
+                    2) Back to main menu
+                    
+                    """
 )
 
 BOOKING=SimpleNamespace(                                                                # Variable with strings to be used in BookingInterface
@@ -30,7 +50,13 @@ RETURN=SimpleNamespace(                                                         
         f"{content.get('current_mileage'):<15} | "
         f"€{content.get('daily_price'):<15} | "
         f"€{content.get('maintenance_cost'):<15}"
-    )
+    ),
+    VALIDATOR = lambda num: num < 1 or num > 2,
+    LOOP_MESSAGE = """Choose an action:
+                1) Return Vehicle
+                2) Back to main menu
+                
+                """
 )
 
 MAINTENANCE=SimpleNamespace(                                                        # Variable with strings to be used in MaintenanceInterface
@@ -43,7 +69,13 @@ MAINTENANCE=SimpleNamespace(                                                    
         f"{content.get('model'):<15} | "
         f"{content.get('current_mileage'):<15} | "
         f"€{content.get('maintenance_cost'):<15}"
-    )
+    ),
+    VALIDATOR = lambda num: num < 1 or num > 2,
+    LOOP_MESSAGE = """Choose an action:
+                    1) Remove vehicle from list
+                    2) Return to main menu
+                    
+                    """
 )
 
 LOGS=SimpleNamespace(                                                                                                                                   # Variable with strings to be used in LogsInterface
@@ -69,5 +101,12 @@ METRICS=SimpleNamespace(                                                        
         VEHICLES = ("ID", "Brand", "Model", "Mileage", "Daily Price", "Maintenance Cost", "Available", "Maintenance Mileage"),  # Column names for the 'vehicles' table
         BOOKINGS = ("ID", "Vehicle ID", "Rental Duration (Days)", "Estimated KM", "Estimated Cost", "Customer Name"),                      # Column names for the 'bookings' table
         LOGS = ("ID", "Vehicle ID", "Rental Duration (Days)", "Revenue", "Additional Costs", "Customer Name", "Transaction Type"),     # Column names for the 'logs' table
-    )
+    ),
+    VALIDATOR = lambda num: num < 1 or num > 3,
+    LOOP_MESSAGE = """Please choose a valid operation:
+        1) Make Query
+        2) Download Full Report
+        3) Return to main menu
+
+        """
 )

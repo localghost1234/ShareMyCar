@@ -1,6 +1,6 @@
 from src.pages.interfaces.base_interface import BaseInterface   # Import the BaseInterface class, a parent class providing common functionality for other interfaces
 from src.misc.interface_strings import METRICS                            # Import the METRICS constant, containing strings or configurations for the metrics interface
-from src.misc.utilities import generate_row, input_loop                       # 
+from src.misc.utilities import generate_row                      # 
 from reportlab.lib.pagesizes import A4                          # Import the A4 constant from reportlab, defining the standard A4 page size for PDF generation
 from reportlab.pdfgen import canvas                             # Import the canvas class from reportlab for creating and drawing on PDF documents
 from datetime import datetime                                   # Import the datetime class for working with dates and times
@@ -27,10 +27,9 @@ class MetricsInterface(BaseInterface):
         Args:
             system: Reference to the application's System instance
         """
-        super().__init__(system, *METRICS.TITLES)
+        super().__init__(*METRICS.TITLES, system=system)
         
         metrics = self.system.get_financial_metrics()                                                        # Retrieve financial metrics
-
         if not metrics:                                                                                          # If no metrics are available, display an empty message
             print(METRICS.EMPTY_MESSAGE, '\n')
             on_return_home()
@@ -39,16 +38,9 @@ class MetricsInterface(BaseInterface):
         for idx, h in enumerate(METRICS.HEADERS):                                                                # Prepares to iterate over a list with the info subtitles, giving out its index and inner value
             print(f"{h}: ", round(metrics[idx], 2))                                                                     # Displays text with the header and positions it in the Frame
 
+        print()        
+        action_number = self.input_loop(METRICS.VALIDATOR, METRICS.LOOP_MESSAGE)
         print()
-        validator = lambda num: num < 1 or num > 3
-        message = """Please choose a valid operation:
-        1) Make Query
-        2) Download Full Report
-        3) Return to main menu
-
-        """
-                
-        action_number = input_loop(validator, message)
 
         if action_number == 1:
             self.submit_query()

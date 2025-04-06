@@ -1,6 +1,5 @@
 from src.pages.interfaces.base_interface import BaseInterface       # Import the BaseInterface class, which serves as a parent class for other interfaces
 from src.misc.interface_strings import INVENTORY                              # Import the INVENTORY namespace, which contains strings or configurations related to the inventory interface
-from src.misc.utilities import input_loop
 
 class InventoryInterface(BaseInterface):
     """
@@ -16,7 +15,7 @@ class InventoryInterface(BaseInterface):
         Args:
             system: Reference to the application's System instance
         """
-        super().__init__(system, *INVENTORY.TITLES)                                                 # Initializes 'BaseInterface' with the pre-defined TITLES strings
+        super().__init__(*INVENTORY.TITLES, system=system)                                                 # Initializes 'BaseInterface' with the pre-defined TITLES strings
 
         self.load_content(                                                                      # Executes necessary modules to extract database content and display it accordingly
             headers=INVENTORY.HEADERS,
@@ -24,16 +23,9 @@ class InventoryInterface(BaseInterface):
             generate_model=INVENTORY.GENERATE_MODEL,                                            # Enters string generator for each listbox row
             empty_message=INVENTORY.EMPTY_MESSAGE,                                              # Message to be displayed in case no content is found
         )
-
-        validator = lambda num: num < 1 or num > 2
-        message = """Choose an action:
-                        1) Add Vehicle
-                        2) Back to main menu
-                        
-                        """
         
-        action_number = input_loop(validator, message)
-
+        action_number = self.input_loop(INVENTORY.VALIDATOR, INVENTORY.LOOP_MESSAGE)
+        print()
         if action_number == 1:
             self.add_vehicle()
         

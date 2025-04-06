@@ -11,7 +11,7 @@ class BaseInterface:
         listbox: The scrollable listbox widget (if created)
     """
     
-    def __init__(self, system, title, subtitle=""):
+    def __init__(self, title, subtitle="", system=None):
         """Initializes the interface with a title and optional subtitle.
         
         Args:
@@ -25,6 +25,14 @@ class BaseInterface:
         print(subtitle)
         print() if subtitle else None
 
+    def input_loop(self, on_validate_constraints, input_message):
+        action_number = -1
+        while on_validate_constraints(action_number):
+            try:
+                action_number = int(input(input_message))
+            except ValueError:
+                action_number = -1
+        return action_number
 
     def load_content(self, headers, get_content, generate_model, empty_message):
         """Loads content into the Listbox based on provided data retrieval functions.
