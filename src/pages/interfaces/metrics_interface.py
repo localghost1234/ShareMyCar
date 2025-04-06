@@ -102,10 +102,10 @@ class MetricsInterface(BaseInterface):
 
         x_position = 50                                                                              # Adjust horizontal position
         y_position = height - 50                                                                     # Adjust vertical position for further text strings
-        font_size = 8                                                                                # Define text size
+        font_size = 6                                                                                # Define text size
         pdf.setFont("Helvetica", font_size)                                                          # Define text font and size for PDF object
 
-        def draw_table(title, headers, data):
+        def draw_table(title, data):
             """Draw a formatted table in the PDF document.
             
             Args:
@@ -113,26 +113,31 @@ class MetricsInterface(BaseInterface):
                 data (list): List of rows to display in the table
             """
             nonlocal y_position                                                                           # Since variable 'y_position' is set outside of this scope, we need to remind the function to use its outter value
-            x_pos = x_position                                                                            # TODO: Improve this -- we create a new variable with the same value, but can lead to errors
-            
+
             pdf.drawString(x_position, y_position, title)                                               # Writes text to PDF with the displayed table's name
             y_position -= font_size * 1.5
             
-            col_widths = [w * 5 + 10 for w in [max(len(str(item)) for item in col) for col in zip(headers, *data)]]     # Gets the max width for each column by finding the longest string length in headers and data and changes the scale of each width dynamically and returns the results
-            pdf.setFont("Helvetica-Bold", font_size)                                                      # Set the font and size to be used in the PDF object
-            
-            for i, header in enumerate(headers):                                                          # Takes the index and inner value of the 'headers' list
-                pdf.drawString(x_pos, y_position, header)                                                 # Writes the column names (headers) at the indicated position of the PDF
-                x_pos += col_widths[i]                                                                    # Depending on the amount of columns, the horizontal position is moved
+            if not data:
+                pdf.drawString(x_position, y_position, 'EMPTY')
+                y_position -= font_size * 2
+                return
+     
+            headers = [str(key).upper() for key in list(data[0].keys())]
+            rows = [[str(value) for value in list(row.values())] for row in data]
+            col_widths = [w * font_size * 0.8 for w in [max(len(item) for item in col) for col in zip(headers, rows)]]     # Gets the max width for each column by finding the longest string length in headers and data and changes the scale of each width dynamically and returns the results
+       
+            x_pos_headers = x_position                                                                            # TODO: Improve this -- we create a new variable with the same value, but can lead to errors
+            for i, h in enumerate(headers):                                                          # Takes the index and inner value of the 'headers' list
+                pdf.drawString(x_pos_headers, y_position, h)                                                 # Writes the column names (headers) at the indicated position of the PDF
+                x_pos_headers += col_widths[i]                                                                    # Depending on the amount of columns, the horizontal position is moved
             
             y_position -= font_size * 1.25                                                                # Lowers the vertical position of the pointer, in accordance to the row's text size
-            pdf.setFont("Helvetica", font_size)                                                           # Set the rows' font and size
 
-            for row in data:                                                                              # Iterate over the list of database content
-                x_pos = x_position                                                                        # TODO: Improve this -- we create a new variable with the same value, but can lead to errors
-                for i, cell in enumerate(row.values()):                                                            # Extract each piece of information from the row's list and their index
-                    pdf.drawString(x_pos, y_position, str(cell))                                          # Writes the information to the PDF, aligned with its corresponding column
-                    x_pos += col_widths[i]                                                                # Moves the PDF object's pointer to the next column's horizontal position
+            for row in rows:                                                                              # Iterate over the list of database content
+                x_pos_cell = x_position                                                                        # TODO: Improve this -- we create a new variable with the same value, but can lead to errors
+                for i, cell in enumerate(row):                                                            # Extract each piece of information from the row's list and their index
+                    pdf.drawString(x_pos_cell, y_position, str(cell))                                          # Writes the information to the PDF, aligned with its corresponding column
+                    x_pos_cell += col_widths[i]                                                                # Moves the PDF object's pointer to the next column's horizontal position
                 y_position -= font_size * 1.25                                                            # Move the vertical pointer to the next row's position, in accordance to the row's text size
                 if y_position < 50:                                                                       # Checks if vertical position is close to the end of the page
                     pdf.showPage()                                                                        # Closes current page and if needed, starts a new one
@@ -140,9 +145,9 @@ class MetricsInterface(BaseInterface):
             
             y_position -= font_size * 2.5
 
-        draw_table("Vehicles:", METRICS.PDF_HEADERS.VEHICLES, self.system.vehicles)                                            # Uses table information to generate, format, and print the PDF's contents
-        draw_table("Bookings:", METRICS.PDF_HEADERS.BOOKINGS, self.system.bookings)                                            # Uses table information to generate, format, and print the PDF's contents
-        draw_table("Logs:", METRICS.PDF_HEADERS.LOGS, self.system.logs)                                            # Uses table information to generate, format, and print the PDF's contents
+        draw_table("Vehicles:", self.system.vehicles)                                            # Uses table information to generate, format, and print the PDF's contents
+        draw_table("Bookings:", self.system.bookings)                                            # Uses table information to generate, format, and print the PDF's contents
+        draw_table("Logs:", self.system.logs)                                            # Uses table information to generate, format, and print the PDF's contents
         
         pdf.save()                                                                                        # Generate the final PDF file in the previously accorded path
         print(f"Report saved as {file_path}\n")                                                             # Show a success message on the developer's console with the new file's path
