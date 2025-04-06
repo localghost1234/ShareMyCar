@@ -14,6 +14,7 @@ class System:
         self.vehicles = self.data["vehicles"]
         self.bookings = self.data["bookings"]
         self.logs = self.data["logs"]
+        print(self.bookings)
     
     def add_vehicle(self, brand, model, mileage, daily_price, maintenance_cost):
         self.vehicles.append({
@@ -39,7 +40,7 @@ class System:
         })
         save_data(self.data)
 
-    def add_log(self, vehicle_id, customer_name, rental_duration, revenue, additional_costs, type):
+    def add_log(self, vehicle_id, customer_name, rental_duration, revenue, additional_costs, transaction_type):
         self.logs.append({
             ID: int(self.logs[len(self.logs) - 1][ID]) + 1,
             VEHICLE_ID: vehicle_id,
@@ -47,7 +48,7 @@ class System:
             RENTAL_DURATION: rental_duration,
             REVENUE: revenue,
             ADDITIONAL_COSTS: additional_costs,
-            TRANSACTION_TYPE: type
+            TRANSACTION_TYPE: transaction_type
         })
         save_data(self.data)
     
@@ -129,6 +130,7 @@ class System:
         )
         
         self.query_update_availability(vehicle_id, False)
+        save_data(self.data)
         return total_estimated_cost
     
     def query_return(self, vehicle_id, customer_name, actual_km, late_days):
@@ -162,4 +164,5 @@ class System:
         
         self.query_update_current_mileage(vehicle_id, new_mileage)
         self.query_update_availability(vehicle_id, True)
+        save_data(self.data)
         return total_revenue
