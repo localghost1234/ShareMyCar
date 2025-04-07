@@ -1,4 +1,4 @@
-from src.misc.utilities import load_data, save_data
+from src.core.database import load_data, save_data
 from src.misc.constants import TABLES, ATTRIBUTES
 
 VEHICLES, BOOKINGS, LOGS = (
