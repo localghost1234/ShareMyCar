@@ -103,14 +103,14 @@ class MetricsInterface(BaseInterface):
                 headers (list): Column headers for the table
                 data (dictionary): List of rows to display in the table
             """
-            nonlocal y_position                                                                      # Since variable 'y_position' is set outside of this scope, we need to remind the function to use its outter value
-            pdf.drawString(x_position, y_position, title)                                            # Writes text to PDF with the displayed table's name
-            y_position -= font_size * 1.5
+            nonlocal y_position                                                       # Since variable 'y_position' is set outside of this scope, we need to remind the function to use its outter value
+            pdf.drawString(x_position, y_position, title)                             # Writes text to PDF with the displayed table's name
+            y_position -= font_size * 1.5                                             # Lowers the vertical position of the pointer, in accordance to the row's text size
             
-            if not data:
-                pdf.drawString(x_position, y_position, 'EMPTY')
-                y_position -= font_size * 2
-                return
+            if not data:                                                              # Checks if content is available
+                pdf.drawString(x_position, y_position, 'EMPTY')                       # If no content is found, a string is displayed instead of a table
+                y_position -= font_size * 2                                           # Lowers the vertical position of the pointer, in accordance to the row's text size
+                return                                                                # Stops further code execution
      
             headers = [str(key).upper() for key in list(data[0].keys())]                                                    # Gets a list of the column names, turns them into strings and capitalizes them
             rows = [[str(value) for value in list(row.values())] for row in data]                                           # Gets a list of the values of every object in 'data' and turns them into strings for easier handling
