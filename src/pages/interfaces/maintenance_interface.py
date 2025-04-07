@@ -18,9 +18,9 @@ class MaintenanceInterface(BaseInterface):
             on_return_home (Callable): Function used to go back to main menu interface
             system (System): Reference to the application's System instance
         """
-        super().__init__(*MAINTENANCE.TITLES, system=system)                             # Initializes 'BaseInterface' with the pre-defined TITLES strings
+        super().__init__(*MAINTENANCE.TITLES, system=system)                            # Initializes 'BaseInterface' with the pre-defined TITLES strings
 
-        has_content = self.load_content(                                                          # Loads the list with vehicles that need maintenance
+        has_content = self.load_content(                                                # Loads the list with vehicles that need maintenance
                 headers=MAINTENANCE.HEADERS,
                 get_content=self.system.get_vehicles_requiring_maintenance,             # Function to fetch vehicles requiring maintenance
                 generate_model=MAINTENANCE.GENERATE_MODEL,                              # Formatting function for vehicle data

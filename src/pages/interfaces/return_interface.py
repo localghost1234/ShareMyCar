@@ -44,24 +44,23 @@ class ReturnInterface(BaseInterface):
         Args:
             vehicle_id (int): The ID of the vehicle being returned.
         """
-        try:
-            vehicle_id = abs(int(input("Vehicle ID: ")))
-            customer_name = self.system.get_customer_name(vehicle_id)                               # Retrieve customer name associated with the vehicle
+        try:                                                                           # Creates a scope to catch any error during the process
+            vehicle_id = abs(int(input("Vehicle ID: ")))                               # Obtains vehicle id from user input, and checks if it's a valid, positive integer
+            customer_name = self.system.get_customer_name(vehicle_id)                  # Retrieve customer name associated with the vehicle
 
-            if not customer_name:
-                raise ValueError
+            if not customer_name:                                                      # If no record of a vehicle with that ID is found, customer_name will be falsy
+                raise ValueError                                                       # Making use of the 'try-except' functionality, we send our execution to the end of the scope
             
-            print("Customer Name: ", customer_name)
+            print("Customer Name: ", customer_name)                                    # Assuming the previous condition was not met, we display the customer's name
 
-            actual_km = abs(int(input("Kilometers Driven: ")))                                        # Convert kilometers driven to integer
-            late_days = abs(int(input("Late Days: ")))                                                # Convert late days to integer
-        except ValueError:
-            print("Invalid values, please try again.\n")
-            return
+            actual_km = abs(int(input("Kilometers Driven: ")))                         # Obtain kilometers driven by the customer and ensure input is a positive integer
+            late_days = abs(int(input("Late Days: ")))                                 # Obtain extra days after original duration estimation and ensure input is a positive integer
+        except ValueError:                                                             # If any error is found, code skips to this line
+            print("Invalid values, please try again.\n")                               # Print error message
+            return                                                                     # Stop further code execution
 
         total_cost = self.system.query_return(vehicle_id, customer_name, actual_km, late_days)  # Calculate total cost
-
-        if total_cost:
-            print(f"Vehicle returned! Total cost: €{total_cost}\n")                          # Show confirmation message    
-        else:
-            print("Vehicle not found or already returned.\n")                           # Show error if vehicle return fails
+        if total_cost:                                                                          # Checks if the return was successful
+            print(f"Vehicle returned! Total cost: €{total_cost}\n")                             # Show success message    
+        else:                                                                                   # Alternative if return was unsuccessful
+            print("Vehicle not found or already returned.\n")                                   # Show error message
