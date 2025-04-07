@@ -1,6 +1,5 @@
 from src.pages.interfaces.base_interface import BaseInterface   # Import the BaseInterface class, a parent class providing common functionality for other interfaces
 from src.misc.interface_strings import METRICS                            # Import the METRICS constant, containing strings or configurations for the metrics interface
-from src.misc.utilities import generate_row                      # 
 from reportlab.lib.pagesizes import A4                          # Import the A4 constant from reportlab, defining the standard A4 page size for PDF generation
 from reportlab.pdfgen import canvas                             # Import the canvas class from reportlab for creating and drawing on PDF documents
 from datetime import datetime                                   # Import the datetime class for working with dates and times
@@ -73,10 +72,10 @@ class MetricsInterface(BaseInterface):
             return
 
         print(f"{len(results_list)} results found:\n")  # Displays and positions the number of results found
-        print(generate_row(results_list[0].keys()))
+        print(self.generate_row(results_list[0].keys()))
 
         for item in results_list:                                                                   # Iterate over the list with the query results
-            print(generate_row(str(v) for v in item.values()))                                                    # Extract the results from their tuples and add them to the listbox
+            print(self.generate_row(str(v) for v in item.values()))                                                    # Extract the results from their tuples and add them to the listbox
 
         print()
 

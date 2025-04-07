@@ -1,5 +1,3 @@
-from src.misc.utilities import generate_row      # Import the generate_row function, which returns a formatted string to use as column names
-
 class BaseInterface:
     """
     Base class for creating a graphical user interface with Tkinter.
@@ -49,9 +47,12 @@ class BaseInterface:
             print(empty_message, '\n')                            # Displays 'empty_message' if no data
             return False                                     # Returns a falsy value and stops further code execution
         
-        print(generate_row(headers))
+        print(self.generate_row(headers))
         for c in content:                                   # Iterates over the extracted DB content (given that the previous condition was false)
             print(generate_model(c))                        # Converts data into the necessary format string and inserts it into the listbox
         
         print()
         return True
+    
+    def generate_row(self, values):
+        return "| ".join(f"{v:<16}" for v in values)

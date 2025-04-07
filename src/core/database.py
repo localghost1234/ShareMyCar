@@ -12,5 +12,3 @@ def load_data():
 def save_data(data):
     with open(DB_NAME, "wb") as f:
         pickle.dump(data, f)
-
-generate_row = lambda values: "| ".join(f"{v:<16}" for v in values)     # Creates a string of separated values from a list
