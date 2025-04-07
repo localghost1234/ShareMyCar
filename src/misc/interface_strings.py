@@ -1,6 +1,6 @@
 from types import SimpleNamespace                       # Brings the namespace module to be used here, which helps us identify variables
 
-HOME=SimpleNamespace(
+HOME=SimpleNamespace(                                                          # Variable with strings to be used in HomeInterface
     TITLE="Welcome to the car sharing management system!",
     VALIDATOR=lambda num: num < 1 or num > 8,
     LOOP_MESSAGE = """Please select a valid operation (1-6):
@@ -28,12 +28,12 @@ INVENTORY=SimpleNamespace(                                                      
         f"€{content.get('maintenance_cost'):<15} | "
         f"{'Yes' if content.get('available') else 'No':<15}"
     ),
-    VALIDATOR = lambda num: num < 1 or num > 2,
+    VALIDATOR = lambda num: num < 1 or num > 2, # When entering a loop, it will check if the user input fits the instructions
     LOOP_MESSAGE = """Choose an action:
                     1) Add Vehicle
                     2) Back to main menu
                     
-                    """
+                    """ # When entering a loop, these instructions will be displayed for the user
 )
 
 BOOKING=SimpleNamespace(                                                                # Variable with strings to be used in BookingInterface
@@ -52,12 +52,12 @@ RETURN=SimpleNamespace(                                                         
         f"€{content.get('daily_price'):<15} | "
         f"€{content.get('maintenance_cost'):<15}"
     ),
-    VALIDATOR = lambda num: num < 1 or num > 2,
+    VALIDATOR = lambda num: num < 1 or num > 2,  # When entering a loop, it will check if the user input fits the instructions
     LOOP_MESSAGE = """Choose an action:
                 1) Return Vehicle
                 2) Back to main menu
                 
-                """
+                """ # When entering a loop, these instructions will be displayed for the user
 )
 
 MAINTENANCE=SimpleNamespace(                                                        # Variable with strings to be used in MaintenanceInterface
@@ -71,12 +71,12 @@ MAINTENANCE=SimpleNamespace(                                                    
         f"{content.get('current_mileage'):<15} | "
         f"€{content.get('maintenance_cost'):<15}"
     ),
-    VALIDATOR = lambda num: num < 1 or num > 2,
+    VALIDATOR = lambda num: num < 1 or num > 2,  # When entering a loop, it will check if the user input fits the instructions
     LOOP_MESSAGE = """Choose an action:
                     1) Remove vehicle from list
                     2) Return to main menu
                     
-                    """
+                    """ # When entering a loop, these instructions will be displayed for the user
 )
 
 LOGS=SimpleNamespace(                                                                                                                                   # Variable with strings to be used in LogsInterface
@@ -103,11 +103,11 @@ METRICS=SimpleNamespace(                                                        
         BOOKINGS = ("Booking ID", "Vehicle ID", "Rental Duration (Days)", "Estimated KM", "Estimated Cost", "Customer Name"),                      # Column names for the 'bookings' table
         LOGS = ("Log ID", "Vehicle ID", "Rental Duration (Days)", "Revenue", "Additional Costs", "Customer Name", "Transaction Type"),     # Column names for the 'logs' table
     ),
-    VALIDATOR = lambda num: num < 1 or num > 3,
+    VALIDATOR = lambda num: num < 1 or num > 3,  # When entering a loop, it will check if the user input fits the instructions
     LOOP_MESSAGE = """Please choose a valid operation:
         1) Make Query
         2) Download Full Report
         3) Return to main menu
 
-        """
+        """ # When entering a loop, these instructions will be displayed for the user
 )
