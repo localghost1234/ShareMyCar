@@ -29,27 +29,26 @@ class MetricsInterface(BaseInterface):
         """
         super().__init__(*METRICS.TITLES, system=system)
         
-        metrics = self.system.get_financial_metrics()                                                        # Retrieve financial metrics
-        if not metrics:                                                                                          # If no metrics are available, display an empty message
-            print(METRICS.EMPTY_MESSAGE, '\n')
-            on_return_home()
-            return
+        metrics = self.system.get_financial_metrics()                                               # Retrieve financial metrics from database
+        if not metrics:                                                                             # Checks if content is available
+            print(METRICS.EMPTY_MESSAGE, '\n')                                                      # Print message for empty content
+            on_return_home()                                                                        # Return to main menu
+            return                                                                                  # Stop further code execution
         
-        for idx, h in enumerate(METRICS.HEADERS):                                                                # Prepares to iterate over a list with the info subtitles, giving out its index and inner value
-            print(f"{h}: ", round(metrics[idx], 2))                                                                     # Displays text with the header and positions it in the Frame
+        for idx, h in enumerate(METRICS.HEADERS):                                                   # Iterates over a list with the info's name, giving out its index and inner value
+            print(f"{h}: ", round(metrics[idx], 2))                                                 # Displays text with its respective header
 
-        print()        
-        action_number = self.input_loop(METRICS.VALIDATOR, METRICS.LOOP_MESSAGE)
-        if action_number == 1:
-            self.submit_query()
-        elif action_number == 2:
-            self.generate_full_report()
+        print()                                                                                     # Line break to maintain readability
+        action_number = self.input_loop(METRICS.VALIDATOR, METRICS.LOOP_MESSAGE)                    # Activates input loop with its validating conditions and message
+        if action_number == 1:                                                                      # Checks if allowed action was chosen
+            self.submit_query()                                                                     # Executes module for such action
+        elif action_number == 2:                                                                    # Checks if allowed action was chosen
+            self.generate_full_report()                                                             # Executes module for such action
         
-        on_return_home()
+        on_return_home()                                                                            # Returns to main menu
 
     def submit_query(self):
         """Allows querying specific info from the database. It allows input in a 'table:column:value' format."""
-
         print("Input Query")                                                                        # Sets a text in the new frame and positions it
         print("Use '<table>:<column>:<value>' format\n(e.g. vehicles:id:1)\n")                      # Sets a text in the new frame and positions it
         try:                                                                                        # Creates a scope for error handling
@@ -75,23 +74,23 @@ class MetricsInterface(BaseInterface):
 
     def generate_full_report(self):
         """Generate a comprehensive PDF report containing:
-        - Vehicle inventory
-        - Booking records
-        - Transaction logs
+            - Vehicle inventory
+            - Booking records
+            - Transaction logs
         """
         current_datetime = datetime.now()                                               # Get an object with the current date and time
-        directory = f"{os.getcwd()}\\reports"
-        os.makedirs(directory, exist_ok=True)
-        filename = f"FullReport_{current_datetime.strftime('%Y-%m-%d_%H%M%S')}.pdf"
-        file_path = f"{directory}\\{filename}"                                      # Opens a modal prompt for the user to choose a file path for the report
+        directory = f"{os.getcwd()}\\reports"                                           # Sets a string with the current working directory, and adds a new dir where the reports shall be stored
+        os.makedirs(directory, exist_ok=True)                                           # Checks if the directory exists, and creates it if it does not
+        filename = f"FullReport_{current_datetime.strftime('%Y-%m-%d_%H%M%S')}.pdf"     # Sets a string to be used as the name of the file, with the current time
+        file_path = f"{directory}\\{filename}"                                          # Sets the complete path where the file will be stored
 
         pdf = canvas.Canvas(file_path, pagesize=A4)                                     # Create a PDF file object to manipulate
         _, height = A4                                                                  # Obtain a variable with the PDF format's height
         y_position = height - 40                                                        # Start position for content
-        font_size = 6                                                                                # Define text size
+        font_size = 6                                                                   # Define text size
 
-        pdf.setFont("Helvetica-Bold", font_size * 1.5)                                                                   # Set top text's font
-        pdf.drawString(200, y_position, f"Full Report - {current_datetime.strftime('%Y-%m-%d_%H:%M:%S')}")  # Write the title's string on top of the file
+        pdf.setFont("Helvetica-Bold", font_size * 1.5)                                                          # Set top text's font
+        pdf.drawString(200, y_position, f"Full Report - {current_datetime.strftime('%Y-%m-%d_%H:%M:%S')}")      # Write the title's string on top of the file
 
         x_position = 50                                                                              # Adjust horizontal position
         y_position = height - 50                                                                     # Adjust vertical position for further text strings
@@ -113,18 +112,18 @@ class MetricsInterface(BaseInterface):
                 y_position -= font_size * 2
                 return
      
-            headers = [str(key).upper() for key in list(data[0].keys())]
-            rows = [[str(value) for value in list(row.values())] for row in data]
+            headers = [str(key).upper() for key in list(data[0].keys())]                                                    # Gets a list of the column names, turns them into strings and capitalizes them
+            rows = [[str(value) for value in list(row.values())] for row in data]                                           # Gets a list of the values of every object in 'data' and turns them into strings for easier handling
             col_widths = [w * font_size * 0.8 for w in [max(len(item) for item in col) for col in zip(headers, *rows)]]     # Gets the max width for each column by finding the longest string length in headers and data and changes the scale of each width dynamically and returns the results
        
-            x_pos_headers = x_position                                                                              # TODO: Improve this -- we create a new variable with the same value, but can lead to errors
-            for i, h in enumerate(headers):                                                                         # Takes the index and inner value of the 'headers' list
-                pdf.drawString(x_pos_headers, y_position, h)                                                        # Writes the column names (headers) at the indicated position of the PDF
-                x_pos_headers += col_widths[i]                                                                      # Depending on the amount of columns, the horizontal position is moved
+            x_pos_headers = x_position                                                                                      # TODO: Improve this -- creates a new variable with the same value, but can lead to errors
+            for i, h in enumerate(headers):                                                                                 # Takes the index and inner value of the 'headers' list
+                pdf.drawString(x_pos_headers, y_position, h)                                                                # Writes the column names (headers) at the indicated position of the PDF
+                x_pos_headers += col_widths[i]                                                                              # Depending on the amount of columns, the horizontal position is moved
             
             y_position -= font_size * 1.25                                                                # Lowers the vertical position of the pointer, in accordance to the row's text size
             for row in rows:                                                                              # Iterate over the list of database content
-                x_pos_cell = x_position                                                                   # TODO: Improve this -- we create a new variable with the same value, but can lead to errors
+                x_pos_cell = x_position                                                                   # TODO: Improve this -- creates a new variable with the same value, but can lead to errors
                 for i, cell in enumerate(row):                                                            # Extract each piece of information from the row's list and their index
                     pdf.drawString(x_pos_cell, y_position, str(cell))                                     # Writes the information to the PDF, aligned with its corresponding column
                     x_pos_cell += col_widths[i]                                                           # Moves the PDF object's pointer to the next column's horizontal position
@@ -133,7 +132,7 @@ class MetricsInterface(BaseInterface):
                     pdf.showPage()                                                                        # Closes current page and if needed, starts a new one
                     y_position = height - 50                                                              # Resets the vertical pointer at the top of the page's size
             
-            y_position -= font_size * 2.5
+            y_position -= font_size * 2.5                                                                 # Lowers the vertical position of the pointer, in accordance to the row's text size
 
         draw_table("Vehicles:", self.system.vehicles)                                    # Uses table information to generate, format, and print the PDF's contents
         draw_table("Bookings:", self.system.bookings)                                    # Uses table information to generate, format, and print the PDF's contents

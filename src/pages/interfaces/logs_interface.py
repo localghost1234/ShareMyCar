@@ -16,7 +16,7 @@ class LogsInterface(BaseInterface):
         super().__init__(*LOGS.TITLES, system=system)           # Initializes 'BaseInterface' with the pre-defined TITLES strings
 
         self.load_content(                                      # Load transaction logs into the Listbox components
-            headers=LOGS.HEADERS,
+            headers=LOGS.HEADERS,                               # Set of strings that will be displayed at the very top (column names)
             get_content=self.system.logs,                       # Function to fetch log data from database
             generate_model=LOGS.GENERATE_MODEL,                 # Formatting model for displaying logs
             empty_message=LOGS.EMPTY_MESSAGE,                   # Message shown if no logs are available
