@@ -11,20 +11,16 @@ ID, BRAND, MODEL, CURRENT_MILEAGE, DAILY_PRICE, MAINTENANCE_COST, MAINTENANCE_MI
 class System:
     def __init__(self):
         self.data = load_data()
-        tables, counters = self.data["tables"], self.data["counters"]
-        
-        self.vehicles_count = counters[TABLES.VEHICLES]
-        self.bookings_count = counters[TABLES.BOOKINGS]
-        self.logs_count = counters[TABLES.LOGS]
+        tables, self.counters = self.data["tables"], self.data["counters"]
 
         self.vehicles = tables[TABLES.VEHICLES]
         self.bookings = tables[TABLES.BOOKINGS]
         self.logs = tables[TABLES.LOGS]
     
     def add_vehicle(self, brand, model, mileage, daily_price, maintenance_cost):
-        self.vehicles_count += 1
+        self.counters[TABLES.VEHICLES] += 1
         self.vehicles.append({
-            ID: self.vehicles_count,
+            ID: self.counters[TABLES.VEHICLES],
             BRAND: brand,
             MODEL: model,
             DAILY_PRICE: daily_price,
@@ -36,9 +32,9 @@ class System:
         save_data(self.data)
 
     def add_booking(self, vehicle_id, customer_name, rental_duration, estimated_km, estimated_cost):
-        self.bookings_count += 1
+        self.counters[TABLES.BOOKINGS] += 1
         self.bookings.append({
-            ID: self.bookings_count,
+            ID: self.counters[TABLES.BOOKINGS],
             VEHICLE_ID: vehicle_id,
             CUSTOMER_NAME: customer_name,
             RENTAL_DURATION: rental_duration,
@@ -48,9 +44,9 @@ class System:
         save_data(self.data)
 
     def add_log(self, vehicle_id, customer_name, rental_duration, revenue, additional_costs, transaction_type):
-        self.logs_count += 1
+        self.counters[TABLES.LOGS] += 1
         self.logs.append({
-            ID: self.logs_count,
+            ID: self.counters[TABLES.LOGS],
             VEHICLE_ID: vehicle_id,
             CUSTOMER_NAME: customer_name,
             RENTAL_DURATION: rental_duration,
