@@ -50,6 +50,12 @@ class InventoryInterface(BaseInterface):
             print("Invalid values, please try again.\n")                                # Print error
             return                                                                      # Stops further code execution
 
-        self.system.add_vehicle(brand, model, current_mileage, daily_price, maintenance_cost)           # Calls system's module to add a vehicle to the database with all the information
-        print("Vehicle added successfully!\n")                                                          # Displays success message
+        self.system.add_vehicle(                                                        # Calls system's module to add a vehicle to the database with all the information
+            brand=brand,                                                                # Sets parameter by key
+            model=model,                                                                # Sets parameter by key
+            current_mileage=current_mileage,                                            # Sets parameter by key
+            daily_price=daily_price,                                                    # Sets parameter by key
+            maintenance_cost=maintenance_cost                                           # Sets parameter by key
+        )
+        print("Vehicle added successfully!\n")                                          # Displays success message
     

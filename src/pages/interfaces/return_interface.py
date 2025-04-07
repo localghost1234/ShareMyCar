@@ -59,8 +59,13 @@ class ReturnInterface(BaseInterface):
             print("Invalid values, please try again.\n")                               # Print error message
             return                                                                     # Stop further code execution
 
-        total_cost = self.system.query_return(vehicle_id, customer_name, actual_km, late_days)  # Calculate total cost
-        if total_cost != None:                                                                  # Checks if the return was successful
-            print(f"Vehicle returned! Total cost: €{total_cost}\n")                             # Show success message    
-        else:                                                                                   # Alternative if return was unsuccessful
-            print("Vehicle not found or already returned.\n")                                   # Show error message
+        total_cost = self.system.query_return(                                         # Calculate total cost for the client
+            vehicle_id=vehicle_id,                                                     # Sets parameter by key
+            customer_name=customer_name,                                               # Sets parameter by key
+            actual_km=actual_km,                                                       # Sets parameter by key
+            late_days=late_days                                                        # Sets parameter by key
+        )
+        if total_cost != None:                                                         # Checks if the return was successful
+            print(f"Vehicle returned! Total cost: €{total_cost}\n")                    # Show success message    
+        else:                                                                          # Alternative if return was unsuccessful
+            print("Vehicle not found or already returned.\n")                          # Show error message
