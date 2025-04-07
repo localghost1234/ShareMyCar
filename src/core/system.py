@@ -150,8 +150,8 @@ class System:
                     or empty tuple if no 'return' logs are found
         """
         return_logs = [log for log in deepcopy(self.logs) if log[TRANSACTION_TYPE] == "return"]           # Return a list with logs whose transaction_type is 'return'
-        if not return_logs:                                                                     # Checks if any was found
-            return ()                                                                           # Returns empty tuple if none were found
+        if not return_logs:                                                                               # Checks if any was found
+            return ()                                                                                     # Returns empty tuple if none were found
         
         vehicles_copy = deepcopy(self.vehicles)                                                 # Generate a copy of data to avoid data corruption
         total_revenue = sum(log[REVENUE] for log in return_logs)                                # Generates a list of all the return logs' revenues and then adds them up
@@ -177,7 +177,7 @@ class System:
         for v in self.vehicles:                     # Iterates over the vehicles' table
             if v[ID] == vehicle_id:                 # Checks if any of them match the given id
                 v[AVAILABLE] = available            # Changes the 'available' attribute to the given value
-                self.save_all()                # Stores the new info in the .pkl database
+                self.save_all()                     # Stores the new info in the .pkl database
                 return True                         # Returns True as a sign of success
         return False                                # Returns False as a sign of failure, in case no vehicle was found
     
@@ -195,7 +195,7 @@ class System:
         for v in self.vehicles:                         # Iterates over the vehicles' table
             if v[ID] == vehicle_id:                     # Checks if any of them match the given id
                 v[CURRENT_MILEAGE] = new_mileage        # Changes current_mileage to the given value
-                self.save_all()                    # Stores info in .pkl database
+                self.save_all()                         # Stores info in .pkl database
                 return True                             # Returns True as a sign of success
         return False                                    # Returns False if no vehicle was found
     
@@ -212,7 +212,7 @@ class System:
         for v in self.vehicles:                                                         # Iterates over the vehicles' table
             if v[ID] == vehicle_id and v[MAINTENANCE_MILEAGE] <= v[CURRENT_MILEAGE]:    # Checks if any of them match the given id and the vehicle actually needs maintenance
                 v[MAINTENANCE_MILEAGE] = v[CURRENT_MILEAGE] + 10000                     # Changes maintenance_mileage to the new value
-                self.save_all()                                                    # Stores info in .pkl database
+                self.save_all()                                                         # Stores info in .pkl database
                 return True                                                             # Returns True as a sign of success
         return False                                                                    # Returns False if no vehicle was found
     
@@ -255,7 +255,7 @@ class System:
         )
         
         self.query_update_availability(vehicle_id, False)   # Updates a vehicle's availability to False (unavailable)
-        self.save_all()                                # Stores new info into .pkl database
+        self.save_all()                                     # Stores new info into .pkl database
         return total_estimated_cost                         # Returns the probable cost (for the client) that will be paid in the future
     
     def query_return(self, vehicle_id, customer_name, actual_km, late_days):
@@ -281,18 +281,18 @@ class System:
         if not original_booking:                                                                        # Check if booking was found
             return None                                                                                 # Return None if not found
 
-        self.bookings = [b for b in bookings_copy if b[VEHICLE_ID] != vehicle_id]                                           # Create a new list of bookings without the other one (deleting it)
-        cleaning_fee = 20.0                                                                                                 # Predefined value of cleaning fee to avoid discrepancies
-        lateness_fee = late_days * 10.0                                                                                     # For every late day, 10 euros are charged
-        driven_kms_fee = actual_km * 1.0                                                                                    # Take all the driven kms and charge 1 euro for them
-        additional_costs = driven_kms_fee + lateness_fee + cleaning_fee                                                     # Add up all the extra charges made
-        total_revenue = original_booking[ESTIMATED_COST] + additional_costs                                                 # Obtain the total of earnings from the booking's payment plus any other fee
-        new_mileage = vehicle[CURRENT_MILEAGE] + actual_km                                                                           # Add the current_mileage with the driven kms
-        final_rental_duration = original_booking[RENTAL_DURATION] + late_days                                               # Add the estimated rental time plus any late days
+        self.bookings = [b for b in bookings_copy if b[VEHICLE_ID] != vehicle_id]                       # Create a new list of bookings without the other one (deleting it)
+        cleaning_fee = 20.0                                                                             # Predefined value of cleaning fee to avoid discrepancies
+        lateness_fee = late_days * 10.0                                                                 # For every late day, 10 euros are charged
+        driven_kms_fee = actual_km * 1.0                                                                # Take all the driven kms and charge 1 euro for them
+        additional_costs = driven_kms_fee + lateness_fee + cleaning_fee                                 # Add up all the extra charges made
+        total_revenue = original_booking[ESTIMATED_COST] + additional_costs                             # Obtain the total of earnings from the booking's payment plus any other fee
+        new_mileage = vehicle[CURRENT_MILEAGE] + actual_km                                              # Add the current_mileage with the driven kms
+        final_rental_duration = original_booking[RENTAL_DURATION] + late_days                           # Add the estimated rental time plus any late days
 
-        if new_mileage >= vehicle[MAINTENANCE_MILEAGE]:
-            print("\nVehicle requires maintenance!")
-            print("You can do so from the Maintenance Management menu.\n")
+        if new_mileage >= vehicle[MAINTENANCE_MILEAGE]:                                                 # Checks if new mileage exceeds the mileage limit for maintenance
+            print("\nVehicle requires maintenance!")                                                    # Prints message if condition is met
+            print("You can do so from the Maintenance Management menu.\n")                              # Prints message if condition is met
 
         self.add_log(                                                 # Adds new log instance to DB
             vehicle_id=vehicle_id,                                    # Sets param to be stored
@@ -305,5 +305,5 @@ class System:
         
         self.query_update_current_mileage(vehicle_id, new_mileage)      # Update returned vehicle's total mileage
         self.query_update_availability(vehicle_id, True)                # Update returned vehicle's availability (is now available)
-        self.save_all()                                            # Store new info into .pkl database
+        self.save_all()                                                 # Store new info into .pkl database
         return total_revenue                                            # Return final revenue (for business) to be displayed
