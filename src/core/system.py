@@ -1,12 +1,6 @@
 from src.core.database import load_data, save_data
 from src.misc.constants import TABLES, ATTRIBUTES
 
-VEHICLES, BOOKINGS, LOGS = (
-    TABLES.VEHICLES,
-    TABLES.BOOKINGS,
-    TABLES.LOGS,
-)
-
 ID, BRAND, MODEL, CURRENT_MILEAGE, DAILY_PRICE, MAINTENANCE_COST, MAINTENANCE_MILEAGE, AVAILABLE, VEHICLE_ID, CUSTOMER_NAME, RENTAL_DURATION, ESTIMATED_KM, ESTIMATED_COST, REVENUE, ADDITIONAL_COSTS, TRANSACTION_TYPE = (
     ATTRIBUTES.ID, ATTRIBUTES.BRAND, ATTRIBUTES.MODEL, ATTRIBUTES.CURRENT_MILEAGE, ATTRIBUTES.DAILY_PRICE,
     ATTRIBUTES.MAINTENANCE_COST, ATTRIBUTES.MAINTENANCE_MILEAGE, ATTRIBUTES.AVAILABLE, ATTRIBUTES.VEHICLE_ID,
@@ -19,13 +13,13 @@ class System:
         self.data = load_data()
         tables, counters = self.data["tables"], self.data["counters"]
         
-        self.vehicles_count = counters[VEHICLES]
-        self.bookings_count = counters[BOOKINGS]
-        self.logs_count = counters[LOGS]
+        self.vehicles_count = counters[TABLES.VEHICLES]
+        self.bookings_count = counters[TABLES.BOOKINGS]
+        self.logs_count = counters[TABLES.LOGS]
 
-        self.vehicles = tables[VEHICLES]
-        self.bookings = tables[BOOKINGS]
-        self.logs = tables[LOGS]
+        self.vehicles = tables[TABLES.VEHICLES]
+        self.bookings = tables[TABLES.BOOKINGS]
+        self.logs = tables[TABLES.LOGS]
     
     def add_vehicle(self, brand, model, mileage, daily_price, maintenance_cost):
         self.vehicles_count += 1
