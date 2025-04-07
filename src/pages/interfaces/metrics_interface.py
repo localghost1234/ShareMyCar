@@ -3,7 +3,7 @@ from src.misc.interface_strings import METRICS                      # Import the
 from reportlab.lib.pagesizes import A4                              # Import the A4 constant from reportlab, defining the standard A4 page size for PDF generation
 from reportlab.pdfgen import canvas                                 # Import the canvas class from reportlab for creating and drawing on PDF documents
 from datetime import datetime                                       # Import the datetime class for working with dates and times
-import os
+import os                                                           # Import the 'os' class to interact with the PC
 
 class MetricsInterface(BaseInterface):
     """Interface for displaying financial metrics and generating reports.
