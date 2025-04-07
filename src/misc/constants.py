@@ -7,8 +7,8 @@ from src.pages.interfaces.logs_interface import LogsInterface                   
 from src.pages.interfaces.metrics_interface import MetricsInterface                 # Import the interface for viewing metrics and analytics
 from types import SimpleNamespace                                                   # Brings the namespace module to be used here, which helps us identify variables
 
-INTERFACES_CLASS = (                        # Define a list of interfaces for the application, mapping names to their corresponding classes
-    HomeInterface,
+INTERFACES_CLASS = (                        # Define a list of interfaces for the application, to easily handle which one gets displayed
+    HomeInterface,                          # Interface for handling app's entrance and exit
     InventoryInterface,                     # Interface for managing vehicle inventory
     BookingInterface,                       # Interface for handling vehicle bookings
     ReturnInterface,                        # Interface for handling vehicle returns
@@ -17,13 +17,13 @@ INTERFACES_CLASS = (                        # Define a list of interfaces for th
     MetricsInterface,                       # Interface for viewing metrics and querying
 )
 
-TABLES = SimpleNamespace(
+TABLES = SimpleNamespace(                   # Variable to maintain table name strings and avoid errors
     VEHICLES="vehicles",
     BOOKINGS="bookings",
     LOGS="logs"
 )
 
-ATTRIBUTES = SimpleNamespace(
+ATTRIBUTES = SimpleNamespace(               # Variable to maintain attribute name strings and avoid errors
     ID="id",
     BRAND="brand",
     MODEL="model",

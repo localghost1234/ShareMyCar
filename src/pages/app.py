@@ -16,11 +16,8 @@ class App:
     def __init__(self):
         """Initialize the application.
 
-        Sets up the system, creates the main window, and initializes the interface.
-        By default, it opens up on a one-time usage of 'HomeInterface'
-
-        Initializes:
-            - system: Core database administration
+        Sets up the system (database) and initializes the interface.
+        By default, it opens up in 'HomeInterface'
         """
         self.system = System()                                                          # Initialize the core system and database
         self.current_interface = None
@@ -52,8 +49,7 @@ class App:
     def close_app(self):
         """Handle application shutdown.
         
-        Closes the system and destroys the Tkinter root window.
-        Executed when the user clicks the window's close button.
+        Closes the database correctly and closes the CLI window.
         """
         del self.system                # Direct command with database to shut it down carefully
         print('Shutting down.')             # Shows a closing message on the delevoper's console
