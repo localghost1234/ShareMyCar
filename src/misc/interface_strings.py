@@ -1,8 +1,8 @@
 from types import SimpleNamespace                       # Brings the namespace module to be used here, which helps us identify variables
 
 HOME=SimpleNamespace(                                                          # Variable with strings to be used in HomeInterface
-    TITLE="Welcome to the car sharing management system!",
-    VALIDATOR=lambda num: num < 1 or num > 8,
+    TITLE="Welcome to the car sharing management system!",  # Message to be displayed at the top of interface
+    VALIDATOR=lambda num: num < 1 or num > 8, # When entering a loop, it will check if the user input fits the instructions
     LOOP_MESSAGE = """Please select a valid operation (1-6):
             1) Check Vehicle Inventory
             2) Book A Vehicle
@@ -12,7 +12,7 @@ HOME=SimpleNamespace(                                                          #
             6) Check Financial Metrics
             7) Close the program
 
-            """
+            """  # When entering a loop, these instructions will be displayed for the user
 )
 
 INVENTORY=SimpleNamespace(                                                                                  # Variable with strings to be used in InventoryInterface
