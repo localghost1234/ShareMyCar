@@ -46,16 +46,17 @@ class InventoryInterface(BaseInterface):
             current_mileage = int(input("Mileage: "))                                   # Turns 'current_mileage' param to an integer if possible, or raises an error
             daily_price = float(input("Daily Price: "))                                 # Turns 'daily_price' param to a float if possible, or raises an error
             maintenance_cost = float(input("Maintenance Cost: "))                       # Turns 'maintenance_cost' param to a float if possible, or raises an error
-        except ValueError:                                                              # If any of the values is something that it should not, the code skips to here
-            print("Invalid values, please try again.\n")                                # Print error
-            return                                                                      # Stops further code execution
 
-        self.system.add_vehicle(                                                        # Calls system's module to add a vehicle to the database with all the information
-            brand=brand,                                                                # Sets parameter by key
-            model=model,                                                                # Sets parameter by key
-            current_mileage=current_mileage,                                            # Sets parameter by key
-            daily_price=daily_price,                                                    # Sets parameter by key
-            maintenance_cost=maintenance_cost                                           # Sets parameter by key
-        )
-        print("Vehicle added successfully!\n")                                          # Displays success message
-    
+            if not all([brand, model]):                                                 # Checks that string values entered are acceptable
+                raise ValueError()                                                      # Raises exception and stops code execution
+
+            self.system.add_vehicle(                                                    # Calls system's module to add a vehicle to the database with all the information
+                brand=brand,                                                            # Sets parameter by key
+                model=model,                                                            # Sets parameter by key
+                current_mileage=current_mileage,                                        # Sets parameter by key
+                daily_price=daily_price,                                                # Sets parameter by key
+                maintenance_cost=maintenance_cost                                       # Sets parameter by key
+            )
+            print("Vehicle added successfully!\n")                                      # Displays success message
+        except ValueError:                                                              # If any of the values is something that it should not, the code skips to here
+            print("Invalid values, please try again.\n")                                # Print error    

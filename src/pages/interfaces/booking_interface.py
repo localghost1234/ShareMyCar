@@ -26,6 +26,9 @@ class BookingInterface(BaseInterface):
             rental_duration = abs(int(input("Rental Duration (days): ")))                       # Adds a text string and positions it
             estimated_km = abs(int(input("Estimated Kilometers: ")))                            # Adds a text string and positions it
             
+            if not customer_name:                                                               # Checks that string values entered are acceptable
+                raise ValueError()                                                              # Raises exception and stops code execution
+
             print()                                                                             # Line break to maintain readability
             cost = self.system.query_booking(                                                   # Calls the system variable's function to add a booking to the database; returns the cost of said booking
                 vehicle_id=vehicle_id,                                                          # Sets parameter by key

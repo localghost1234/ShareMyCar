@@ -49,23 +49,22 @@ class ReturnInterface(BaseInterface):
             customer_name = self.system.get_customer_name(vehicle_id)                  # Retrieve customer name associated with the vehicle
 
             if not customer_name:                                                      # If no record of a vehicle with that ID is found, customer_name will be falsy
-                raise ValueError                                                       # Making use of the 'try-except' functionality, we send our execution to the end of the scope
+                raise ValueError()                                                     # Making use of the 'try-except' functionality, we send our execution to the end of the scope
             
             print("Customer Name: ", customer_name)                                    # Assuming the previous condition was not met, we display the customer's name
 
             actual_km = abs(int(input("Kilometers Driven: ")))                         # Obtain kilometers driven by the customer and ensure input is a positive integer
             late_days = abs(int(input("Late Days: ")))                                 # Obtain extra days after original duration estimation and ensure input is a positive integer
+
+            total_cost = self.system.query_return(                                         # Calculate total cost for the client
+                vehicle_id=vehicle_id,                                                     # Sets parameter by key
+                customer_name=customer_name,                                               # Sets parameter by key
+                actual_km=actual_km,                                                       # Sets parameter by key
+                late_days=late_days                                                        # Sets parameter by key
+            )
+            if total_cost != None:                                                         # Checks if the return was successful
+                print(f"Vehicle returned! Total cost: €{total_cost}\n")                    # Show success message    
+            else:                                                                          # Alternative if return was unsuccessful
+                print("Vehicle not found or already returned.\n")                          # Show error message
         except ValueError:                                                             # If any error is found, code skips to this line
             print("Invalid values, please try again.\n")                               # Print error message
-            return                                                                     # Stop further code execution
-
-        total_cost = self.system.query_return(                                         # Calculate total cost for the client
-            vehicle_id=vehicle_id,                                                     # Sets parameter by key
-            customer_name=customer_name,                                               # Sets parameter by key
-            actual_km=actual_km,                                                       # Sets parameter by key
-            late_days=late_days                                                        # Sets parameter by key
-        )
-        if total_cost != None:                                                         # Checks if the return was successful
-            print(f"Vehicle returned! Total cost: €{total_cost}\n")                    # Show success message    
-        else:                                                                          # Alternative if return was unsuccessful
-            print("Vehicle not found or already returned.\n")                          # Show error message
