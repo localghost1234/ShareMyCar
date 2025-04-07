@@ -57,6 +57,8 @@ class InventoryInterface(BaseInterface):
                 daily_price=daily_price,                                                # Sets parameter by key
                 maintenance_cost=maintenance_cost                                       # Sets parameter by key
             )
-            print("Vehicle added successfully!\n")                                      # Displays success message
+            print("Vehicle added successfully!")                                        # Displays success message
         except ValueError:                                                              # If any of the values is something that it should not, the code skips to here
-            print("Invalid values, please try again.\n")                                # Print error    
+            print("Invalid values, please try again.")                                  # Print error
+
+        print()                                                                         # Line break to maintain readability    

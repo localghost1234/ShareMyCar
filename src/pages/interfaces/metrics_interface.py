@@ -69,7 +69,7 @@ class MetricsInterface(BaseInterface):
         for item in results_list:                                                                   # Iterate over the list with the query results
             print(self.generate_row(str(v) for v in item.values()))                                 # Extract the values of every dictionary in the list, turns them into a single string and prints them
 
-        print()                                                                                     # Line break to separate from the rest of the interface
+        print()                                                                                     # Line break to maintain readability
 
     def generate_full_report(self):
         """Generate a comprehensive PDF report containing:

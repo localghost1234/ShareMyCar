@@ -62,9 +62,11 @@ class ReturnInterface(BaseInterface):
                 actual_km=actual_km,                                                       # Sets parameter by key
                 late_days=late_days                                                        # Sets parameter by key
             )
-            if total_cost != None:                                                         # Checks if the return was successful
-                print(f"Vehicle returned! Total cost: €{total_cost}\n")                    # Show success message    
-            else:                                                                          # Alternative if return was unsuccessful
-                print("Vehicle not found or already returned.\n")                          # Show error message
-        except ValueError:                                                             # If any error is found, code skips to this line
-            print("Invalid values, please try again.\n")                               # Print error message
+            if total_cost != None:                                                       # Checks if the return was successful
+                print(f"Vehicle returned! Total cost: €{total_cost}")                    # Show success message    
+            else:                                                                        # Alternative if return was unsuccessful
+                print("Vehicle not found or already returned.")                          # Show error message
+        except ValueError:                                                               # If any error is found, code skips to this line
+            print("Invalid values, please try again.")                                   # Print error message
+
+        print()                                                                          # Line break to maintain readability

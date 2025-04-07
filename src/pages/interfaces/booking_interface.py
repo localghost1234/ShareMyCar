@@ -36,11 +36,12 @@ class BookingInterface(BaseInterface):
                 rental_duration=rental_duration,                                                # Sets parameter by key
                 estimated_km=estimated_km                                                       # Sets parameter by key
             )
-            if cost != None:                                                                     # Checks if the returned value is truthy (cost should always be above 0) 
-                print(f"Vehicle booked! Estimated cost: €{cost}\n")                              # Displays success modal with calculated cost for the client
-            else:                                                                                # Alternate condition, in case the former was falsy
-                print("Vehicle not found or unavailable.\n")                                     # Displays error modal
-        except ValueError:                                                                       # If any error occurs, code skips to this line
-            print("Invalid values, please try again.\n")                                         # Print error and skip a line
+            if cost != None:                                                                   # Checks if the returned value is truthy (cost should always be above 0) 
+                print(f"Vehicle booked! Estimated cost: €{cost}")                              # Displays success modal with calculated cost for the client
+            else:                                                                              # Alternate condition, in case the former was falsy
+                print("Vehicle not found or unavailable.")                                     # Displays error modal
+        except ValueError:                                                                     # If any error occurs, code skips to this line
+            print("Invalid values, please try again.")                                         # Print error and skip a line
 
-        on_return_home()                                                                         # Return to main menu interface
+        print()                                                                                # Line break to maintain readability
+        on_return_home()                                                                       # Return to main menu interface
