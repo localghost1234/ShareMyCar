@@ -5,22 +5,19 @@ class InventoryInterface(BaseInterface):
     """
     Represents the interface for showcasing all the existing vehicles in the database.
     Inherits components from BaseInterface.
-
-    Attributes:
-        refresh_list (function): Callback function to refresh the listbox content
     """
     def __init__(self, on_return_home, system):
         """Initialize the inventory interface.
         
         Args:
-            on_return_home: Callable used to go back to main menu interface
-            system: Reference to the application's System instance
+            on_return_home (Callable): Function used to go back to main menu interface
+            system (System): Reference to the application's System instance
         """
         super().__init__(*INVENTORY.TITLES, system=system)                                                 # Initializes 'BaseInterface' with the pre-defined TITLES strings
 
         self.load_content(                                                                      # Executes necessary modules to extract database content and display it accordingly
-            headers=INVENTORY.HEADERS,
-            get_content=self.system.vehicles,                                           # Enters function to extract database content
+            headers=INVENTORY.HEADERS,                                                          # Parameter for set of strings that will be displayed at the very top (column names)
+            get_content=self.system.vehicles,                                                   # Enters function to extract database content
             generate_model=INVENTORY.GENERATE_MODEL,                                            # Enters string generator for each listbox row
             empty_message=INVENTORY.EMPTY_MESSAGE,                                              # Message to be displayed in case no content is found
         )

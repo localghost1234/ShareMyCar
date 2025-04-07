@@ -5,8 +5,7 @@ class ReturnInterface(BaseInterface):
     """
     Interface for returning rented vehicles.
     
-    Displays a list of currently unavailable vehicles and allows users to:
-    - Select vehicles by double-clicking
+    Allows users to:
     - Enter return details (kilometers driven and late days)
     - Calculate and process the total return cost
     """
@@ -15,8 +14,8 @@ class ReturnInterface(BaseInterface):
         """Initialize the return interface with vehicle list and event bindings.
         
         Args:
-            on_return_home: Callable used to go back to main menu interface
-            system: Reference to the application's System instance
+            on_return_home (Callable): Function used to go back to main menu interface
+            system (System): Reference to the application's System instance
         """
         super().__init__(*RETURN.TITLES, system=system)                                  # Initializes 'BaseInterface' with the pre-defined TITLES strings
 

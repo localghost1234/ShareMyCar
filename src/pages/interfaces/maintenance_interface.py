@@ -15,8 +15,8 @@ class MaintenanceInterface(BaseInterface):
         """Initialize the maintenance interface with vehicle list and event bindings.
         
         Args:
-            on_return_home: Callable used to go back to main menu interface
-            system: Reference to the application's System instance
+            on_return_home (Callable): Function used to go back to main menu interface
+            system (System): Reference to the application's System instance
         """
         super().__init__(*MAINTENANCE.TITLES, system=system)                             # Initializes 'BaseInterface' with the pre-defined TITLES strings
 
