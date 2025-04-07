@@ -11,11 +11,10 @@ ID, BRAND, MODEL, CURRENT_MILEAGE, DAILY_PRICE, MAINTENANCE_COST, MAINTENANCE_MI
 class System:
     def __init__(self):
         self.data = load_data()
-        tables, self.counters = self.data["tables"], self.data["counters"]
-
-        self.vehicles = tables[TABLES.VEHICLES]
-        self.bookings = tables[TABLES.BOOKINGS]
-        self.logs = tables[TABLES.LOGS]
+        self.tables, self.counters = self.data["tables"], self.data["counters"]
+        self.vehicles = self.tables[TABLES.VEHICLES]
+        self.bookings = self.tables[TABLES.BOOKINGS]
+        self.logs = self.tables[TABLES.LOGS]
     
     def add_vehicle(self, brand, model, mileage, daily_price, maintenance_cost):
         self.counters[TABLES.VEHICLES] += 1
@@ -63,7 +62,7 @@ class System:
         return [v for v in self.vehicles if not v[AVAILABLE]]
     
     def get_table_row(self, table_name, column_name, column_value):
-        return [record for record in self.data.get(table_name, []) if column_name in record and str(record[column_name]) == str(column_value)]
+        return [record for record in self.tables.get(table_name, []) if str(column_value).lower() in str(record[column_name]).lower()]
     
     def get_customer_name(self, vehicle_id):
         return next((b[CUSTOMER_NAME] for b in self.bookings if b[VEHICLE_ID] == vehicle_id), None)
