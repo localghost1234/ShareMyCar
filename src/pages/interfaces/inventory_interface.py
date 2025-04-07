@@ -43,9 +43,9 @@ class InventoryInterface(BaseInterface):
         try:                                                                            # Creates scope to handle any errors
             brand = str(input("Brand: "))                                               # Turns 'brand' param to an integer if possible, or raises an error
             model = str(input("Model: "))                                               # Turns 'model' param to an integer if possible, or raises an error
-            current_mileage = int(input("Mileage: "))                                   # Turns 'current_mileage' param to an integer if possible, or raises an error
-            daily_price = float(input("Daily Price: "))                                 # Turns 'daily_price' param to a float if possible, or raises an error
-            maintenance_cost = float(input("Maintenance Cost: "))                       # Turns 'maintenance_cost' param to a float if possible, or raises an error
+            current_mileage = abs(int(input("Mileage: ")))                              # Turns 'current_mileage' param to an integer if possible, or raises an error
+            daily_price = abs(float(input("Daily Price: ")))                            # Turns 'daily_price' param to a float if possible, or raises an error
+            maintenance_cost = abs(float(input("Maintenance Cost: ")))                  # Turns 'maintenance_cost' param to a float if possible, or raises an error
 
             if not all([brand, model]):                                                 # Checks that string values entered are acceptable
                 raise ValueError()                                                      # Raises exception and stops code execution

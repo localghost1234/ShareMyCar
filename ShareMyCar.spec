@@ -53,7 +53,8 @@ a = Analysis(
     'doctest',
     'cProfile',
     'trace',
-    'timeit'],
+    'timeit'
+    ],
     noarchive=False,
     optimize=0,
 )

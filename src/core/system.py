@@ -27,14 +27,14 @@ class System:
     def save_all(self):
         save_data(self.data)
     
-    def add_vehicle(self, brand, model, mileage, daily_price, maintenance_cost):
+    def add_vehicle(self, brand, model, current_mileage, daily_price, maintenance_cost):
         """
         Add a new vehicle to the system.
         
         Args:
             brand (str): The brand of the vehicle
             model (str): The model of the vehicle
-            mileage (float): Current mileage of the vehicle
+            current_mileage (int): Current mileage of the vehicle
             daily_price (float): Daily rental price of the vehicle
             maintenance_cost (float): Cost per km for maintenance
         """
@@ -45,8 +45,8 @@ class System:
             MODEL: model,                               # The 'model' attribute
             DAILY_PRICE: daily_price,                   # The 'daily_price' attribute
             MAINTENANCE_COST: maintenance_cost,         # The 'maintenance_cost' attribute
-            CURRENT_MILEAGE: mileage,                   # The 'current_mileage' attribute
-            MAINTENANCE_MILEAGE: mileage + 10000,       # The 'maintenance_mileage' attribute
+            CURRENT_MILEAGE: current_mileage,                   # The 'current_mileage' attribute
+            MAINTENANCE_MILEAGE: current_mileage + 10000,       # The 'maintenance_mileage' attribute
             AVAILABLE: True                             # The 'available' attribute
         })
         self.save_all()                                 # Stores data into the .pkl file
