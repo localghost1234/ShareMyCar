@@ -28,7 +28,7 @@ class BookingInterface(BaseInterface):
             
             print()                                                                                     # Line break to maintain readability
             cost = self.system.query_booking(vehicle_id, rental_duration, estimated_km, customer_name)  # Calls the system variable's function to add a booking to the database; returns the cost of said booking
-            if cost:                                                                                    # Checks if the returned value is truthy (cost should always be above 0) 
+            if cost != None:                                                                                    # Checks if the returned value is truthy (cost should always be above 0) 
                 print(f"Vehicle booked! Estimated cost: €{cost}\n")                                     # Displays success modal with calculated cost for the client
             else:                                                                                       # Alternate condition, in case the former was falsy
                 print("Vehicle not found or unavailable.\n")                                            # Displays error modal

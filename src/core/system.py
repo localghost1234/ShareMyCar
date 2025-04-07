@@ -213,7 +213,7 @@ class System:
                 return True                                                             # Returns True as a sign of success
         return False                                                                    # Returns False if no vehicle was found
     
-    def query_booking(self, vehicle_id, rental_duration, estimated_km, customer_name):
+    def query_booking(self, vehicle_id, customer_name, rental_duration, estimated_km):
         """
         Process a vehicle booking request.
         
@@ -227,8 +227,8 @@ class System:
             float: Total estimated cost if booking was successful, None otherwise
         """
         vehicle = next((v for v in deepcopy(self.vehicles) if v[ID] == vehicle_id and v[AVAILABLE]), None)    # Iterates over vehicles' table until finding match, otherwise, return None
-        if not vehicle:                                                                             # Checks if vehicle was found
-            return None                                                                             # Returns 'None' otherwise
+        if not vehicle:                                                                                       # Checks if vehicle was found
+            return None                                                                                       # Returns 'None' otherwise
         
         mileage_cost = vehicle[MAINTENANCE_COST] * estimated_km         # Multiplies vehicle's maintenance_cost times kms to be driven
         duration_cost = vehicle[DAILY_PRICE] * rental_duration          # Multiplies vehicle's daily_price times the days to be rented
