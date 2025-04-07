@@ -12,7 +12,7 @@ HOME=SimpleNamespace(                                                   # Variab
             6) Check Financial Metrics
             7) Close the program
 
-            """                                                     # When entering a loop, these instructions will be displayed for the user
+            """                                                         # When entering a loop, these instructions will be displayed for the user
 )
 
 INVENTORY=SimpleNamespace(                                                                                          # Variable with strings to be used in InventoryInterface
@@ -37,7 +37,7 @@ INVENTORY=SimpleNamespace(                                                      
 )
 
 BOOKING=SimpleNamespace(                                                                # Variable with strings to be used in BookingInterface
-    TITLE = "Booking Management"                                                        # Title of interface
+    TITLES=("Booking Management", "Provide data or press 'Enter' to cancel.")           # Title and subtitle of interface
 )
 
 RETURN=SimpleNamespace(                                                                                 # Variable with strings to be used in ReturnInterface

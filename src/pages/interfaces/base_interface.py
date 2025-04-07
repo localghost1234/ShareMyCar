@@ -29,7 +29,7 @@ class BaseInterface:
                 action_number = abs(int(input(input_message)))  # Opens channel for user to interace with the app, turn it into an int (or raise an error if not possible), and if anything, turn it into an absolute number
             except ValueError:                                  # If user input is cannot be turned into a number, we skip the previous code to this line
                 action_number = -1                              # Variable gets reset to non-acceptable value, maintaining user in the loop
-        print()                                   # Prints a line break to keep understandability
+        print()                                   # Prints a line break to maintain readability
         return action_number                      # Return clean user input
 
     def load_content(self, headers, get_content, generate_model, empty_message):
@@ -43,14 +43,14 @@ class BaseInterface:
         """
         content = get_content if isinstance(get_content, (list, tuple)) else get_content()  # Content may come in the form of iterable or function, so we check and obtain it from either one
         if not content:                                                                     # Checks if there is available content in DB
-            print(empty_message, '\n')                                                      # Displays 'empty_message' if no data
+            print(empty_message, '\n')                                                      # Displays 'empty_message' if no data and skips a line
             return False                                                                    # Returns False and stops further code execution
         
         print(self.generate_row(headers))                   # Creates and prints into console a string of the column names
         for c in content:                                   # Iterates over the extracted DB content
             print(generate_model(c))                        # Converts data into the necessary format string and prints it
         
-        print()                                             # Line break to keep understandibility
+        print()                                             # Line break to maintain readability
         return True                                         # Return True to indicate success
     
     def generate_row(self, values):

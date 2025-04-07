@@ -13,7 +13,7 @@ class InventoryInterface(BaseInterface):
             on_return_home (Callable): Function used to go back to main menu interface
             system (System): Reference to the application's System instance
         """
-        super().__init__(*INVENTORY.TITLES, system=system)                                                 # Initializes 'BaseInterface' with the pre-defined TITLES strings
+        super().__init__(*INVENTORY.TITLES, system=system)                                      # Initializes 'BaseInterface' with the pre-defined TITLES strings
 
         self.load_content(                                                                      # Executes necessary modules to extract database content and display it accordingly
             headers=INVENTORY.HEADERS,                                                          # Parameter for set of strings that will be displayed at the very top (column names)
@@ -22,11 +22,11 @@ class InventoryInterface(BaseInterface):
             empty_message=INVENTORY.EMPTY_MESSAGE,                                              # Message to be displayed in case no content is found
         )
         
-        action_number = self.input_loop(INVENTORY.VALIDATOR, INVENTORY.LOOP_MESSAGE)
-        if action_number == 1:
-            self.add_vehicle()
+        action_number = self.input_loop(INVENTORY.VALIDATOR, INVENTORY.LOOP_MESSAGE)            # Activates loop with validating callable and message to display, then assigns the (cleaned) user input
+        if action_number == 1:                                                                  # Check if allowed action was chosen
+            self.add_vehicle()                                                                  # Executes chosen action if condition is met
         
-        on_return_home()
+        on_return_home()                                                        # Returns to main menu
 
     def add_vehicle(self):
         """Shows controlled input to add a new vehicle to the database.
@@ -47,7 +47,7 @@ class InventoryInterface(BaseInterface):
             daily_price = float(input("Daily Price: "))                                 # Turns 'daily_price' param to a float if possible, or raises an error
             maintenance_cost = float(input("Maintenance Cost: "))                       # Turns 'maintenance_cost' param to a float if possible, or raises an error
         except ValueError:                                                              # If any of the values is something that it should not, the code skips to here
-            print("Invalid values, please try again.\n")
+            print("Invalid values, please try again.\n")                                # Print error
             return                                                                      # Stops further code execution
 
         self.system.add_vehicle(brand, model, current_mileage, daily_price, maintenance_cost)           # Calls system's module to add a vehicle to the database with all the information
