@@ -268,12 +268,12 @@ class System:
         Returns:
             float: Total revenue generated from the rental including any fees, None if vehicle not found
         """
-        vehicles_copy = deepcopy(self.vehicles)
-        vehicle = next((v for v in vehicles_copy if v[ID] == vehicle_id), None)       # Search for a vehicle matching the id, or return None
+        vehicles_copy = deepcopy(self.vehicles)                                                 # Creates a copy of the table to avoid accidental changes
+        vehicle = next((v for v in vehicles_copy if v[ID] == vehicle_id), None)                 # Search for a vehicle matching the id, or return None
         if not vehicle:                                                                         # Check if vehicle was found
             return None                                                                         # Return None if not found
         
-        bookings_copy = deepcopy(self.bookings)
+        bookings_copy = deepcopy(self.bookings)                                                     # Creates a copy of the table to avoid accidental changes
         original_booking = next((b for b in bookings_copy if b[VEHICLE_ID] == vehicle_id), None)    # Search for a booked vehicle if id matches, or return None
         if not original_booking:                                                                    # Check if booking was found
             return None                                                                             # Return None if not found
