@@ -60,8 +60,8 @@ class MetricsInterface(BaseInterface):
         print("Use '<table>:<column>:<value>' format\n(e.g. vehicles:id:1)\n")                        # Sets a text in the new frame and positions it
         try:                                                                                        # Creates a scope for error handling
             query_entry = input('---> ')                                                                       # Opens channels to receive user input
-            query_list = query_entry.strip().split(':')                                           # Retrieves user input from Entry, deletes trailing spaces and splits it into a list of strings (separated by ':')
-            table, column, value = query_list                                                        # Extract table_name and column_name
+            query_list = query_entry.split(':')                                           # Retrieves user input from Entry, deletes trailing spaces and splits it into a list of strings (separated by ':')
+            table, column, value = [text.strip() for text in query_list]                                                        # Extract table_name and column_name
             results_list = self.system.get_table_row(table, column, value)                    # Extracts database info with specified params
         except:                                                                           # Handle invalid queries
             print(f"Invalid values, please try again.\n")               # Displays error modal
