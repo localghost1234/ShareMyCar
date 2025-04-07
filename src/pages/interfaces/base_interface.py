@@ -24,6 +24,12 @@ class BaseInterface:
         print() if subtitle else None
 
     def input_loop(self, on_validate_constraints, input_message):
+        """Keeps user in an infinite cycle until they give the correct input.
+        
+        Args:
+            on_validate_constraints (Callable): Function to check if the user should remain in the loop or exit.
+            input_message (str): Text displayed which should give instructions for user to exit loop.
+        """
         action_number = -1
         while on_validate_constraints(action_number):
             try:
@@ -34,11 +40,11 @@ class BaseInterface:
         return action_number
 
     def load_content(self, headers, get_content, generate_model, empty_message):
-        """Loads content into the Listbox based on provided data retrieval functions.
+        """Loads content and prints it, or shows a message indicating the lackthereof.
         
         Args:
             headers (tuple): Group of strings which will visually represent the names of each column
-            get_content (callable): Function that retrieves content to display
+            get_content (list, callable): List or function that retrieves content to be displayed
             generate_model (callable): Function that formats content for display
             empty_message (str): Message to show when no content is available
         """
@@ -55,4 +61,5 @@ class BaseInterface:
         return True
     
     def generate_row(self, values):
+        """Formats lists of values and turns them into a single string."""
         return "| ".join(f"{v:<16}" for v in values)
