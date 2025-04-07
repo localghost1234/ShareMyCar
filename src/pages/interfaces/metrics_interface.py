@@ -123,7 +123,7 @@ class MetricsInterface(BaseInterface):
      
             headers = [str(key).upper() for key in list(data[0].keys())]
             rows = [[str(value) for value in list(row.values())] for row in data]
-            col_widths = [w * font_size * 0.8 for w in [max(len(item) for item in col) for col in zip(headers, rows)]]     # Gets the max width for each column by finding the longest string length in headers and data and changes the scale of each width dynamically and returns the results
+            col_widths = [w * font_size * 0.8 for w in [max(len(item) for item in col) for col in zip(headers, *rows)]]     # Gets the max width for each column by finding the longest string length in headers and data and changes the scale of each width dynamically and returns the results
        
             x_pos_headers = x_position                                                                            # TODO: Improve this -- we create a new variable with the same value, but can lead to errors
             for i, h in enumerate(headers):                                                          # Takes the index and inner value of the 'headers' list
