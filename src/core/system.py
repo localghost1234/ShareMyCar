@@ -76,7 +76,7 @@ class System:
         total_revenue = sum(log[REVENUE] for log in returns_logs)
         total_additional_costs = sum(log[ADDITIONAL_COSTS] for log in returns_logs)
         total_maintenance_cost = sum(v[MAINTENANCE_COST] for v in self.vehicles)
-        avg_mileage = sum(v[CURRENT_MILEAGE] for v in self.vehicles) / len(self.vehicles) if self.vehicles else 0
+        avg_mileage = sum(v[CURRENT_MILEAGE] for v in self.vehicles) / len(self.vehicles)
 
         total_operational_costs = total_maintenance_cost + total_additional_costs
         total_profit = total_revenue - total_operational_costs
