@@ -22,10 +22,10 @@ class BookingInterface(BaseInterface):
 
         print("Provide data or press 'Enter' to cancel.\n")
         try:
-            vehicle_id = int(input("Vehicle ID: "))                                                           # Adds a text string and positions it
+            vehicle_id = abs(int(input("Vehicle ID: ")))                                                           # Adds a text string and positions it
             customer_name = str(input("Customer Name: "))                                                           # Adds a text string and positions it
-            rental_duration = int(input("Rental Duration (days): "))                                                       # Adds a text string and positions it
-            estimated_km = int(input("Estimated Kilometers: "))                                               # Adds a text string and positions it
+            rental_duration = abs(int(input("Rental Duration (days): ")))                                                       # Adds a text string and positions it
+            estimated_km = abs(int(input("Estimated Kilometers: ")))                                               # Adds a text string and positions it
             print()
             cost = self.system.query_booking(vehicle_id, rental_duration, estimated_km, customer_name)  # Calls the system variable's function to add a booking to the database; returns the cost of said booking
             if cost:                                                                                    # Checks if the returned value is truthy (cost should always be above 0) 

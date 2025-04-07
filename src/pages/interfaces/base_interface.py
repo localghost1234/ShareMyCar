@@ -33,7 +33,7 @@ class BaseInterface:
         action_number = -1
         while on_validate_constraints(action_number):
             try:
-                action_number = int(input(input_message))
+                action_number = abs(int(input(input_message)))
             except ValueError:
                 action_number = -1
         print()

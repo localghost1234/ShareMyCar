@@ -45,16 +45,16 @@ class ReturnInterface(BaseInterface):
             vehicle_id (int): The ID of the vehicle being returned.
         """
         try:
-            vehicle_id = int(input("Vehicle ID: "))
-            customer_name = self.system.get_customer_name(vehicle_id)                           # Retrieve customer name associated with the vehicle
+            vehicle_id = abs(int(input("Vehicle ID: ")))
+            customer_name = self.system.get_customer_name(vehicle_id)                               # Retrieve customer name associated with the vehicle
 
             if not customer_name:
                 raise ValueError
             
             print("Customer Name: ", customer_name)
 
-            actual_km = int(input("Kilometers Driven: "))                                        # Convert kilometers driven to integer
-            late_days = int(input("Late Days: "))                                                # Convert late days to integer
+            actual_km = abs(int(input("Kilometers Driven: ")))                                        # Convert kilometers driven to integer
+            late_days = abs(int(input("Late Days: ")))                                                # Convert late days to integer
         except ValueError:
             print("Invalid values, please try again.\n")
             return
