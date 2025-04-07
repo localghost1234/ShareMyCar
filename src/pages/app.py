@@ -5,12 +5,12 @@ import signal, sys                                          # Import of librarie
 class App:
     """Main application class for Share My Car.
 
-    This class initializes the Tkinter root window, manages the user interface,
+    This class initializes the CLI window, manages the user interface,
     and handles switching between different application interfaces.
 
     Attributes:
-        system (System): The core system managing application functionality.
-        current_interface: The currently active interface.
+        system (System): The core management module, which takes care of database usage.
+        current_interface (BaseInterface): The currently active screen that the user is seeing.
     """
 
     def __init__(self):
