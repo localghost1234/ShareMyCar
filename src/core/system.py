@@ -69,12 +69,12 @@ class System:
         return next((b[CUSTOMER_NAME] for b in self.bookings if b[VEHICLE_ID] == vehicle_id), None)
     
     def get_financial_metrics(self):
-        return_logs = (log for log in self.logs if log[TRANSACTION_TYPE] == "return")
-        if not return_logs:
+        returns_logs = [log for log in self.logs if log[TRANSACTION_TYPE] == "return"]
+        if not returns_logs:
             return ()
         
-        total_revenue = sum(log[REVENUE] for log in return_logs)
-        total_additional_costs = sum(log[ADDITIONAL_COSTS] for log in return_logs)
+        total_revenue = sum(log[REVENUE] for log in returns_logs)
+        total_additional_costs = sum(log[ADDITIONAL_COSTS] for log in returns_logs)
         total_maintenance_cost = sum(v[MAINTENANCE_COST] for v in self.vehicles)
         avg_mileage = sum(v[CURRENT_MILEAGE] for v in self.vehicles) / len(self.vehicles) if self.vehicles else 0
 

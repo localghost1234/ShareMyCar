@@ -26,7 +26,7 @@ class BookingInterface(BaseInterface):
             customer_name = str(input("Customer Name: "))                                                           # Adds a text string and positions it
             rental_duration = int(input("Rental Duration (days): "))                                                       # Adds a text string and positions it
             estimated_km = int(input("Estimated Kilometers: "))                                               # Adds a text string and positions it
-
+            print()
             cost = self.system.query_booking(vehicle_id, rental_duration, estimated_km, customer_name)  # Calls the system variable's function to add a booking to the database; returns the cost of said booking
             if cost:                                                                                    # Checks if the returned value is truthy (cost should always be above 0) 
                 print(f"Vehicle booked! Estimated cost: €{cost}\n")                              # Displays success modal with calculated cost for the client
