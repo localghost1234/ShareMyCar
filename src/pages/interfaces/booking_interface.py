@@ -20,7 +20,7 @@ class BookingInterface(BaseInterface):
         """
         super().__init__(title=BOOKING.TITLE, system=system)                                           # Initializes 'BaseInterface' with the pre-defined TITLES strings
 
-        print("Provide data or press 'Enter' to cancel.")
+        print("Provide data or press 'Enter' to cancel.\n")
         try:
             vehicle_id = int(input("Vehicle ID: "))                                                           # Adds a text string and positions it
             customer_name = str(input("Customer Name: "))                                                           # Adds a text string and positions it
@@ -31,7 +31,7 @@ class BookingInterface(BaseInterface):
             if cost:                                                                                    # Checks if the returned value is truthy (cost should always be above 0) 
                 print(f"Vehicle booked! Estimated cost: €{cost}\n")                              # Displays success modal with calculated cost for the client
             else:                                                                                       # Alternate condition, in case the former was falsy
-                print("Vehicle not found or unavailable\n")                                    # Displays error modal
+                print("Vehicle not found or unavailable.\n")                                    # Displays error modal
         except ValueError:
             print("Invalid values, please try again.\n")
 

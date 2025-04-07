@@ -96,13 +96,13 @@ class MetricsInterface(BaseInterface):
         pdf = canvas.Canvas(file_path, pagesize=A4)                                     # Create a PDF file object to manipulate
         _, height = A4                                                                  # Obtain a variable with the PDF format's height
         y_position = height - 40                                                        # Start position for content
+        font_size = 6                                                                                # Define text size
 
-        pdf.setFont("Helvetica-Bold", 16)                                                                   # Set top text's font
+        pdf.setFont("Helvetica-Bold", font_size * 1.5)                                                                   # Set top text's font
         pdf.drawString(200, y_position, f"Full Report - {current_datetime.strftime('%Y-%m-%d_%H:%M:%S')}")  # Write the title's string on top of the file
 
         x_position = 50                                                                              # Adjust horizontal position
         y_position = height - 50                                                                     # Adjust vertical position for further text strings
-        font_size = 6                                                                                # Define text size
         pdf.setFont("Helvetica", font_size)                                                          # Define text font and size for PDF object
 
         def draw_table(title, data):
