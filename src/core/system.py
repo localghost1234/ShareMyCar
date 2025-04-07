@@ -276,20 +276,23 @@ class System:
         if not vehicle:                                                                         # Check if vehicle was found
             return None                                                                         # Return None if not found
         
-        bookings_copy = deepcopy(self.bookings)                                                     # Creates a copy of the table to avoid accidental changes
-        original_booking = next((b for b in bookings_copy if b[VEHICLE_ID] == vehicle_id), None)    # Search for a booked vehicle if id matches, or return None
-        if not original_booking:                                                                    # Check if booking was found
-            return None                                                                             # Return None if not found
+        bookings_copy = deepcopy(self.bookings)                                                         # Creates a copy of the table to avoid accidental changes
+        original_booking = next((b for b in bookings_copy if b[VEHICLE_ID] == vehicle_id), None)        # Search for a booked vehicle if id matches, or return None
+        if not original_booking:                                                                        # Check if booking was found
+            return None                                                                                 # Return None if not found
 
-        self.bookings = [b for b in bookings_copy if b[VEHICLE_ID] != vehicle_id]                                 # Create a new list of bookings without the other one (deleting it)
+        self.bookings = [b for b in bookings_copy if b[VEHICLE_ID] != vehicle_id]                                           # Create a new list of bookings without the other one (deleting it)
         cleaning_fee = 20.0                                                                                                 # Predefined value of cleaning fee to avoid discrepancies
         lateness_fee = late_days * 10.0                                                                                     # For every late day, 10 euros are charged
         driven_kms_fee = actual_km * 1.0                                                                                    # Take all the driven kms and charge 1 euro for them
         additional_costs = driven_kms_fee + lateness_fee + cleaning_fee                                                     # Add up all the extra charges made
         total_revenue = original_booking[ESTIMATED_COST] + additional_costs                                                 # Obtain the total of earnings from the booking's payment plus any other fee
-        current_mileage = next((v[CURRENT_MILEAGE] for v in vehicles_copy if v[ID] == original_booking[VEHICLE_ID]), 0)     # Iterate over the vehicles' table to find its current_mileage value
-        new_mileage = current_mileage + actual_km                                                                           # Add the current_mileage with the driven kms
+        new_mileage = vehicle[CURRENT_MILEAGE] + actual_km                                                                           # Add the current_mileage with the driven kms
         final_rental_duration = original_booking[RENTAL_DURATION] + late_days                                               # Add the estimated rental time plus any late days
+
+        if new_mileage >= vehicle[MAINTENANCE_MILEAGE]:
+            print("\nVehicle requires maintenance!")
+            print("You can do so from the Maintenance Management menu.\n")
 
         self.add_log(                                                 # Adds new log instance to DB
             vehicle_id=vehicle_id,                                    # Sets param to be stored
