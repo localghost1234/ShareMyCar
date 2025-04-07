@@ -38,13 +38,13 @@ class App:
             self.close_app()
             return
     
-        if self.current_interface:                                                                                  # We ensure that the 'current_interface' we access is not a null object (None)
-            self.current_interface = None                                                                           # This closes/erases the current frame (space in the modal) to make space for a new one
+        if self.current_interface:                                                                                           # We ensure that the 'current_interface' we access is not a null object (None)
+            self.current_interface = None                                                                                    # This closes/erases the current frame (space in the modal) to make space for a new one
         
         if interface_number == 0:
             self.current_interface = INTERFACES_CLASS[0](self.switch_interface)
         else:
-            self.current_interface = INTERFACES_CLASS[interface_number](lambda: self.switch_interface(0), self.system)             # We call the class we wish to see, and pass on information about the app
+            self.current_interface = INTERFACES_CLASS[interface_number](lambda: self.switch_interface(0), self.system)        # We call the class we wish to see, and pass on information about the app
 
     def close_app(self):
         """Handle application shutdown; closes the database the CLI window correctly."""
