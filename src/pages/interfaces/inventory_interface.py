@@ -16,7 +16,7 @@ class InventoryInterface(BaseInterface):
         super().__init__(*INVENTORY.TITLES, system=system)                                      # Initializes 'BaseInterface' with the pre-defined TITLES strings
 
         self.load_content(                                                                      # Executes necessary modules to extract database content and display it accordingly
-            headers=INVENTORY.HEADERS,                                                          # Parameter for set of strings that will be displayed at the very top (column names)
+            headers=INVENTORY.HEADERS,                                                          # Set of strings that will be displayed at the very top (column names)
             get_content=self.system.vehicles,                                                   # Enters function to extract database content
             generate_model=INVENTORY.GENERATE_MODEL,                                            # Enters string generator for each listbox row
             empty_message=INVENTORY.EMPTY_MESSAGE,                                              # Message to be displayed in case no content is found
