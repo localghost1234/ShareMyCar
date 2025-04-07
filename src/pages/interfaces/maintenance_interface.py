@@ -1,4 +1,4 @@
-from src.pages.interfaces.base_interface import BaseInterface       # Import the BaseInterface class, a parent class providing common functionality for other interfaces
+from src.pages.interfaces.base_interface import BaseInterface                 # Import the BaseInterface class, a parent class providing common functionality for other interfaces
 from src.misc.interface_strings import MAINTENANCE                            # Import the MAINTENANCE namespace, containing strings or configurations for the maintenance interface
 
 class MaintenanceInterface(BaseInterface):

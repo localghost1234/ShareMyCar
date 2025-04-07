@@ -1,5 +1,5 @@
 from src.pages.interfaces.base_interface import BaseInterface       # Import the BaseInterface class, which serves as a parent class for other interfaces
-from src.misc.interface_strings import BOOKING                                # Import the BOOKING namespace, which contains strings or configurations related to the booking interface
+from src.misc.interface_strings import BOOKING                      # Import the BOOKING namespace, which contains strings or configurations related to the booking interface
 
 class BookingInterface(BaseInterface):
     """

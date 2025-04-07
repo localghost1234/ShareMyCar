@@ -1,8 +1,8 @@
-from src.pages.interfaces.base_interface import BaseInterface   # Import the BaseInterface class, a parent class providing common functionality for other interfaces
-from src.misc.interface_strings import METRICS                            # Import the METRICS constant, containing strings or configurations for the metrics interface
-from reportlab.lib.pagesizes import A4                          # Import the A4 constant from reportlab, defining the standard A4 page size for PDF generation
-from reportlab.pdfgen import canvas                             # Import the canvas class from reportlab for creating and drawing on PDF documents
-from datetime import datetime                                   # Import the datetime class for working with dates and times
+from src.pages.interfaces.base_interface import BaseInterface       # Import the BaseInterface class, a parent class providing common functionality for other interfaces
+from src.misc.interface_strings import METRICS                      # Import the METRICS constant, containing strings or configurations for the metrics interface
+from reportlab.lib.pagesizes import A4                              # Import the A4 constant from reportlab, defining the standard A4 page size for PDF generation
+from reportlab.pdfgen import canvas                                 # Import the canvas class from reportlab for creating and drawing on PDF documents
+from datetime import datetime                                       # Import the datetime class for working with dates and times
 import os
 
 class MetricsInterface(BaseInterface):
