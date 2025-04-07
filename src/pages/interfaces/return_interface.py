@@ -17,21 +17,21 @@ class ReturnInterface(BaseInterface):
             on_return_home (Callable): Function used to go back to main menu interface
             system (System): Reference to the application's System instance
         """
-        super().__init__(*RETURN.TITLES, system=system)                                  # Initializes 'BaseInterface' with the pre-defined TITLES strings
+        super().__init__(*RETURN.TITLES, system=system)                                 # Initializes 'BaseInterface' with the pre-defined TITLES strings
 
-        has_content = self.load_content(                                                          # Executes necessary modules to extract database content and display it accordingly
-                headers=RETURN.HEADERS,
-                get_content=self.system.get_unavailable_vehicles,                       # Fetch unavailable vehicles
-                generate_model=RETURN.GENERATE_MODEL,                                   # Define how vehicle data is displayed
-                empty_message=RETURN.EMPTY_MESSAGE                                      # Message if no vehicles are found
+        has_content = self.load_content(                                                # Executes necessary module to extract database content and display it accordingly; receives boolean indicating if content was found or not
+                headers=RETURN.HEADERS,                                                 # Parameter for set of strings that will be displayed at the very top (column names)
+                get_content=self.system.get_unavailable_vehicles,                       # Function to fetch content from database
+                generate_model=RETURN.GENERATE_MODEL,                                   # Function which defines how each piece of data should be displayed
+                empty_message=RETURN.EMPTY_MESSAGE                                      # Message if no content is found
             )
 
-        if has_content:
-            action_number = self.input_loop(RETURN.VALIDATOR, RETURN.LOOP_MESSAGE)
-            if action_number == 1:
-                self.return_vehicle()
-
-        on_return_home()
+        if has_content:                                                                 # Checks if content was available
+            action_number = self.input_loop(RETURN.VALIDATOR, RETURN.LOOP_MESSAGE)      # Activates loop with validating callable and message to display, then assigns the (cleaned) user input
+            if action_number == 1:                                                      # Check if allowed action was chosen
+                self.return_vehicle()                                                   # Executes chosen action if condition is met
+        
+        on_return_home()                                      # Returns to main menu
 
     def return_vehicle(self):
         """

@@ -19,7 +19,7 @@ class BookingInterface(BaseInterface):
             system (System): Reference to the application's System instance
         """
         super().__init__(*BOOKING.TITLES, system=system)                                     # Initializes 'BaseInterface' with the pre-defined TITLES strings
-
+        
         try:                                                                                            # Creates a scope to catch any error during execution
             vehicle_id = abs(int(input("Vehicle ID: ")))                                                # Adds a text string and positions it
             customer_name = str(input("Customer Name: "))                                               # Adds a text string and positions it
