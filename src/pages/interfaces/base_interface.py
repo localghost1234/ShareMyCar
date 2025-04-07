@@ -13,9 +13,9 @@ class BaseInterface:
         """Initializes the interface with a title and optional subtitle.
         
         Args:
-            system: Reference to the application's System instance
             title (str): Main title for the interface
             subtitle (str, optional): Secondary title text
+            system (System, optional): Reference to the application's System instance
         """
         self.system = system
 
