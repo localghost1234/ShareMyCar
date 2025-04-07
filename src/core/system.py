@@ -268,7 +268,8 @@ class System:
         Returns:
             float: Total revenue generated from the rental including any fees, None if vehicle not found
         """
-        vehicle = next((v for v in deepcopy(self.vehicles) if v[ID] == vehicle_id), None)       # Search for a vehicle matching the id, or return None
+        vehicles_copy = deepcopy(self.vehicles)
+        vehicle = next((v for v in vehicles_copy if v[ID] == vehicle_id), None)       # Search for a vehicle matching the id, or return None
         if not vehicle:                                                                         # Check if vehicle was found
             return None                                                                         # Return None if not found
         
@@ -283,7 +284,7 @@ class System:
         driven_kms_fee = actual_km * 1.0                                                                                    # Take all the driven kms and charge 1 euro for them
         additional_costs = driven_kms_fee + lateness_fee + cleaning_fee                                                     # Add up all the extra charges made
         total_revenue = original_booking[ESTIMATED_COST] + additional_costs                                                 # Obtain the total of earnings from the booking's payment plus any other fee
-        current_mileage = next((v[CURRENT_MILEAGE] for v in deepcopy(self.vehicles) if v[ID] == original_booking[VEHICLE_ID]), 0)     # Iterate over the vehicles' table to find its current_mileage value
+        current_mileage = next((v[CURRENT_MILEAGE] for v in vehicles_copy if v[ID] == original_booking[VEHICLE_ID]), 0)     # Iterate over the vehicles' table to find its current_mileage value
         new_mileage = current_mileage + actual_km                                                                           # Add the current_mileage with the driven kms
         final_rental_duration = original_booking[RENTAL_DURATION] + late_days                                               # Add the estimated rental time plus any late days
 
