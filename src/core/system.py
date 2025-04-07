@@ -272,11 +272,12 @@ class System:
         if not vehicle:                                                                         # Check if vehicle was found
             return None                                                                         # Return None if not found
         
-        original_booking = next((b for b in deepcopy(self.bookings) if b[VEHICLE_ID] == vehicle_id), None)    # Search for a booked vehicle if id matches, or return None
+        bookings_copy = deepcopy(self.bookings)
+        original_booking = next((b for b in bookings_copy if b[VEHICLE_ID] == vehicle_id), None)    # Search for a booked vehicle if id matches, or return None
         if not original_booking:                                                                    # Check if booking was found
             return None                                                                             # Return None if not found
 
-        self.bookings = [b for b in deepcopy(self.bookings) if b[VEHICLE_ID] != vehicle_id]                                 # Create a new list of bookings without the other one (deleting it)
+        self.bookings = [b for b in bookings_copy if b[VEHICLE_ID] != vehicle_id]                                 # Create a new list of bookings without the other one (deleting it)
         cleaning_fee = 20.0                                                                                                 # Predefined value of cleaning fee to avoid discrepancies
         lateness_fee = late_days * 10.0                                                                                     # For every late day, 10 euros are charged
         driven_kms_fee = actual_km * 1.0                                                                                    # Take all the driven kms and charge 1 euro for them
