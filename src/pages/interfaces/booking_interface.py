@@ -35,4 +35,4 @@ class BookingInterface(BaseInterface):
         except ValueError:                                                                        # If any error occurs, code skips to this line
             print("Invalid values, please try again.\n")                                          # Print error and skip a line
 
-        on_return_home()                                                           # Return to main menu interface
+        on_return_home()                                                                          # Return to main menu interface

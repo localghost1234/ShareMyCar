@@ -32,7 +32,7 @@ class MaintenanceInterface(BaseInterface):
             if action_number == 1:                                                              # Checks if allowed action was chosen
                 self.check_maintenance()                                                        # Executes function if condition was met
             
-        on_return_home()                                                    # Returns to main menu
+        on_return_home()                                                                        # Returns to main menu
 
     def check_maintenance(self):
         """Displays section to complete vehicle maintenance."""

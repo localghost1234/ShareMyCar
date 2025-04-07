@@ -225,8 +225,8 @@ class System:
             float: Total estimated cost if booking was successful, None otherwise
         """
         vehicle = next((v for v in self.vehicles if v[ID] == vehicle_id and v[AVAILABLE]), None)    # Iterates over vehicles' table until finding match, otherwise, return None
-        if not vehicle:                                             # Checks if vehicle was found
-            return None                                             # Returns None otherwise
+        if not vehicle:                                                                             # Checks if vehicle was found
+            return None                                                                             # Returns 'None' otherwise
         
         mileage_cost = vehicle[MAINTENANCE_COST] * estimated_km         # Multiplies vehicle's maintenance_cost times kms to be driven
         duration_cost = vehicle[DAILY_PRICE] * rental_duration          # Multiplies vehicle's daily_price times the days to be rented
@@ -274,15 +274,15 @@ class System:
         if not original_booking:                                                                    # Check if booking was found
             return None                                                                             # Return None if not found
 
-        self.bookings = [b for b in self.bookings if b[VEHICLE_ID] != vehicle_id]                  # Create a new list of bookings without the other one (deleting it)
-        cleaning_fee = 20.0                                                                        # Predefined value of cleaning fee to avoid discrepancies
-        lateness_fee = late_days * 10.0                                                            # For every late day, 10 euros are charged
-        driven_kms_fee = actual_km * 1.0                                                           # Take all the driven kms and charge 1 euro for them
-        additional_costs = driven_kms_fee + lateness_fee + cleaning_fee                            # Add up all the extra charges made
-        total_revenue = original_booking[ESTIMATED_COST] + additional_costs                        # Obtain the total of earnings from the booking's payment plus any other fee
-        current_mileage = next((v[CURRENT_MILEAGE] for v in self.vehicles if v[ID] == original_booking[VEHICLE_ID]), 0)      # Iterate over the vehicles' table to find its current_mileage value
-        new_mileage = current_mileage + actual_km                                                                            # Add the current_mileage with the driven kms
-        final_rental_duration = original_booking[RENTAL_DURATION] + late_days                                                # Add the estimated rental time plus any late days
+        self.bookings = [b for b in self.bookings if b[VEHICLE_ID] != vehicle_id]                                           # Create a new list of bookings without the other one (deleting it)
+        cleaning_fee = 20.0                                                                                                 # Predefined value of cleaning fee to avoid discrepancies
+        lateness_fee = late_days * 10.0                                                                                     # For every late day, 10 euros are charged
+        driven_kms_fee = actual_km * 1.0                                                                                    # Take all the driven kms and charge 1 euro for them
+        additional_costs = driven_kms_fee + lateness_fee + cleaning_fee                                                     # Add up all the extra charges made
+        total_revenue = original_booking[ESTIMATED_COST] + additional_costs                                                 # Obtain the total of earnings from the booking's payment plus any other fee
+        current_mileage = next((v[CURRENT_MILEAGE] for v in self.vehicles if v[ID] == original_booking[VEHICLE_ID]), 0)     # Iterate over the vehicles' table to find its current_mileage value
+        new_mileage = current_mileage + actual_km                                                                           # Add the current_mileage with the driven kms
+        final_rental_duration = original_booking[RENTAL_DURATION] + late_days                                               # Add the estimated rental time plus any late days
 
         self.add_log(                                                 # Adds new log instance to DB
             vehicle_id=vehicle_id,                                    # Sets param to be stored

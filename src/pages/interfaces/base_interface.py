@@ -23,14 +23,14 @@ class BaseInterface:
             on_validate_constraints (Callable): Function to check if the user should remain in the loop or exit.
             input_message (str): Text displayed; should give instructions on how to exit loop.
         """
-        action_number = -1                              # Initialize number's variable
-        while on_validate_constraints(action_number):   # Creates an infinite loop, only broken when conditions provided by the interface are met
+        action_number = -1                                      # Initialize number's variable
+        while on_validate_constraints(action_number):           # Creates an infinite loop, only broken when conditions provided by the interface are met
             try:                                                # Creates a scope to enclose any input given by the user in case something disagreeable is entered
                 action_number = abs(int(input(input_message)))  # Opens channel for user to interace with the app, turn it into an int (or raise an error if not possible), and if anything, turn it into an absolute number
             except ValueError:                                  # If user input is cannot be turned into a number, we skip the previous code to this line
                 action_number = -1                              # Variable gets reset to non-acceptable value, maintaining user in the loop
-        print()                                   # Prints a line break to maintain readability
-        return action_number                      # Return clean user input
+        print()                                                 # Prints a line break to maintain readability
+        return action_number                                    # Return clean user input
 
     def load_content(self, headers, get_content, generate_model, empty_message):
         """Loads content and prints it, or shows a message indicating the lackthereof.

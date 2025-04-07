@@ -31,7 +31,7 @@ class ReturnInterface(BaseInterface):
             if action_number == 1:                                                      # Check if allowed action was chosen
                 self.return_vehicle()                                                   # Executes chosen action if condition is met
         
-        on_return_home()                                      # Returns to main menu
+        on_return_home()                                                                # Returns to main menu
 
     def return_vehicle(self):
         """
