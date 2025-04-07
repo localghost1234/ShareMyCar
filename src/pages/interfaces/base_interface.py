@@ -11,11 +11,10 @@ class BaseInterface:
             subtitle (str, optional): Secondary title text
             system (System, optional): Reference to the application's System instance
         """
-        self.system = system
-
-        print(title)
-        print(subtitle)
-        print() if subtitle else None
+        self.system = system                    # Pass system param to keep it in interface at all times
+        print(title)                            # Print upper interface text
+        print(subtitle)                         # Print lower interface text
+        print() if subtitle else None           # Print line break, if a subtitle was given
 
     def input_loop(self, on_validate_constraints, input_message):
         """Keeps user in an infinite cycle until they give the correct input.
