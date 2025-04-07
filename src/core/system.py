@@ -1,6 +1,6 @@
-from src.core.database import load_data, save_data  # Importing database functionality
-from src.misc.constants import TABLES, ATTRIBUTES   # Importing namespaces with common string variables
-from copy import deepcopy
+from src.core.database import load_data, save_data      # Importing database functionality
+from src.misc.constants import TABLES, ATTRIBUTES       # Importing namespaces with common string variables
+from copy import deepcopy                               # Import a module to create a copy of objects like dictionaries to the root
 
 ID, BRAND, MODEL, CURRENT_MILEAGE, DAILY_PRICE, MAINTENANCE_COST, MAINTENANCE_MILEAGE, AVAILABLE, VEHICLE_ID, CUSTOMER_NAME, RENTAL_DURATION, ESTIMATED_KM, ESTIMATED_COST, REVENUE, ADDITIONAL_COSTS, TRANSACTION_TYPE = (
     ATTRIBUTES.ID, ATTRIBUTES.BRAND, ATTRIBUTES.MODEL, ATTRIBUTES.CURRENT_MILEAGE, ATTRIBUTES.DAILY_PRICE,
@@ -22,6 +22,9 @@ class System:
 
     def __del__(self):
         """Whenever a System instance gets deleted, it will save all the database values as they are."""
+        self.save_all()
+
+    def save_all(self):
         save_data(self.data)
     
     def add_vehicle(self, brand, model, mileage, daily_price, maintenance_cost):
@@ -46,7 +49,7 @@ class System:
             MAINTENANCE_MILEAGE: mileage + 10000,       # The 'maintenance_mileage' attribute
             AVAILABLE: True                             # The 'available' attribute
         })
-        save_data(self.data)                            # Stores data into the .pkl file
+        self.save_all()                                 # Stores data into the .pkl file
 
     def add_booking(self, vehicle_id, customer_name, rental_duration, estimated_km, estimated_cost):
         """
@@ -68,7 +71,7 @@ class System:
             ESTIMATED_KM: estimated_km,                 # The 'estimated_km' attribute
             ESTIMATED_COST: estimated_cost,             # The 'estimated_cost' attribute
         })
-        save_data(self.data)                            # Stores data into the .pkl file
+        self.save_all()                                 # Stores data into the .pkl file
 
     def add_log(self, vehicle_id, customer_name, rental_duration, revenue, additional_costs, transaction_type):
         """
@@ -92,7 +95,7 @@ class System:
             ADDITIONAL_COSTS: additional_costs,             # The 'additional_costs' attribute
             TRANSACTION_TYPE: transaction_type              # The 'transaction_type' attribute
         })
-        save_data(self.data)                                # Stores data into the .pkl file
+        self.save_all()                                     # Stores data into the .pkl file
     
     def get_vehicles_requiring_maintenance(self):
         """
@@ -174,7 +177,7 @@ class System:
         for v in self.vehicles:                     # Iterates over the vehicles' table
             if v[ID] == vehicle_id:                 # Checks if any of them match the given id
                 v[AVAILABLE] = available            # Changes the 'available' attribute to the given value
-                save_data(self.data)                # Stores the new info in the .pkl database
+                self.save_all()                # Stores the new info in the .pkl database
                 return True                         # Returns True as a sign of success
         return False                                # Returns False as a sign of failure, in case no vehicle was found
     
@@ -192,7 +195,7 @@ class System:
         for v in self.vehicles:                         # Iterates over the vehicles' table
             if v[ID] == vehicle_id:                     # Checks if any of them match the given id
                 v[CURRENT_MILEAGE] = new_mileage        # Changes current_mileage to the given value
-                save_data(self.data)                    # Stores info in .pkl database
+                self.save_all()                    # Stores info in .pkl database
                 return True                             # Returns True as a sign of success
         return False                                    # Returns False if no vehicle was found
     
@@ -209,7 +212,7 @@ class System:
         for v in self.vehicles:                                                         # Iterates over the vehicles' table
             if v[ID] == vehicle_id and v[MAINTENANCE_MILEAGE] <= v[CURRENT_MILEAGE]:    # Checks if any of them match the given id and the vehicle actually needs maintenance
                 v[MAINTENANCE_MILEAGE] = v[CURRENT_MILEAGE] + 10000                     # Changes maintenance_mileage to the new value
-                save_data(self.data)                                                    # Stores info in .pkl database
+                self.save_all()                                                    # Stores info in .pkl database
                 return True                                                             # Returns True as a sign of success
         return False                                                                    # Returns False if no vehicle was found
     
@@ -252,7 +255,7 @@ class System:
         )
         
         self.query_update_availability(vehicle_id, False)   # Updates a vehicle's availability to False (unavailable)
-        save_data(self.data)                                # Stores new info into .pkl database
+        self.save_all()                                # Stores new info into .pkl database
         return total_estimated_cost                         # Returns the probable cost (for the client) that will be paid in the future
     
     def query_return(self, vehicle_id, customer_name, actual_km, late_days):
@@ -299,5 +302,5 @@ class System:
         
         self.query_update_current_mileage(vehicle_id, new_mileage)      # Update returned vehicle's total mileage
         self.query_update_availability(vehicle_id, True)                # Update returned vehicle's availability (is now available)
-        save_data(self.data)                                            # Store new info into .pkl database
+        self.save_all()                                            # Store new info into .pkl database
         return total_revenue                                            # Return final revenue (for business) to be displayed

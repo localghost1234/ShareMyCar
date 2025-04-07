@@ -3,7 +3,7 @@ from src.misc.interface_strings import METRICS                      # Import the
 from reportlab.lib.pagesizes import A4                              # Import the A4 constant from reportlab, defining the standard A4 page size for PDF generation
 from reportlab.pdfgen import canvas                                 # Import the canvas class from reportlab for creating and drawing on PDF documents
 from datetime import datetime                                       # Import the datetime class for working with dates and times
-from copy import deepcopy
+from copy import deepcopy                                           # Import a module to create a copy of objects like dictionaries to the root
 import os                                                           # Import the 'os' class to interact with the PC
 
 class MetricsInterface(BaseInterface):
@@ -32,12 +32,10 @@ class MetricsInterface(BaseInterface):
         
         metrics = self.system.get_financial_metrics()                                               # Retrieve financial metrics from database
         if not metrics:                                                                             # Checks if content is available
-            print(METRICS.EMPTY_MESSAGE, '\n')                                                      # Print message for empty content
-            on_return_home()                                                                        # Return to main menu
-            return                                                                                  # Stop further code execution
-        
-        for idx, h in enumerate(METRICS.HEADERS):                                                   # Iterates over a list with the info's name, giving out its index and inner value
-            print(f"{h}: ", round(metrics[idx], 2))                                                 # Displays text with its respective header
+            print(METRICS.EMPTY_MESSAGE)                                                            # Print message for empty content
+        else:
+            for idx, h in enumerate(METRICS.HEADERS):                                               # Iterates over a list with the info's name, giving out its index and inner value
+                print(f"{h}: ", round(metrics[idx], 2))                                             # Displays text with its respective header
 
         print()                                                                                     # Line break to maintain readability
         action_number = self.input_loop(METRICS.VALIDATOR, METRICS.LOOP_MESSAGE)                    # Activates input loop with its validating conditions and message
@@ -51,7 +49,8 @@ class MetricsInterface(BaseInterface):
     def submit_query(self):
         """Allows querying specific info from the database. It allows input in a 'table:column:value' format."""
         print("Input Query")                                                                        # Sets a text in the new frame and positions it
-        print("Use '<table>:<column>:<value>' format\n(e.g. vehicles:id:1)\n")                      # Sets a text in the new frame and positions it
+        print("Use '<table>:<column>:<value>' format\n(e.g. vehicles:id:1)")                        # Sets a text in the new frame and positions it
+        print("Possible table names: 'vehicles', 'bookings', 'logs'\n")
         try:                                                                                        # Creates a scope for error handling
             query_entry = input('---> ')                                                            # Opens channels to receive user input
             table, column, value = [text.strip() for text in query_entry.split(':')]                # Extract table, column name and value from the user input string (divided into parts by ':' separator)
