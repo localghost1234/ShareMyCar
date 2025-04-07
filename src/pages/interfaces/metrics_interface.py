@@ -3,6 +3,7 @@ from src.misc.interface_strings import METRICS                      # Import the
 from reportlab.lib.pagesizes import A4                              # Import the A4 constant from reportlab, defining the standard A4 page size for PDF generation
 from reportlab.pdfgen import canvas                                 # Import the canvas class from reportlab for creating and drawing on PDF documents
 from datetime import datetime                                       # Import the datetime class for working with dates and times
+from copy import deepcopy
 import os                                                           # Import the 'os' class to interact with the PC
 
 class MetricsInterface(BaseInterface):
@@ -133,9 +134,9 @@ class MetricsInterface(BaseInterface):
             
             y_position -= font_size * 2.5                                                                 # Lowers the vertical position of the pointer, in accordance to the row's text size
 
-        draw_table("Vehicles:", self.system.vehicles)                                    # Uses table information to generate, format, and print the PDF's contents
-        draw_table("Bookings:", self.system.bookings)                                    # Uses table information to generate, format, and print the PDF's contents
-        draw_table("Logs:", self.system.logs)                                            # Uses table information to generate, format, and print the PDF's contents
+        draw_table("Vehicles:", deepcopy(self.system.vehicles))                                    # Uses table information to generate, format, and print the PDF's contents
+        draw_table("Bookings:", deepcopy(self.system.bookings))                                    # Uses table information to generate, format, and print the PDF's contents
+        draw_table("Logs:", deepcopy(self.system.logs))                                            # Uses table information to generate, format, and print the PDF's contents
         
         pdf.save()                                                                       # Generate the final PDF file in the previously accorded path
         print(f"Report saved as {file_path}\n")                                          # Show a success message on the console with the new file's path
