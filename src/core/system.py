@@ -1,5 +1,6 @@
 from src.core.database import load_data, save_data  # Importing database functionality
 from src.misc.constants import TABLES, ATTRIBUTES   # Importing namespaces with common string variables
+from copy import deepcopy
 
 ID, BRAND, MODEL, CURRENT_MILEAGE, DAILY_PRICE, MAINTENANCE_COST, MAINTENANCE_MILEAGE, AVAILABLE, VEHICLE_ID, CUSTOMER_NAME, RENTAL_DURATION, ESTIMATED_KM, ESTIMATED_COST, REVENUE, ADDITIONAL_COSTS, TRANSACTION_TYPE = (
     ATTRIBUTES.ID, ATTRIBUTES.BRAND, ATTRIBUTES.MODEL, ATTRIBUTES.CURRENT_MILEAGE, ATTRIBUTES.DAILY_PRICE,
@@ -100,7 +101,7 @@ class System:
         Returns:
             list: Vehicles where current mileage exceeds maintenance mileage
         """
-        return [v for v in self.vehicles if v[CURRENT_MILEAGE] >= v[MAINTENANCE_MILEAGE]]
+        return [v for v in deepcopy(self.vehicles) if v[CURRENT_MILEAGE] >= v[MAINTENANCE_MILEAGE]]
     
     def get_unavailable_vehicles(self):
         """
@@ -109,7 +110,7 @@ class System:
         Returns:
             list: Vehicles marked as unavailable
         """
-        return [v for v in self.vehicles if not v[AVAILABLE]]
+        return [v for v in deepcopy(self.vehicles) if not v[AVAILABLE]]
     
     def get_table_row(self, table_name, column_name, column_value):
         """
@@ -123,7 +124,7 @@ class System:
         Returns:
             list: Matching records
         """
-        return [record for record in self.tables.get(table_name, []) if str(column_value).lower() in str(record[column_name]).lower()]
+        return [record for record in deepcopy(self.tables.get(table_name, [])) if str(column_value).lower() in str(record[column_name]).lower()]
     
     def get_customer_name(self, vehicle_id):
         """
@@ -135,7 +136,7 @@ class System:
         Returns:
             str: Customer name if found, None otherwise
         """
-        return next((b[CUSTOMER_NAME] for b in self.bookings if b[VEHICLE_ID] == vehicle_id), None)
+        return next((b[CUSTOMER_NAME] for b in deepcopy(self.bookings) if b[VEHICLE_ID] == vehicle_id), None)
     
     def get_financial_metrics(self):
         """
@@ -145,14 +146,15 @@ class System:
             tuple: Contains (total_revenue, total_operational_costs, total_profit, avg_mileage)
                     or empty tuple if no 'return' logs are found
         """
-        return_logs = [log for log in self.logs if log[TRANSACTION_TYPE] == "return"]           # Return a list with logs whose transaction_type is 'return'
+        return_logs = [log for log in deepcopy(self.logs) if log[TRANSACTION_TYPE] == "return"]           # Return a list with logs whose transaction_type is 'return'
         if not return_logs:                                                                     # Checks if any was found
             return ()                                                                           # Returns empty tuple if none were found
         
+        vehicles_copy = deepcopy(self.vehicles)                                                 # Generate a copy of data to avoid data corruption
         total_revenue = sum(log[REVENUE] for log in return_logs)                                # Generates a list of all the return logs' revenues and then adds them up
         total_additional_costs = sum(log[ADDITIONAL_COSTS] for log in return_logs)              # Generates a list of all the return logs' additional_costs and then adds them up
-        total_maintenance_cost = sum(v[MAINTENANCE_COST] for v in self.vehicles)                # Generates a list of all the vehicles' maintenance_cost and then adds them up
-        avg_mileage = sum(v[CURRENT_MILEAGE] for v in self.vehicles) / len(self.vehicles)       # Generates a list of all the vehicles' current_mileage, adds them up and then divides them by the amount of vehicles
+        total_maintenance_cost = sum(v[MAINTENANCE_COST] for v in vehicles_copy)                # Generates a list of all the vehicles' maintenance_cost and then adds them up
+        avg_mileage = sum(v[CURRENT_MILEAGE] for v in vehicles_copy) / len(vehicles_copy)       # Generates a list of all the vehicles' current_mileage, adds them up and then divides them by the amount of vehicles
         total_operational_costs = total_maintenance_cost + total_additional_costs               # Adds two different types of costs
         total_profit = total_revenue - total_operational_costs                                  # Takes the total of payments and substracts the costs of operations
         
@@ -224,7 +226,7 @@ class System:
         Returns:
             float: Total estimated cost if booking was successful, None otherwise
         """
-        vehicle = next((v for v in self.vehicles if v[ID] == vehicle_id and v[AVAILABLE]), None)    # Iterates over vehicles' table until finding match, otherwise, return None
+        vehicle = next((v for v in deepcopy(self.vehicles) if v[ID] == vehicle_id and v[AVAILABLE]), None)    # Iterates over vehicles' table until finding match, otherwise, return None
         if not vehicle:                                                                             # Checks if vehicle was found
             return None                                                                             # Returns 'None' otherwise
         
@@ -266,9 +268,9 @@ class System:
         Returns:
             float: Total revenue generated from the rental including any fees, None if vehicle not found
         """
-        vehicle = next((v for v in self.vehicles if v[ID] == vehicle_id), None)       # Search for a vehicle matching the id, or return None
-        if not vehicle:                                                               # Check if vehicle was found
-            return None                                                               # Return None if not found
+        vehicle = next((v for v in deepcopy(self.vehicles) if v[ID] == vehicle_id), None)       # Search for a vehicle matching the id, or return None
+        if not vehicle:                                                                         # Check if vehicle was found
+            return None                                                                         # Return None if not found
         
         original_booking = next((b for b in self.bookings if b[VEHICLE_ID] == vehicle_id), None)    # Search for a booked vehicle if id matches, or return None
         if not original_booking:                                                                    # Check if booking was found
@@ -280,7 +282,7 @@ class System:
         driven_kms_fee = actual_km * 1.0                                                                                    # Take all the driven kms and charge 1 euro for them
         additional_costs = driven_kms_fee + lateness_fee + cleaning_fee                                                     # Add up all the extra charges made
         total_revenue = original_booking[ESTIMATED_COST] + additional_costs                                                 # Obtain the total of earnings from the booking's payment plus any other fee
-        current_mileage = next((v[CURRENT_MILEAGE] for v in self.vehicles if v[ID] == original_booking[VEHICLE_ID]), 0)     # Iterate over the vehicles' table to find its current_mileage value
+        current_mileage = next((v[CURRENT_MILEAGE] for v in deepcopy(self.vehicles) if v[ID] == original_booking[VEHICLE_ID]), 0)     # Iterate over the vehicles' table to find its current_mileage value
         new_mileage = current_mileage + actual_km                                                                           # Add the current_mileage with the driven kms
         final_rental_duration = original_booking[RENTAL_DURATION] + late_days                                               # Add the estimated rental time plus any late days
 
