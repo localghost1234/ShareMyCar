@@ -142,8 +142,7 @@ class System:
         Calculate financial metrics for the rental system.
         
         Returns:
-            tuple: Contains (total_revenue, total_operational_costs, total_profit, avg_mileage)
-                   Returns empty tuple if no return logs exist
+            tuple: Contains (total_revenue, total_operational_costs, total_profit, avg_mileage) or empty tuple if no 'return' logs are found
         """
         returns_logs = [log for log in self.logs if log[TRANSACTION_TYPE] == "return"]
         if not returns_logs:

@@ -47,10 +47,7 @@ class App:
             self.current_interface = INTERFACES_CLASS[interface_number](lambda: self.switch_interface(0), self.system)             # We call the class we wish to see, and pass on information about the app
 
     def close_app(self):
-        """Handle application shutdown.
-        
-        Closes the database correctly and closes the CLI window.
-        """
-        del self.system                # Direct command with database to shut it down carefully
-        print('Shutting down.')             # Shows a closing message on the delevoper's console
+        """Handle application shutdown; closes the database the CLI window correctly."""
+        del self.system                     # Deletes System instance (which shuts down database gracefully, also)
+        print('Shutting down.')             # Shows a closing message on the console
         sys.exit()                          # Closes the window
